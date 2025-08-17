@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Slide - Gerador de Slides com IA</title>
-    <!-- Inclui a fonte Inter do Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <!-- Inclui o Tailwind CSS via CDN para um estilo moderno e responsivo -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Estilos personalizados */
@@ -76,7 +74,6 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col justify-between">
 
-    <!-- Header do Site -->
     <header class="bg-white shadow-md py-4">
         <div class="container mx-auto px-4">
             <nav class="flex justify-between items-center">
@@ -86,7 +83,6 @@
         </div>
     </header>
 
-    <!-- Seção Principal (Hero) -->
     <main class="flex-grow flex items-center justify-center hero-bg">
         <div class="container mx-auto p-8 max-w-4xl text-center">
             <h1 class="text-4xl sm:text-6xl font-extrabold text-gray-900 leading-tight mb-4">Crie Apresentações Incríveis em Segundos</h1>
@@ -95,12 +91,10 @@
         </div>
     </main>
 
-    <!-- Seção de Demonstração do Gerador de Slides -->
     <section id="demo" class="bg-white rounded-3xl shadow-xl p-8 max-w-4xl w-full mx-auto my-12">
         <h2 class="text-3xl sm:text-4xl font-bold text-center mb-6 text-gray-800">Demonstração Funcional</h2>
         <p class="text-center text-gray-600 mb-8">Digite um tópico abaixo e veja a IA criar o conteúdo de slides minimalistas para você.</p>
 
-        <!-- Formulário de entrada -->
         <div class="mb-6">
             <textarea
                 id="promptInput"
@@ -109,7 +103,6 @@
             ></textarea>
         </div>
 
-        <!-- Botão e área de status -->
         <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
             <button
                 id="generateBtn"
@@ -118,7 +111,6 @@
                 Gerar Slides
             </button>
             <div id="statusMessage" class="flex items-center text-gray-500 font-medium">
-                <!-- Ícone de carregamento -->
                 <svg id="loadingIcon" class="hidden animate-spin h-5 w-5 mr-3 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -127,7 +119,6 @@
             </div>
         </div>
 
-        <!-- Botões de ação (Tela Cheia) -->
         <div id="actionButtons" class="flex items-center justify-center mt-6">
             <button
                 id="fullscreenBtn"
@@ -137,25 +128,19 @@
             </button>
         </div>
 
-        <!-- Área de exibição dos slides -->
         <div id="slidesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-            <!-- Slides gerados serão inseridos aqui -->
-        </div>
+            </div>
     </section>
 
-    <!-- Rodapé -->
     <footer class="bg-gray-800 text-white py-6 mt-auto">
         <div class="container mx-auto px-4 text-center">
             <p>&copy; 2025 AI Slide. Todos os direitos reservados. Feito por M&A</p>
         </div>
     </footer>
 
-    <!-- Container para a visualização em tela cheia -->
     <div id="fullscreen-view">
         <div class="relative w-full h-full flex items-center justify-center">
-            <!-- Container para os botões de navegação, que irão aparecer e desaparecer -->
             <div id="fullscreenControls" class="absolute inset-0 flex items-center justify-between transition-opacity duration-500">
-                <!-- Botões de navegação -->
                 <button id="prevBtn" class="absolute left-4 z-10 text-white bg-gray-800 rounded-full p-2 hover:bg-gray-700 focus:outline-none">
                     <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -174,8 +159,7 @@
                 <span id="slideCounter" class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white bg-gray-800 rounded-full px-4 py-1"></span>
             </div>
             <div id="slides-carousel" class="relative w-full h-full flex items-center justify-center overflow-hidden">
-                <!-- Slides serão adicionados aqui dinamicamente -->
-            </div>
+                </div>
         </div>
     </div>
 
@@ -198,7 +182,7 @@
             const fullscreenControls = document.getElementById('fullscreenControls');
 
             // Sua chave de API real foi inserida aqui.
-            const API_KEY = "AIzaSyAjtMB4WF3FGFw9JHYDbbA7TaCGecO-Ync";
+            const API_KEY = "AIzaSyDXK51AeCFgMs5vX5BNOxNFQKO2zM-AC-I";
             
             let slideData = []; // Armazena o conteúdo gerado
             let currentSlideIndex = 0;
