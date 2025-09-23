@@ -1,364 +1,841 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Slides com IA</title>
-    <!-- Inclui o Tailwind CSS via CDN para um estilo moderno e responsivo -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Caixa Profissional - Foco Tablet</title>
     <style>
-        /* Define a fonte Inter para todo o corpo do documento */
+        :root {
+            --primary-color: #790000; /* Verde-azulado */
+            --secondary-color: #ffc107; /* Amarelo */
+            --background-color: #e0f2f1; /* Verde claro */
+            --card-background: #fff;
+            --font-color: #000000;
+            --accent-color: #af4c4c; /* Verde */
+            --danger-color: #f43636; /* Vermelho */
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--font-color);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        /* Estiliza os botões para um visual mais agradável */
-        .btn-primary {
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        .header {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex-wrap: wrap; /* Permite que os botões quebrem a linha em telas pequenas */
         }
 
-        /* Animação de rotação para o ícone de carregamento */
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .header h1 {
+            margin: 0;
+            font-size: 1.5em;
         }
-        .animate-spin {
-            animation: spin 1s linear infinite;
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+            flex-wrap: wrap;
+        }
+
+        .header .btn-header {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: #fff;
+            font-size: 0.9em; /* Fonte menor para caber mais botões */
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            padding: 10px;
+            gap: 10px;
+            overflow: hidden;
+            flex-direction: column; /* Padrão em tablets: colunas */
+        }
+
+        .left-panel {
+            flex: 1; /* Ocupa metade do espaço em tablets */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .right-panel {
+            flex: 1; /* Ocupa metade do espaço em tablets */
+            display: flex;
+            flex-direction: column;
+            background-color: var(--card-background);
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px;
+            overflow: hidden;
+        }
+
+        .input-bar {
+            display: flex;
+            gap: 5px;
+        }
+
+        .input-bar input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            outline: none;
         }
         
-        /* Estilo para a visualização em tela cheia */
-        #fullscreen-view {
-            display: none;
-            position: fixed;
+        .input-bar button {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .value-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .value-card {
+            background-color: var(--card-background);
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+            height: 60px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .value-card:active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background-color: #e0f2f1;
+        }
+
+        .value-card .price {
+            font-size: 1.5em; 
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 0;
+        }
+        
+        .sale-list {
+            flex: 1;
+            overflow-y: auto;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+        }
+
+        .sale-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .sale-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-info h4 {
+            margin: 0;
+            font-size: 1em;
+            font-weight: normal;
+        }
+        
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .item-actions button {
+            background-color: var(--danger-color);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .item-price {
+            min-width: 60px;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .total-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            padding-top: 10px;
+        }
+
+        .total-section .total-label {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .total-section .total-price {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .payment-method-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .payment-method-buttons button {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        /* Classes de Cores */
+        .btn-cash { background-color: #4CAF50; }
+        .btn-card { background-color: #2196F3; }
+        .btn-pix { background-color: #f44336; }
+
+        .btn-cash:hover { background-color: #43a047; }
+        .btn-card:hover { background-color: #1976d2; }
+        .btn-pix:hover { background-color: #d32f2f; }
+
+        .history-panel, .modal {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #f3f4f6;
-            z-index: 1000;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .fullscreen-slide {
-            width: 90%;
-            max-width: 1200px;
-            min-height: 80vh;
+            background-color: var(--background-color);
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 10;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 4rem;
-            text-align: center;
-            border-radius: 1.5rem;
-            transition: transform 0.5s ease-in-out;
-            transform-origin: center center;
-            overflow-y: auto; /* Permite a rolagem se o conteúdo for muito longo */
         }
 
-        /* Classe para esconder os controles */
-        .controls-hidden {
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease-out;
+        .history-panel.active, .modal.active {
+            transform: translateX(0);
+        }
+
+        .history-panel .history-header, .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .history-panel .history-header h2, .modal-header h2 {
+            margin: 0;
+        }
+        
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .history-card {
+            background-color: var(--card-background);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .history-card .sale-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #777;
+            margin-bottom: 10px;
+        }
+
+        .history-card .item-list {
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+        
+        .history-card .item-list p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        .summary-card {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            margin-top: 20px;
+        }
+
+        .summary-card p {
+            margin: 5px 0;
+            font-size: 1.1em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .modal-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .modal-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .modal-input-group label {
+            font-weight: bold;
+        }
+
+        .modal-input-group input, .modal-input-group textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Media Queries para telas de tablet (horizontal) */
+        @media (min-width: 768px) and (orientation: landscape) {
+            .main-container {
+                flex-direction: row; /* Layout em duas colunas em tablets horizontais */
+            }
+            .left-panel {
+                flex: 2; /* Deixa o painel de valores maior */
+            }
+            .right-panel {
+                flex: 1.5; /* Mantém o painel de carrinho um pouco menor */
+            }
+        }
+        
+        /* Media Queries para telas de tablet (vertical) e smartphones */
+        @media (max-width: 767px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .header-buttons {
+                margin-top: 10px;
+            }
+            .main-container {
+                flex-direction: column;
+            }
+            .left-panel, .right-panel {
+                width: 100%;
+                flex: none;
+            }
+            .right-panel {
+                height: 50vh; /* Garante que o painel de carrinho seja sempre visível */
+            }
+            .value-grid {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            }
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<body>
 
-    <!-- Container principal para o aplicativo -->
-    <div id="mainContainer" class="bg-white rounded-3xl shadow-xl p-8 max-w-4xl w-full">
-        <h1 class="text-4xl font-bold text-center mb-6 text-gray-800">Gerador de Slides com IA</h1>
-        <p class="text-center text-gray-600 mb-8">Digite um tópico abaixo e a IA criará o conteúdo de slides minimalistas para você.</p>
-
-        <!-- Formulário de entrada -->
-        <div class="mb-6">
-            <textarea
-                id="promptInput"
-                class="w-full h-32 p-4 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 resize-none text-gray-800"
-                placeholder="Ex: 'Introdução à Inteligência Artificial', 'A importância da energia solar'..."
-            ></textarea>
-        </div>
-
-        <!-- Botão e área de status -->
-        <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
-            <button
-                id="generateBtn"
-                class="btn-primary bg-blue-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-                Gerar Slides
-            </button>
-            <div id="statusMessage" class="flex items-center text-gray-500 font-medium">
-                <!-- Ícone de carregamento -->
-                <svg id="loadingIcon" class="hidden animate-spin h-5 w-5 mr-3 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span id="statusText"></span>
-            </div>
-        </div>
-
-        <!-- Botões de ação (Tela Cheia) -->
-        <div id="actionButtons" class="flex items-center justify-center mt-6">
-            <button
-                id="fullscreenBtn"
-                class="btn-primary bg-purple-600 text-white font-semibold py-2 px-6 rounded-full shadow-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 hidden"
-            >
-                Modo de Tela Cheia
-            </button>
-        </div>
-
-        <!-- Área de exibição dos slides -->
-        <div id="slidesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-            <!-- Slides gerados serão inseridos aqui -->
+    <div class="header">
+        <h1>Caixa M&A</h1>
+        <div class="header-buttons">
+            <button class="btn-header" onclick="showModal('start')">Início de Turno</button>
+            <button class="btn-header" onclick="showModal('sangria')">Sangria</button>
+            <button class="btn-header" onclick="showModal('suplemento')">Suplemento</button>
+            <button class="btn-header" onclick="toggleHistoryPanel()">Histórico</button>
+            <button class="btn-header" onclick="showModal('end')">Fim de Turno</button>
         </div>
     </div>
 
-    <!-- Container para a visualização em tela cheia -->
-    <div id="fullscreen-view">
-        <div class="relative w-full h-full flex items-center justify-center">
-            <!-- Container para os botões de navegação, que irão aparecer e desaparecer -->
-            <div id="fullscreenControls" class="absolute inset-0 flex items-center justify-between transition-opacity duration-500">
-                <!-- Botões de navegação -->
-                <button id="prevBtn" class="absolute left-4 z-10 text-white bg-gray-800 rounded-full p-2 hover:bg-gray-700 focus:outline-none">
-                    <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
-                <button id="nextBtn" class="absolute right-4 z-10 text-white bg-gray-800 rounded-full p-2 hover:bg-gray-700 focus:outline-none">
-                    <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </button>
-                <button id="exitFullscreenBtn" class="absolute top-4 right-4 z-20 text-white bg-gray-800 rounded-full p-2 hover:bg-gray-700 focus:outline-none">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-                <span id="slideCounter" class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white bg-gray-800 rounded-full px-4 py-1"></span>
+    <div class="main-container">
+        
+        <div class="left-panel">
+            <div class="input-bar">
+                <input type="number" id="manualInput" placeholder="Inserir valor (ex: 7,50)">
+                <button onclick="addManualValue()">Adicionar</button>
             </div>
-            <div id="slides-carousel" class="relative w-full h-full flex items-center justify-center overflow-hidden">
-                <!-- Slides serão adicionados aqui dinamicamente -->
+            
+            <div class="value-grid" id="valueGrid">
+                </div>
+        </div>
+
+        <div class="right-panel">
+            <h2>Carrinho de Vendas</h2>
+            <div class="sale-list" id="saleList">
+                </div>
+            
+            <div class="total-section">
+                <span class="total-label">Total a Pagar:</span>
+                <span class="total-price" id="totalPrice">R$ 0,00</span>
+            </div>
+            
+            <div class="payment-method-buttons">
+                <button class="btn-cash" onclick="finishSale('Dinheiro')">Dinheiro</button>
+                <button class="btn-card" onclick="finishSale('Cartão')">Cartão</button>
+                <button class="btn-pix" onclick="finishSale('Pix')">Pix</button>
             </div>
         </div>
+    </div>
+
+    <div class="history-panel" id="historyPanel">
+        <div class="history-header">
+            <h2>Histórico de Vendas</h2>
+            <button class="btn-header" onclick="toggleHistoryPanel()">Fechar</button>
+        </div>
+        <div class="history-list" id="historyList">
+            </div>
+        <div id="summaryCard" class="summary-card" style="display: none;">
+            </div>
+    </div>
+
+    <div id="modalContainer" class="modal">
+        <div class="modal-header">
+            <h2 id="modalTitle"></h2>
+            <button class="btn-header" onclick="hideModal()">X</button>
+        </div>
+        <div id="modalContent" class="modal-content">
+            </div>
+        <div id="modalButtons" class="modal-buttons">
+            </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Seletores para os elementos do DOM
-            const promptInput = document.getElementById('promptInput');
-            const generateBtn = document.getElementById('generateBtn');
-            const statusMessage = document.getElementById('statusMessage');
-            const loadingIcon = document.getElementById('loadingIcon');
-            const statusText = document.getElementById('statusText');
-            const slidesContainer = document.getElementById('slidesContainer');
-            const fullscreenBtn = document.getElementById('fullscreenBtn');
-            const exitFullscreenBtn = document.getElementById('exitFullscreenBtn');
-            const fullscreenView = document.getElementById('fullscreen-view');
-            const slidesCarousel = document.getElementById('slides-carousel');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const slideCounter = document.getElementById('slideCounter');
-            const fullscreenControls = document.getElementById('fullscreenControls');
+        const predefinedValues = [2, 5, 10, 20, 50, 100, 150, 200];
+        const ACCESS_PASSWORD = '2178';
+        let currentSale = [];
+        let dailySales = JSON.parse(localStorage.getItem('dailySales')) || {
+            sales: [],
+            total: { Dinheiro: 0, Cartão: 0, Pix: 0 },
+            transactions: [],
+            started: false
+        };
 
-            // Sua chave de API real foi inserida aqui.
-            const API_KEY = "AIzaSyAjtMB4WF3FGFw9JHYDbbA7TaCGecO-Ync";
+        const valueGrid = document.getElementById('valueGrid');
+        const saleList = document.getElementById('saleList');
+        const totalPriceEl = document.getElementById('totalPrice');
+        const manualInput = document.getElementById('manualInput');
+        const historyPanel = document.getElementById('historyPanel');
+        const historyList = document.getElementById('historyList');
+        const summaryCard = document.getElementById('summaryCard');
+        const modalContainer = document.getElementById('modalContainer');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        const modalButtons = document.getElementById('modalButtons');
+
+        function formatCurrency(value) {
+            return `R$ ${value.toFixed(2).replace('.', ',')}`;
+        }
+
+        function renderValues() {
+            valueGrid.innerHTML = '';
+            predefinedValues.forEach(value => {
+                const card = document.createElement('div');
+                card.className = 'value-card';
+                card.innerHTML = `<span class="price">${formatCurrency(value)}</span>`;
+                card.onclick = () => addToSale({ id: Date.now() + Math.random(), value: value });
+                valueGrid.appendChild(card);
+            });
+        }
+
+        function addToSale(item) {
+            if (!dailySales.started) {
+                alert('Inicie o turno para começar as vendas.');
+                return;
+            }
+            currentSale.push({ ...item });
+            renderSaleList();
+        }
+
+        function addManualValue() {
+            const manualValue = parseFloat(manualInput.value.replace(',', '.'));
+            if (!isNaN(manualValue) && manualValue > 0) {
+                addToSale({ id: Date.now() + Math.random(), value: manualValue });
+                manualInput.value = '';
+            } else {
+                alert('Por favor, insira um valor válido.');
+            }
+        }
+        
+        function renderSaleList() {
+            saleList.innerHTML = '';
+            let total = 0;
+            currentSale.forEach((item, index) => {
+                total += item.value;
+                const li = document.createElement('div');
+                li.className = 'sale-item';
+                li.innerHTML = `
+                    <div class="item-info">
+                        <h4>Valor Adicionado</h4>
+                        <p>${formatCurrency(item.value)}</p>
+                    </div>
+                    <div class="item-actions">
+                        <span class="item-price">${formatCurrency(item.value)}</span>
+                        <button onclick="removeFromSale(${index})">x</button>
+                    </div>
+                `;
+                saleList.appendChild(li);
+            });
+            totalPriceEl.textContent = formatCurrency(total);
+        }
+
+        function removeFromSale(index) {
+            currentSale.splice(index, 1);
+            renderSaleList();
+        }
+        
+        function finishSale(paymentMethod) {
+            if (!dailySales.started) {
+                alert('Inicie o turno para começar as vendas.');
+                return;
+            }
+
+            if (currentSale.length === 0) {
+                alert('O carrinho está vazio.');
+                return;
+            }
+
+            const totalSale = currentSale.reduce((acc, item) => acc + item.value, 0);
+            const newSale = {
+                id: Date.now(),
+                date: new Date().toLocaleString('pt-BR'),
+                items: [...currentSale],
+                total: totalSale,
+                type: 'Venda',
+                payment: paymentMethod
+            };
             
-            let slideData = []; // Armazena o conteúdo gerado
-            let currentSlideIndex = 0;
-            let controlsTimeout; // Variável para controlar o temporizador
-
-            // Temas de cores para os slides
-            const colorThemes = [
-                { bg: 'bg-blue-100', text: 'text-blue-900', border: 'border-blue-200' },
-                { bg: 'bg-green-100', text: 'text-green-900', border: 'border-green-200' },
-                { bg: 'bg-yellow-100', text: 'text-yellow-900', border: 'border-yellow-200' },
-                { bg: 'bg-purple-100', text: 'text-purple-900', border: 'border-purple-200' },
-                { bg: 'bg-red-100', text: 'text-red-900', border: 'border-red-200' }
-            ];
+            dailySales.sales.unshift(newSale);
+            dailySales.total[paymentMethod] += totalSale;
             
-            /**
-             * Função assíncrona para gerar e exibir os slides, chamando a API diretamente.
-             */
-            const generateSlides = async () => {
-                const prompt = promptInput.value.trim();
+            localStorage.setItem('dailySales', JSON.stringify(dailySales));
+            
+            alert(`Venda de ${formatCurrency(totalSale)} finalizada com sucesso via ${paymentMethod}!`);
+            clearSale();
+        }
 
-                if (!prompt) {
-                    statusText.textContent = "Por favor, digite um tópico para gerar os slides.";
+        function clearSale() {
+            currentSale = [];
+            renderSaleList();
+        }
+
+        function showModal(type) {
+            if (type === 'end') {
+                const password = prompt('Por favor, insira a senha para finalizar o turno:');
+                if (password !== ACCESS_PASSWORD) {
+                    alert('Senha incorreta.');
                     return;
                 }
-
-                slidesContainer.innerHTML = '';
-                generateBtn.disabled = true;
-                generateBtn.textContent = 'Gerando...';
-                loadingIcon.classList.remove('hidden');
-                statusText.textContent = 'Aguarde, a IA está trabalhando...';
-                fullscreenBtn.classList.add('hidden');
-                slideData = []; // Limpa os dados de slides anteriores
-
-                try {
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
-                    const textPayload = {
-                        contents: [{
-                            parts: [
-                                { text: `Crie o conteúdo de slides minimalistas e menos detalhados com base no seguinte tópico: "${prompt}". Para cada slide, forneça um título e 1 a 2 pontos-chave. Separe cada slide com duas quebras de linha. Responda apenas com o texto, sem formatação extra como asteriscos ou cabeçalhos.` }
-                            ]
-                        }]
-                    };
-
-                    // Gera o texto dos slides
-                    const textResponse = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(textPayload)
-                    });
-
-                    if (!textResponse.ok) {
-                        throw new Error(`Erro ao gerar o texto dos slides.`);
-                    }
-
-                    const textResult = await textResponse.json();
-                    const responseText = textResult.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                    if (!responseText) {
-                        statusText.textContent = 'A API não retornou conteúdo de texto. Tente um tópico diferente.';
-                        return;
-                    }
-
-                    const cleanedText = responseText.replace(/\*/g, '').trim();
-                    const slideContents = cleanedText.split('\n\n').filter(p => p.trim() !== '');
-
-                    if (slideContents.length === 0) {
-                        statusText.textContent = 'Nenhum slide foi gerado. Tente um tópico diferente.';
-                        return;
-                    }
-                    
-                    statusText.textContent = 'Texto gerado, agora exibindo os slides...';
-                    
-                    // Exibe os slides
-                    slideContents.forEach((content, index) => {
-                        const lines = content.split('\n');
-                        const title = lines[0] || `Slide ${index + 1}`;
-                        const body = lines.slice(1).join('\n');
-                        const theme = colorThemes[index % colorThemes.length];
-                        
-                        slideData.push({ title, body, theme });
-
-                        const slideElement = document.createElement('div');
-                        slideElement.className = `bg-gray-50 border border-gray-200 rounded-xl shadow-sm p-6 flex flex-col justify-between presentation-slide ${theme.bg} ${theme.text}`;
-                        slideElement.innerHTML = `
-                            <div class="mb-4 w-full h-full flex flex-col items-center justify-center text-center">
-                                <h3 class="text-3xl font-bold mb-4">${title}</h3>
-                                <div class="text-xl leading-relaxed whitespace-pre-wrap">${body}</div>
-                            </div>
-                        `;
-                        slidesContainer.appendChild(slideElement);
-                    });
-                    
-                    statusText.textContent = 'Slides gerados com sucesso!';
-                    fullscreenBtn.classList.remove('hidden');
-
-                } catch (error) {
-                    console.error('Erro na requisição:', error);
-                    statusText.textContent = `Erro: ${error.message}`;
-                    slidesContainer.innerHTML = `<div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert"><p class="font-bold">Erro</p><p>${error.message}</p></div>`;
-                } finally {
-                    generateBtn.disabled = false;
-                    generateBtn.textContent = 'Gerar Slides';
-                    loadingIcon.classList.add('hidden');
+                if (!dailySales.started) {
+                    alert('Nenhum turno em andamento.');
+                    return;
                 }
-            };
+                renderShiftSummary();
+                modalTitle.textContent = 'Fim de Turno';
+                modalButtons.innerHTML = `<button class="btn-cancel" onclick="hideModal()">Cancelar</button><button class="btn-danger" onclick="endShift()">Finalizar Turno</button>`;
+                modalContainer.classList.add('active');
+                return;
+            }
 
-            // Função para esconder os controles
-            const hideControls = () => {
-                fullscreenControls.classList.add('controls-hidden');
-            };
+            modalContent.innerHTML = '';
+            modalButtons.innerHTML = '';
+            let title = '';
+            let actionButton = '';
 
-            // Função para mostrar os controles e iniciar o temporizador
-            const showControls = () => {
-                clearTimeout(controlsTimeout);
-                fullscreenControls.classList.remove('controls-hidden');
-                controlsTimeout = setTimeout(hideControls, 2000); // Esconde após 2 segundos de inatividade
-            };
-            
-            // Função para entrar no modo de tela cheia
-            const enterFullscreenMode = () => {
-                if (slideData.length === 0) return;
-                
-                slidesCarousel.innerHTML = '';
-                slideData.forEach((slide, index) => {
-                    const slideElement = document.createElement('div');
-                    slideElement.className = `fullscreen-slide absolute top-0 left-0 w-full p-20 flex-col items-center justify-center transition-all duration-500 ${slide.theme.bg} ${slide.theme.text}`;
-                    slideElement.style.display = 'none'; // Esconde todos os slides inicialmente
-                    
-                    slideElement.innerHTML = `
-                        <h2 class="text-6xl font-extrabold mb-8">${slide.title}</h2>
-                        <p class="text-3xl leading-relaxed whitespace-pre-wrap">${slide.body}</p>
+            switch (type) {
+                case 'start':
+                    if (dailySales.started) {
+                        alert('O turno já foi iniciado.');
+                        return;
+                    }
+                    title = 'Início de Turno';
+                    modalContent.innerHTML = `
+                        <div class="modal-input-group">
+                            <label for="startValue">Valor Inicial (Fundo de Troco)</label>
+                            <input type="number" id="startValue" placeholder="Ex: 50,00">
+                        </div>
                     `;
-                    slidesCarousel.appendChild(slideElement);
-                });
-                
-                fullscreenView.style.display = 'flex';
-                currentSlideIndex = 0;
-                showCurrentSlide();
-                showControls(); // Exibe os controles e inicia o temporizador
-            };
-
-            // Função para mostrar o slide atual
-            const showCurrentSlide = () => {
-                const slides = slidesCarousel.querySelectorAll('.fullscreen-slide');
-                slides.forEach((slide, index) => {
-                    slide.style.display = (index === currentSlideIndex) ? 'flex' : 'none';
-                });
-                slideCounter.textContent = `${currentSlideIndex + 1} de ${slideData.length}`;
-                prevBtn.disabled = currentSlideIndex === 0;
-                nextBtn.disabled = currentSlideIndex === slideData.length - 1;
-            };
-
-            // Função para sair do modo de tela cheia
-            const exitFullscreenMode = () => {
-                fullscreenView.style.display = 'none';
-                clearTimeout(controlsTimeout); // Limpa o temporizador ao sair do modo
-            };
-
-            // Função para navegação entre slides
-            const handleNavigation = (direction) => {
-                if (direction === 'next' && currentSlideIndex < slideData.length - 1) {
-                    currentSlideIndex++;
-                } else if (direction === 'prev' && currentSlideIndex > 0) {
-                    currentSlideIndex--;
-                }
-                showCurrentSlide();
-            };
-
-            // Navegação por teclado
-            const handleKeyDown = (e) => {
-                if (fullscreenView.style.display === 'flex') {
-                    if (e.key === 'ArrowRight') {
-                        handleNavigation('next');
-                    } else if (e.key === 'ArrowLeft') {
-                        handleNavigation('prev');
+                    actionButton = `<button class="btn-cash" onclick="startShift()">Iniciar Turno</button>`;
+                    break;
+                case 'sangria':
+                    if (!dailySales.started) {
+                        alert('Inicie o turno para realizar sangrias.');
+                        return;
                     }
-                }
-            };
+                    title = 'Sangria (Retirada)';
+                    modalContent.innerHTML = `
+                        <div class="modal-input-group">
+                            <label for="sangriaName">Nome do Funcionário</label>
+                            <input type="text" id="sangriaName" placeholder="Seu nome" required>
+                        </div>
+                        <div class="modal-input-group">
+                            <label for="sangriaValue">Valor da Sangria</label>
+                            <input type="number" id="sangriaValue" placeholder="Ex: 100,00" required>
+                        </div>
+                        <div class="modal-input-group">
+                            <label for="sangriaNotes">Observações (opcional)</label>
+                            <textarea id="sangriaNotes" rows="3"></textarea>
+                        </div>
+                    `;
+                    actionButton = `<button class="btn-cash" onclick="addTransaction('Sangria')">Confirmar</button>`;
+                    break;
+                case 'suplemento':
+                    if (!dailySales.started) {
+                        alert('Inicie o turno para realizar suplementos.');
+                        return;
+                    }
+                    title = 'Suplemento (Reforço)';
+                    modalContent.innerHTML = `
+                        <div class="modal-input-group">
+                            <label for="suplementoValue">Valor do Suplemento</label>
+                            <input type="number" id="suplementoValue" placeholder="Ex: 50,00">
+                        </div>
+                        <div class="modal-input-group">
+                            <label for="suplementoNotes">Observações (opcional)</label>
+                            <textarea id="suplementoNotes" rows="3"></textarea>
+                        </div>
+                    `;
+                    actionButton = `<button class="btn-cash" onclick="addTransaction('Suplemento')">Confirmar</button>`;
+                    break;
+            }
 
-            // Escutadores de eventos para interações do usuário
-            generateBtn.addEventListener('click', generateSlides);
-            fullscreenBtn.addEventListener('click', enterFullscreenMode);
-            exitFullscreenBtn.addEventListener('click', exitFullscreenMode);
-            prevBtn.addEventListener('click', () => handleNavigation('prev'));
-            nextBtn.addEventListener('click', () => handleNavigation('next'));
-            document.addEventListener('keydown', handleKeyDown);
+            modalTitle.textContent = title;
+            modalButtons.innerHTML = `<button class="btn-cancel" onclick="hideModal()">Cancelar</button>${actionButton}`;
+            modalContainer.classList.add('active');
+        }
+
+        function hideModal() {
+            modalContainer.classList.remove('active');
+        }
+
+        function startShift() {
+            const startValue = parseFloat(document.getElementById('startValue').value.replace(',', '.'));
+            if (isNaN(startValue) || startValue < 0) {
+                alert('Por favor, insira um valor inicial válido.');
+                return;
+            }
+            dailySales = {
+                sales: [],
+                total: { Dinheiro: 0, Cartão: 0, Pix: 0 },
+                transactions: [],
+                started: true
+            };
+            addTransaction('Início de Turno', startValue);
+            localStorage.setItem('dailySales', JSON.stringify(dailySales));
+            hideModal();
+            alert('Turno iniciado com sucesso!');
+        }
+
+        function endShift() {
+            const confirmation = confirm('Tem certeza que deseja finalizar o turno? Isso encerrará o histórico do dia.');
+            if (confirmation) {
+                dailySales.transactions.push({
+                    type: 'Fim de Turno',
+                    value: 0,
+                    date: new Date().toLocaleString('pt-BR'),
+                    notes: ''
+                });
+                dailySales = {
+                    sales: [],
+                    total: { Dinheiro: 0, Cartão: 0, Pix: 0 },
+                    transactions: [],
+                    started: false
+                };
+                localStorage.setItem('dailySales', JSON.stringify(dailySales));
+                hideModal();
+                alert('Turno finalizado. O histórico do dia foi encerrado.');
+            }
+        }
+
+        function addTransaction(type, value = null) {
+            let transactionValue = value;
+            let notes = '';
+            let employeeName = '';
+
+            if (type === 'Sangria') {
+                employeeName = document.getElementById('sangriaName').value.trim();
+                transactionValue = parseFloat(document.getElementById('sangriaValue').value.replace(',', '.'));
+                notes = document.getElementById('sangriaNotes').value;
+                if (!employeeName) {
+                    alert('O nome do funcionário é obrigatório para a sangria.');
+                    return;
+                }
+            } else if (type === 'Suplemento') {
+                transactionValue = parseFloat(document.getElementById('suplementoValue').value.replace(',', '.'));
+                notes = document.getElementById('suplementoNotes').value;
+            }
             
-            // Adiciona um listener de movimento do mouse para mostrar os controles
-            fullscreenView.addEventListener('mousemove', showControls);
-            fullscreenView.addEventListener('touchmove', showControls);
+            if (type !== 'Início de Turno' && type !== 'Fim de Turno') {
+                if (isNaN(transactionValue) || transactionValue <= 0) {
+                    alert('Por favor, insira um valor válido.');
+                    return;
+                }
+            }
+            
+            dailySales.transactions.push({
+                type: type,
+                value: transactionValue,
+                date: new Date().toLocaleString('pt-BR'),
+                notes: notes,
+                employee: employeeName 
+            });
+            
+            localStorage.setItem('dailySales', JSON.stringify(dailySales));
+            hideModal();
+            alert(`${type} de ${formatCurrency(transactionValue || 0)} registrado com sucesso.`);
+        }
+        
+        function toggleHistoryPanel() {
+            const password = prompt('Por favor, insira a senha para acessar o histórico:');
+            if (password === ACCESS_PASSWORD) {
+                historyPanel.classList.toggle('active');
+                if (historyPanel.classList.contains('active')) {
+                    renderHistory();
+                }
+            } else {
+                alert('Senha incorreta.');
+            }
+        }
+        
+        function renderHistory() {
+            historyList.innerHTML = '';
+            
+            const allEvents = [...dailySales.sales, ...dailySales.transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (allEvents.length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; color: #777;">Nenhuma atividade registrada.</p>';
+                summaryCard.style.display = 'none';
+                return;
+            }
+
+            allEvents.forEach(event => {
+                const card = document.createElement('div');
+                card.className = 'history-card';
+                
+                let cardContent = '';
+                if (event.type === 'Venda') {
+                    const totalItems = event.items.reduce((acc, item) => acc + item.value, 0);
+                    cardContent = `
+                        <div class="sale-info">
+                            <span><strong>Venda #${event.id.toString().slice(-4)}</strong></span>
+                            <span>${event.date}</span>
+                        </div>
+                        <div class="item-list">
+                            <p><strong>Tipo:</strong> Venda (${event.payment})</p>
+                        </div>
+                        <p style="text-align: right; font-weight: bold; margin: 10px 0 0;">Total: ${formatCurrency(totalItems)}</p>
+                    `;
+                } else {
+                    cardContent = `
+                        <div class="sale-info">
+                            <span><strong>${event.type}</strong></span>
+                            <span>${event.date}</span>
+                        </div>
+                        <div class="item-list">
+                            <p><strong>Valor:</strong> ${formatCurrency(event.value)}</p>
+                            ${event.employee ? `<p><strong>Funcionário:</strong> ${event.employee}</p>` : ''}
+                            ${event.notes ? `<p><strong>Observações:</strong> ${event.notes}</p>` : ''}
+                        </div>
+                    `;
+                }
+                card.innerHTML = cardContent;
+                historyList.appendChild(card);
+            });
+            
+            renderShiftSummary();
+        }
+
+        function renderShiftSummary() {
+            const salesTotal = Object.values(dailySales.total).reduce((acc, val) => acc + val, 0);
+            const initialCash = dailySales.transactions.find(t => t.type === 'Início de Turno')?.value || 0;
+            const sangrias = dailySales.transactions.filter(t => t.type === 'Sangria').reduce((acc, t) => acc + t.value, 0);
+            const suplementos = dailySales.transactions.filter(t => t.type === 'Suplemento').reduce((acc, t) => acc + t.value, 0);
+            const totalCash = dailySales.total.Dinheiro + initialCash + suplementos - sangrias;
+
+            summaryCard.innerHTML = `
+                <h3>Resumo do Turno</h3>
+                <p><span>Total de Vendas:</span> <strong>${formatCurrency(salesTotal)}</strong></p>
+                <hr style="border: none; border-top: 1px dashed rgba(255,255,255,0.5);">
+                <p><span>Vendas Dinheiro:</span> <strong>${formatCurrency(dailySales.total.Dinheiro)}</strong></p>
+                <p><span>Vendas Cartão:</span> <strong>${formatCurrency(dailySales.total.Cartão)}</strong></p>
+                <p><span>Vendas Pix:</span> <strong>${formatCurrency(dailySales.total.Pix)}</strong></p>
+                <hr style="border: none; border-top: 1px dashed rgba(255,255,255,0.5);">
+                <p><span>Fundo de Troco Inicial:</span> <strong>${formatCurrency(initialCash)}</strong></p>
+                <p><span>Total Sangrias:</span> <strong>${formatCurrency(sangrias)}</strong></p>
+                <p><span>Total Suplementos:</span> <strong>${formatCurrency(suplementos)}</strong></p>
+                <hr style="border: none; border-top: 1px dashed rgba(255,255,255,0.5);">
+                <p><span><strong>Total em Caixa:</strong></span> <strong>${formatCurrency(totalCash)}</strong></p>
+            `;
+            summaryCard.style.display = 'block';
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            renderValues();
+            renderSaleList();
         });
     </script>
 </body>
