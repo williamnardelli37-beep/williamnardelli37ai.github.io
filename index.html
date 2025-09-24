@@ -28,8 +28,8 @@
             color: var(--font-color);
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .header {
@@ -41,6 +41,7 @@
             justify-content: space-between;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             flex-wrap: wrap;
+            z-index: 2; /* Garante que o cabeçalho esteja sempre no topo */
         }
 
         .header h1 {
@@ -64,6 +65,7 @@
             padding: 8px 12px;
             border-radius: 8px;
             transition: background-color 0.2s, transform 0.1s;
+            touch-action: manipulation;
         }
 
         .main-container {
@@ -115,6 +117,7 @@
             padding: 12px;
             border-radius: 8px;
             cursor: pointer;
+            touch-action: manipulation;
         }
 
         .value-grid {
@@ -139,6 +142,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            touch-action: manipulation;
         }
 
         .value-card:active {
@@ -199,6 +203,7 @@
             cursor: pointer;
             font-weight: bold;
             transition: background-color 0.2s;
+            touch-action: manipulation;
         }
 
         .item-price {
@@ -241,6 +246,7 @@
             color: #fff;
             cursor: pointer;
             transition: background-color 0.2s;
+            touch-action: manipulation;
         }
 
         /* Classes de Cores */
@@ -253,7 +259,7 @@
         .btn-pix:hover { background-color: #d32f2f; }
 
         .history-panel, .modal {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -361,10 +367,8 @@
             gap: 10px;
         }
 
-        /* --- Início das NOVAS Media Queries --- */
-
-        /* Para telas de smartphone */
-        @media (max-width: 767px) {
+        /* Para telas de smartphone e tablets em modo retrato */
+        @media (max-width: 1024px) {
             .header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -379,48 +383,27 @@
             .left-panel, .right-panel {
                 width: 100%;
                 flex: none;
-            }
-            .right-panel {
                 height: 50vh;
+                overflow-y: auto;
             }
             .value-grid {
                 grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-                max-height: 40vh; /* Limita a altura em smartphones */
             }
         }
 
-        /* Para tablets em orientação vertical (como o iPad mini 2) */
-        @media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-            body {
-                overflow-y: auto;
-            }
-            .main-container {
-                flex-direction: column;
-                overflow-y: auto;
-            }
-            .left-panel, .right-panel {
-                flex: none;
-                width: 100%;
-                height: 50vh;
-                overflow-y: auto;
-            }
-        }
-
-        /* Para tablets maiores e desktops */
+        /* Para telas maiores (desktops e tablets em modo paisagem) */
         @media (min-width: 1025px) {
             body {
-                overflow: hidden;
+                overflow-y: hidden;
             }
             .main-container {
                 flex-direction: row;
             }
             .left-panel {
                 flex: 2;
-                overflow-y: hidden;
             }
             .right-panel {
                 flex: 1.5;
-                overflow-y: hidden;
             }
             .value-grid {
                 overflow-y: auto;
@@ -429,8 +412,6 @@
                 overflow-y: auto;
             }
         }
-
-        /* --- Fim das NOVAS Media Queries --- */
     </style>
 </head>
 <body>
@@ -438,11 +419,11 @@
     <div class="header">
         <h1>Caixa M&A</h1>
         <div class="header-buttons">
-            <button class="btn-header" onclick="showModal('start')">Início de Turno</button>
-            <button class="btn-header" onclick="showModal('sangria')">Sangria</button>
-            <button class="btn-header" onclick="showModal('suplemento')">Suplemento</button>
-            <button class="btn-header" onclick="toggleHistoryPanel()">Histórico</button>
-            <button class="btn-header" onclick="showModal('end')">Fim de Turno</button>
+            <button class="btn-header" id="startBtn">Início de Turno</button>
+            <button class="btn-header" id="sangriaBtn">Sangria</button>
+            <button class="btn-header" id="suplementoBtn">Suplemento</button>
+            <button class="btn-header" id="historyBtn">Histórico</button>
+            <button class="btn-header" id="endBtn">Fim de Turno</button>
         </div>
     </div>
 
@@ -451,17 +432,17 @@
         <div class="left-panel">
             <div class="input-bar">
                 <input type="number" id="manualInput" placeholder="Inserir valor (ex: 7,50)">
-                <button onclick="addManualValue()">Adicionar</button>
+                <button id="addManualBtn">Adicionar</button>
             </div>
             
             <div class="value-grid" id="valueGrid">
-                </div>
+            </div>
         </div>
 
         <div class="right-panel">
             <h2>Carrinho de Vendas</h2>
             <div class="sale-list" id="saleList">
-                </div>
+            </div>
             
             <div class="total-section">
                 <span class="total-label">Total a Pagar:</span>
@@ -469,9 +450,9 @@
             </div>
             
             <div class="payment-method-buttons">
-                <button class="btn-cash" onclick="finishSale('Dinheiro')">Dinheiro</button>
-                <button class="btn-card" onclick="finishSale('Cartão')">Cartão</button>
-                <button class="btn-pix" onclick="finishSale('Pix')">Pix</button>
+                <button class="btn-cash" id="cashBtn">Dinheiro</button>
+                <button class="btn-card" id="cardBtn">Cartão</button>
+                <button class="btn-pix" id="pixBtn">Pix</button>
             </div>
         </div>
     </div>
@@ -479,23 +460,23 @@
     <div class="history-panel" id="historyPanel">
         <div class="history-header">
             <h2>Histórico de Vendas</h2>
-            <button class="btn-header" onclick="toggleHistoryPanel()">Fechar</button>
+            <button class="btn-header" id="closeHistoryBtn">Fechar</button>
         </div>
         <div class="history-list" id="historyList">
-            </div>
+        </div>
         <div id="summaryCard" class="summary-card" style="display: none;">
-            </div>
+        </div>
     </div>
 
     <div id="modalContainer" class="modal">
         <div class="modal-header">
             <h2 id="modalTitle"></h2>
-            <button class="btn-header" onclick="hideModal()">X</button>
+            <button class="btn-header" id="closeModalBtn">X</button>
         </div>
         <div id="modalContent" class="modal-content">
-            </div>
+        </div>
         <div id="modalButtons" class="modal-buttons">
-            </div>
+        </div>
     </div>
 
     <script>
@@ -531,7 +512,7 @@
                 const card = document.createElement('div');
                 card.className = 'value-card';
                 card.innerHTML = `<span class="price">${formatCurrency(value)}</span>`;
-                card.onclick = () => addToSale({ id: Date.now() + Math.random(), value: value });
+                card.addEventListener('click', () => addToSale({ id: Date.now() + Math.random(), value: value }));
                 valueGrid.appendChild(card);
             });
         }
@@ -569,12 +550,20 @@
                     </div>
                     <div class="item-actions">
                         <span class="item-price">${formatCurrency(item.value)}</span>
-                        <button onclick="removeFromSale(${index})">x</button>
+                        <button class="remove-btn" data-index="${index}">x</button>
                     </div>
                 `;
                 saleList.appendChild(li);
             });
             totalPriceEl.textContent = formatCurrency(total);
+
+            // Adiciona o event listener ao novo botão de remoção
+            document.querySelectorAll('.remove-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const index = e.target.getAttribute('data-index');
+                    removeFromSale(index);
+                });
+            });
         }
 
         function removeFromSale(index) {
@@ -630,7 +619,11 @@
                 }
                 renderShiftSummary();
                 modalTitle.textContent = 'Fim de Turno';
-                modalButtons.innerHTML = `<button class="btn-cancel" onclick="hideModal()">Cancelar</button><button class="btn-danger" onclick="endShift()">Finalizar Turno</button>`;
+                modalButtons.innerHTML = `<button class="btn-cancel" id="cancelEndBtn">Cancelar</button><button class="btn-danger" id="endShiftBtn">Finalizar Turno</button>`;
+                
+                document.getElementById('endShiftBtn').addEventListener('click', endShift);
+                document.getElementById('cancelEndBtn').addEventListener('click', hideModal);
+
                 modalContainer.classList.add('active');
                 return;
             }
@@ -653,7 +646,7 @@
                             <input type="number" id="startValue" placeholder="Ex: 50,00">
                         </div>
                     `;
-                    actionButton = `<button class="btn-cash" onclick="startShift()">Iniciar Turno</button>`;
+                    actionButton = `<button class="btn-cash" id="startShiftBtn">Iniciar Turno</button>`;
                     break;
                 case 'sangria':
                     if (!dailySales.started) {
@@ -675,7 +668,7 @@
                             <textarea id="sangriaNotes" rows="3"></textarea>
                         </div>
                     `;
-                    actionButton = `<button class="btn-cash" onclick="addTransaction('Sangria')">Confirmar</button>`;
+                    actionButton = `<button class="btn-cash" id="confirmSangriaBtn">Confirmar</button>`;
                     break;
                 case 'suplemento':
                     if (!dailySales.started) {
@@ -693,12 +686,25 @@
                             <textarea id="suplementoNotes" rows="3"></textarea>
                         </div>
                     `;
-                    actionButton = `<button class="btn-cash" onclick="addTransaction('Suplemento')">Confirmar</button>`;
+                    actionButton = `<button class="btn-cash" id="confirmSuplementoBtn">Confirmar</button>`;
                     break;
             }
 
             modalTitle.textContent = title;
-            modalButtons.innerHTML = `<button class="btn-cancel" onclick="hideModal()">Cancelar</button>${actionButton}`;
+            modalButtons.innerHTML = `<button class="btn-cancel" id="cancelModalBtn">Cancelar</button>${actionButton}`;
+            
+            // Adiciona listeners aos botões do modal
+            if (document.getElementById('startShiftBtn')) {
+                document.getElementById('startShiftBtn').addEventListener('click', startShift);
+            }
+            if (document.getElementById('confirmSangriaBtn')) {
+                document.getElementById('confirmSangriaBtn').addEventListener('click', () => addTransaction('Sangria'));
+            }
+            if (document.getElementById('confirmSuplementoBtn')) {
+                document.getElementById('confirmSuplementoBtn').addEventListener('click', () => addTransaction('Suplemento'));
+            }
+            document.getElementById('cancelModalBtn').addEventListener('click', hideModal);
+
             modalContainer.classList.add('active');
         }
 
@@ -866,10 +872,31 @@
             `;
             summaryCard.style.display = 'block';
         }
+
+        function setupEventListeners() {
+            // Header buttons
+            document.getElementById('startBtn').addEventListener('click', () => showModal('start'));
+            document.getElementById('sangriaBtn').addEventListener('click', () => showModal('sangria'));
+            document.getElementById('suplementoBtn').addEventListener('click', () => showModal('suplemento'));
+            document.getElementById('historyBtn').addEventListener('click', toggleHistoryPanel);
+            document.getElementById('endBtn').addEventListener('click', () => showModal('end'));
+            
+            // Other buttons
+            document.getElementById('addManualBtn').addEventListener('click', addManualValue);
+            document.getElementById('cashBtn').addEventListener('click', () => finishSale('Dinheiro'));
+            document.getElementById('cardBtn').addEventListener('click', () => finishSale('Cartão'));
+            document.getElementById('pixBtn').addEventListener('click', () => finishSale('Pix'));
+
+            // Modal buttons
+            document.getElementById('closeHistoryBtn').addEventListener('click', toggleHistoryPanel);
+            document.getElementById('closeModalBtn').addEventListener('click', hideModal);
+
+        }
         
         document.addEventListener('DOMContentLoaded', () => {
             renderValues();
             renderSaleList();
+            setupEventListeners();
         });
     </script>
 </body>
