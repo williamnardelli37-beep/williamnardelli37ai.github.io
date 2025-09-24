@@ -6,13 +6,7 @@
     <title>Caixa Profissional - Foco Tablet</title>
     <style>
         :root {
-            --primary-color: #790000; /* Verde-azulado */
-            --secondary-color: #ffc107; /* Amarelo */
-            --background-color: #e0f2f1; /* Verde claro */
-            --card-background: #fff;
-            --font-color: #000000;
-            --accent-color: #af4c4c; /* Verde */
-            --danger-color: #f43636; /* Vermelho */
+            /* As variáveis foram removidas para compatibilidade */
         }
 
         * {
@@ -24,8 +18,8 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--background-color);
-            color: var(--font-color);
+            background-color: #e0f2f1; /* Verde claro */
+            color: #000000;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -33,7 +27,7 @@
         }
 
         .header {
-            background-color: var(--primary-color);
+            background-color: #790000; /* Verde-azulado */
             color: #fff;
             padding: 15px;
             display: flex;
@@ -41,7 +35,7 @@
             justify-content: space-between;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             flex-wrap: wrap;
-            z-index: 2; /* Garante que o cabeçalho esteja sempre no topo */
+            z-index: 2;
         }
 
         .header h1 {
@@ -89,7 +83,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background-color: var(--card-background);
+            background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             padding: 15px;
@@ -111,7 +105,7 @@
         }
         
         .input-bar button {
-            background-color: var(--primary-color);
+            background-color: #790000;
             color: #fff;
             border: none;
             padding: 12px;
@@ -130,8 +124,8 @@
         }
 
         .value-card {
-            background-color: var(--card-background);
-            border: 2px solid var(--primary-color);
+            background-color: #fff;
+            border: 2px solid #790000;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             padding: 8px;
@@ -154,7 +148,7 @@
         .value-card .price {
             font-size: 1.5em;
             font-weight: bold;
-            color: var(--primary-color);
+            color: #790000;
             margin: 0;
         }
         
@@ -194,7 +188,7 @@
         }
 
         .item-actions button {
-            background-color: var(--danger-color);
+            background-color: #f43636;
             color: #fff;
             border: none;
             border-radius: 50%;
@@ -227,7 +221,7 @@
         .total-section .total-price {
             font-size: 2em;
             font-weight: bold;
-            color: var(--primary-color);
+            color: #790000;
         }
 
         .payment-method-buttons {
@@ -249,7 +243,6 @@
             touch-action: manipulation;
         }
 
-        /* Classes de Cores */
         .btn-cash { background-color: #4CAF50; }
         .btn-card { background-color: #2196F3; }
         .btn-pix { background-color: #f44336; }
@@ -264,7 +257,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--background-color);
+            background-color: #e0f2f1;
             transform: translateX(100%);
             transition: transform 0.3s ease-in-out;
             z-index: 10;
@@ -297,7 +290,7 @@
         }
 
         .history-card {
-            background-color: var(--card-background);
+            background-color: #fff;
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -322,7 +315,7 @@
         }
 
         .summary-card {
-            background-color: var(--primary-color);
+            background-color: #790000;
             color: #fff;
             padding: 20px;
             border-radius: 10px;
@@ -367,7 +360,6 @@
             gap: 10px;
         }
 
-        /* Para telas de smartphone e tablets em modo retrato */
         @media (max-width: 1024px) {
             .header {
                 flex-direction: column;
@@ -391,7 +383,6 @@
             }
         }
 
-        /* Para telas maiores (desktops e tablets em modo paisagem) */
         @media (min-width: 1025px) {
             body {
                 overflow-y: hidden;
@@ -428,7 +419,6 @@
     </div>
 
     <div class="main-container">
-        
         <div class="left-panel">
             <div class="input-bar">
                 <input type="number" id="manualInput" placeholder="Inserir valor (ex: 7,50)">
@@ -480,39 +470,41 @@
     </div>
 
     <script>
-        const predefinedValues = [2, 5, 10, 20, 50, 100, 150, 200];
-        const ACCESS_PASSWORD = '2178';
-        let currentSale = [];
-        let dailySales = JSON.parse(localStorage.getItem('dailySales')) || {
+        var predefinedValues = [2, 5, 10, 20, 50, 100, 150, 200];
+        var ACCESS_PASSWORD = '2178';
+        var currentSale = [];
+        var dailySales = JSON.parse(localStorage.getItem('dailySales')) || {
             sales: [],
             total: { Dinheiro: 0, Cartão: 0, Pix: 0 },
             transactions: [],
             started: false
         };
 
-        const valueGrid = document.getElementById('valueGrid');
-        const saleList = document.getElementById('saleList');
-        const totalPriceEl = document.getElementById('totalPrice');
-        const manualInput = document.getElementById('manualInput');
-        const historyPanel = document.getElementById('historyPanel');
-        const historyList = document.getElementById('historyList');
-        const summaryCard = document.getElementById('summaryCard');
-        const modalContainer = document.getElementById('modalContainer');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalContent = document.getElementById('modalContent');
-        const modalButtons = document.getElementById('modalButtons');
+        var valueGrid = document.getElementById('valueGrid');
+        var saleList = document.getElementById('saleList');
+        var totalPriceEl = document.getElementById('totalPrice');
+        var manualInput = document.getElementById('manualInput');
+        var historyPanel = document.getElementById('historyPanel');
+        var historyList = document.getElementById('historyList');
+        var summaryCard = document.getElementById('summaryCard');
+        var modalContainer = document.getElementById('modalContainer');
+        var modalTitle = document.getElementById('modalTitle');
+        var modalContent = document.getElementById('modalContent');
+        var modalButtons = document.getElementById('modalButtons');
 
         function formatCurrency(value) {
-            return `R$ ${value.toFixed(2).replace('.', ',')}`;
+            return "R$ " + value.toFixed(2).replace('.', ',');
         }
 
         function renderValues() {
             valueGrid.innerHTML = '';
-            predefinedValues.forEach(value => {
-                const card = document.createElement('div');
+            predefinedValues.forEach(function(value) {
+                var card = document.createElement('div');
                 card.className = 'value-card';
-                card.innerHTML = `<span class="price">${formatCurrency(value)}</span>`;
-                card.addEventListener('click', () => addToSale({ id: Date.now() + Math.random(), value: value }));
+                card.innerHTML = '<span class="price">' + formatCurrency(value) + '</span>';
+                card.addEventListener('click', function() {
+                    addToSale({ id: Date.now() + Math.random(), value: value });
+                });
                 valueGrid.appendChild(card);
             });
         }
@@ -522,12 +514,12 @@
                 alert('Inicie o turno para começar as vendas.');
                 return;
             }
-            currentSale.push({ ...item });
+            currentSale.push(item);
             renderSaleList();
         }
 
         function addManualValue() {
-            const manualValue = parseFloat(manualInput.value.replace(',', '.'));
+            var manualValue = parseFloat(manualInput.value.replace(',', '.'));
             if (!isNaN(manualValue) && manualValue > 0) {
                 addToSale({ id: Date.now() + Math.random(), value: manualValue });
                 manualInput.value = '';
@@ -538,10 +530,10 @@
         
         function renderSaleList() {
             saleList.innerHTML = '';
-            let total = 0;
-            currentSale.forEach((item, index) => {
+            var total = 0;
+            currentSale.forEach(function(item, index) {
                 total += item.value;
-                const li = document.createElement('div');
+                var li = document.createElement('div');
                 li.className = 'sale-item';
                 li.innerHTML = `
                     <div class="item-info">
@@ -557,13 +549,13 @@
             });
             totalPriceEl.textContent = formatCurrency(total);
 
-            // Adiciona o event listener ao novo botão de remoção
-            document.querySelectorAll('.remove-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const index = e.target.getAttribute('data-index');
+            var removeButtons = document.querySelectorAll('.remove-btn');
+            for (var i = 0; i < removeButtons.length; i++) {
+                removeButtons[i].addEventListener('click', function(e) {
+                    var index = e.target.getAttribute('data-index');
                     removeFromSale(index);
                 });
-            });
+            }
         }
 
         function removeFromSale(index) {
@@ -582,11 +574,11 @@
                 return;
             }
 
-            const totalSale = currentSale.reduce((acc, item) => acc + item.value, 0);
-            const newSale = {
+            var totalSale = currentSale.reduce(function(acc, item) { return acc + item.value; }, 0);
+            var newSale = {
                 id: Date.now(),
                 date: new Date().toLocaleString('pt-BR'),
-                items: [...currentSale],
+                items: currentSale.slice(),
                 total: totalSale,
                 type: 'Venda',
                 payment: paymentMethod
@@ -597,7 +589,7 @@
             
             localStorage.setItem('dailySales', JSON.stringify(dailySales));
             
-            alert(`Venda de ${formatCurrency(totalSale)} finalizada com sucesso via ${paymentMethod}!`);
+            alert('Venda de ' + formatCurrency(totalSale) + ' finalizada com sucesso via ' + paymentMethod + '!');
             clearSale();
         }
 
@@ -608,7 +600,7 @@
 
         function showModal(type) {
             if (type === 'end') {
-                const password = prompt('Por favor, insira a senha para finalizar o turno:');
+                var password = prompt('Por favor, insira a senha para finalizar o turno:');
                 if (password !== ACCESS_PASSWORD) {
                     alert('Senha incorreta.');
                     return;
@@ -619,7 +611,7 @@
                 }
                 renderShiftSummary();
                 modalTitle.textContent = 'Fim de Turno';
-                modalButtons.innerHTML = `<button class="btn-cancel" id="cancelEndBtn">Cancelar</button><button class="btn-danger" id="endShiftBtn">Finalizar Turno</button>`;
+                modalButtons.innerHTML = '<button class="btn-cancel" id="cancelEndBtn">Cancelar</button><button class="btn-danger" id="endShiftBtn">Finalizar Turno</button>';
                 
                 document.getElementById('endShiftBtn').addEventListener('click', endShift);
                 document.getElementById('cancelEndBtn').addEventListener('click', hideModal);
@@ -630,8 +622,8 @@
 
             modalContent.innerHTML = '';
             modalButtons.innerHTML = '';
-            let title = '';
-            let actionButton = '';
+            var title = '';
+            var actionButton = '';
 
             switch (type) {
                 case 'start':
@@ -646,7 +638,7 @@
                             <input type="number" id="startValue" placeholder="Ex: 50,00">
                         </div>
                     `;
-                    actionButton = `<button class="btn-cash" id="startShiftBtn">Iniciar Turno</button>`;
+                    actionButton = '<button class="btn-cash" id="startShiftBtn">Iniciar Turno</button>';
                     break;
                 case 'sangria':
                     if (!dailySales.started) {
@@ -668,7 +660,7 @@
                             <textarea id="sangriaNotes" rows="3"></textarea>
                         </div>
                     `;
-                    actionButton = `<button class="btn-cash" id="confirmSangriaBtn">Confirmar</button>`;
+                    actionButton = '<button class="btn-cash" id="confirmSangriaBtn">Confirmar</button>';
                     break;
                 case 'suplemento':
                     if (!dailySales.started) {
@@ -686,22 +678,21 @@
                             <textarea id="suplementoNotes" rows="3"></textarea>
                         </div>
                     `;
-                    actionButton = `<button class="btn-cash" id="confirmSuplementoBtn">Confirmar</button>`;
+                    actionButton = '<button class="btn-cash" id="confirmSuplementoBtn">Confirmar</button>';
                     break;
             }
 
             modalTitle.textContent = title;
-            modalButtons.innerHTML = `<button class="btn-cancel" id="cancelModalBtn">Cancelar</button>${actionButton}`;
+            modalButtons.innerHTML = '<button class="btn-cancel" id="cancelModalBtn">Cancelar</button>' + actionButton;
             
-            // Adiciona listeners aos botões do modal
             if (document.getElementById('startShiftBtn')) {
                 document.getElementById('startShiftBtn').addEventListener('click', startShift);
             }
             if (document.getElementById('confirmSangriaBtn')) {
-                document.getElementById('confirmSangriaBtn').addEventListener('click', () => addTransaction('Sangria'));
+                document.getElementById('confirmSangriaBtn').addEventListener('click', function() { addTransaction('Sangria'); });
             }
             if (document.getElementById('confirmSuplementoBtn')) {
-                document.getElementById('confirmSuplementoBtn').addEventListener('click', () => addTransaction('Suplemento'));
+                document.getElementById('confirmSuplementoBtn').addEventListener('click', function() { addTransaction('Suplemento'); });
             }
             document.getElementById('cancelModalBtn').addEventListener('click', hideModal);
 
@@ -713,7 +704,7 @@
         }
 
         function startShift() {
-            const startValue = parseFloat(document.getElementById('startValue').value.replace(',', '.'));
+            var startValue = parseFloat(document.getElementById('startValue').value.replace(',', '.'));
             if (isNaN(startValue) || startValue < 0) {
                 alert('Por favor, insira um valor inicial válido.');
                 return;
@@ -731,7 +722,7 @@
         }
 
         function endShift() {
-            const confirmation = confirm('Tem certeza que deseja finalizar o turno? Isso encerrará o histórico do dia.');
+            var confirmation = confirm('Tem certeza que deseja finalizar o turno? Isso encerrará o histórico do dia.');
             if (confirmation) {
                 dailySales.transactions.push({
                     type: 'Fim de Turno',
@@ -751,10 +742,10 @@
             }
         }
 
-        function addTransaction(type, value = null) {
-            let transactionValue = value;
-            let notes = '';
-            let employeeName = '';
+        function addTransaction(type, value) {
+            var transactionValue = value;
+            var notes = '';
+            var employeeName = '';
 
             if (type === 'Sangria') {
                 employeeName = document.getElementById('sangriaName').value.trim();
@@ -786,11 +777,11 @@
             
             localStorage.setItem('dailySales', JSON.stringify(dailySales));
             hideModal();
-            alert(`${type} de ${formatCurrency(transactionValue || 0)} registrado com sucesso.`);
+            alert(type + ' de ' + formatCurrency(transactionValue || 0) + ' registrado com sucesso.');
         }
         
         function toggleHistoryPanel() {
-            const password = prompt('Por favor, insira a senha para acessar o histórico:');
+            var password = prompt('Por favor, insira a senha para acessar o histórico:');
             if (password === ACCESS_PASSWORD) {
                 historyPanel.classList.toggle('active');
                 if (historyPanel.classList.contains('active')) {
@@ -804,7 +795,7 @@
         function renderHistory() {
             historyList.innerHTML = '';
             
-            const allEvents = [...dailySales.sales, ...dailySales.transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+            var allEvents = dailySales.sales.concat(dailySales.transactions).sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
 
             if (allEvents.length === 0) {
                 historyList.innerHTML = '<p style="text-align: center; color: #777;">Nenhuma atividade registrada.</p>';
@@ -812,13 +803,13 @@
                 return;
             }
 
-            allEvents.forEach(event => {
-                const card = document.createElement('div');
+            allEvents.forEach(function(event) {
+                var card = document.createElement('div');
                 card.className = 'history-card';
                 
-                let cardContent = '';
+                var cardContent = '';
                 if (event.type === 'Venda') {
-                    const totalItems = event.items.reduce((acc, item) => acc + item.value, 0);
+                    var totalItems = event.items.reduce(function(acc, item) { return acc + item.value; }, 0);
                     cardContent = `
                         <div class="sale-info">
                             <span><strong>Venda #${event.id.toString().slice(-4)}</strong></span>
@@ -837,8 +828,8 @@
                         </div>
                         <div class="item-list">
                             <p><strong>Valor:</strong> ${formatCurrency(event.value)}</p>
-                            ${event.employee ? `<p><strong>Funcionário:</strong> ${event.employee}</p>` : ''}
-                            ${event.notes ? `<p><strong>Observações:</strong> ${event.notes}</p>` : ''}
+                            ${event.employee ? '<p><strong>Funcionário:</strong> ' + event.employee + '</p>' : ''}
+                            ${event.notes ? '<p><strong>Observações:</strong> ' + event.notes + '</p>' : ''}
                         </div>
                     `;
                 }
@@ -850,11 +841,15 @@
         }
 
         function renderShiftSummary() {
-            const salesTotal = Object.values(dailySales.total).reduce((acc, val) => acc + val, 0);
-            const initialCash = dailySales.transactions.find(t => t.type === 'Início de Turno')?.value || 0;
-            const sangrias = dailySales.transactions.filter(t => t.type === 'Sangria').reduce((acc, t) => acc + t.value, 0);
-            const suplementos = dailySales.transactions.filter(t => t.type === 'Suplemento').reduce((acc, t) => acc + t.value, 0);
-            const totalCash = dailySales.total.Dinheiro + initialCash + suplementos - sangrias;
+            var salesTotal = Object.values(dailySales.total).reduce(function(acc, val) { return acc + val; }, 0);
+            var initialCash = 0;
+            var initialTransaction = dailySales.transactions.find(function(t) { return t.type === 'Início de Turno'; });
+            if (initialTransaction) {
+                initialCash = initialTransaction.value;
+            }
+            var sangrias = dailySales.transactions.filter(function(t) { return t.type === 'Sangria'; }).reduce(function(acc, t) { return acc + t.value; }, 0);
+            var suplementos = dailySales.transactions.filter(function(t) { return t.type === 'Suplemento'; }).reduce(function(acc, t) { return acc + t.value; }, 0);
+            var totalCash = dailySales.total.Dinheiro + initialCash + suplementos - sangrias;
 
             summaryCard.innerHTML = `
                 <h3>Resumo do Turno</h3>
@@ -874,26 +869,22 @@
         }
 
         function setupEventListeners() {
-            // Header buttons
-            document.getElementById('startBtn').addEventListener('click', () => showModal('start'));
-            document.getElementById('sangriaBtn').addEventListener('click', () => showModal('sangria'));
-            document.getElementById('suplementoBtn').addEventListener('click', () => showModal('suplemento'));
+            document.getElementById('startBtn').addEventListener('click', function() { showModal('start'); });
+            document.getElementById('sangriaBtn').addEventListener('click', function() { showModal('sangria'); });
+            document.getElementById('suplementoBtn').addEventListener('click', function() { showModal('suplemento'); });
             document.getElementById('historyBtn').addEventListener('click', toggleHistoryPanel);
-            document.getElementById('endBtn').addEventListener('click', () => showModal('end'));
+            document.getElementById('endBtn').addEventListener('click', function() { showModal('end'); });
             
-            // Other buttons
             document.getElementById('addManualBtn').addEventListener('click', addManualValue);
-            document.getElementById('cashBtn').addEventListener('click', () => finishSale('Dinheiro'));
-            document.getElementById('cardBtn').addEventListener('click', () => finishSale('Cartão'));
-            document.getElementById('pixBtn').addEventListener('click', () => finishSale('Pix'));
+            document.getElementById('cashBtn').addEventListener('click', function() { finishSale('Dinheiro'); });
+            document.getElementById('cardBtn').addEventListener('click', function() { finishSale('Cartão'); });
+            document.getElementById('pixBtn').addEventListener('click', function() { finishSale('Pix'); });
 
-            // Modal buttons
             document.getElementById('closeHistoryBtn').addEventListener('click', toggleHistoryPanel);
             document.getElementById('closeModalBtn').addEventListener('click', hideModal);
-
         }
         
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', function() {
             renderValues();
             renderSaleList();
             setupEventListeners();
