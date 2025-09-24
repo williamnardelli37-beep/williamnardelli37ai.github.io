@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Caixa Profissional - Foco Tablet</title>
     <style>
-        :root {
-            /* As variáveis foram removidas para compatibilidade */
-        }
-
         * {
             box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -18,7 +14,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #e0f2f1; /* Verde claro */
+            background-color: #e0f2f1;
             color: #000000;
             display: flex;
             flex-direction: column;
@@ -27,7 +23,7 @@
         }
 
         .header {
-            background-color: #790000; /* Verde-azulado */
+            background-color: #790000;
             color: #fff;
             padding: 15px;
             display: flex;
@@ -410,11 +406,11 @@
     <div class="header">
         <h1>Caixa M&A</h1>
         <div class="header-buttons">
-            <button class="btn-header" id="startBtn">Início de Turno</button>
-            <button class="btn-header" id="sangriaBtn">Sangria</button>
-            <button class="btn-header" id="suplementoBtn">Suplemento</button>
-            <button class="btn-header" id="historyBtn">Histórico</button>
-            <button class="btn-header" id="endBtn">Fim de Turno</button>
+            <button class="btn-header" onclick="showModal('start')">Início de Turno</button>
+            <button class="btn-header" onclick="showModal('sangria')">Sangria</button>
+            <button class="btn-header" onclick="showModal('suplemento')">Suplemento</button>
+            <button class="btn-header" onclick="toggleHistoryPanel()">Histórico</button>
+            <button class="btn-header" onclick="showModal('end')">Fim de Turno</button>
         </div>
     </div>
 
@@ -422,7 +418,7 @@
         <div class="left-panel">
             <div class="input-bar">
                 <input type="number" id="manualInput" placeholder="Inserir valor (ex: 7,50)">
-                <button id="addManualBtn">Adicionar</button>
+                <button onclick="addManualValue()">Adicionar</button>
             </div>
             
             <div class="value-grid" id="valueGrid">
@@ -440,9 +436,9 @@
             </div>
             
             <div class="payment-method-buttons">
-                <button class="btn-cash" id="cashBtn">Dinheiro</button>
-                <button class="btn-card" id="cardBtn">Cartão</button>
-                <button class="btn-pix" id="pixBtn">Pix</button>
+                <button class="btn-cash" onclick="finishSale('Dinheiro')">Dinheiro</button>
+                <button class="btn-card" onclick="finishSale('Cartão')">Cartão</button>
+                <button class="btn-pix" onclick="finishSale('Pix')">Pix</button>
             </div>
         </div>
     </div>
@@ -450,7 +446,7 @@
     <div class="history-panel" id="historyPanel">
         <div class="history-header">
             <h2>Histórico de Vendas</h2>
-            <button class="btn-header" id="closeHistoryBtn">Fechar</button>
+            <button class="btn-header" onclick="toggleHistoryPanel()">Fechar</button>
         </div>
         <div class="history-list" id="historyList">
         </div>
@@ -461,7 +457,7 @@
     <div id="modalContainer" class="modal">
         <div class="modal-header">
             <h2 id="modalTitle"></h2>
-            <button class="btn-header" id="closeModalBtn">X</button>
+            <button class="btn-header" onclick="hideModal()">X</button>
         </div>
         <div id="modalContent" class="modal-content">
         </div>
@@ -502,9 +498,9 @@
                 var card = document.createElement('div');
                 card.className = 'value-card';
                 card.innerHTML = '<span class="price">' + formatCurrency(value) + '</span>';
-                card.addEventListener('click', function() {
+                card.onclick = function() {
                     addToSale({ id: Date.now() + Math.random(), value: value });
-                });
+                };
                 valueGrid.appendChild(card);
             });
         }
@@ -542,20 +538,12 @@
                     </div>
                     <div class="item-actions">
                         <span class="item-price">${formatCurrency(item.value)}</span>
-                        <button class="remove-btn" data-index="${index}">x</button>
+                        <button onclick="removeFromSale(${index})">x</button>
                     </div>
                 `;
                 saleList.appendChild(li);
             });
             totalPriceEl.textContent = formatCurrency(total);
-
-            var removeButtons = document.querySelectorAll('.remove-btn');
-            for (var i = 0; i < removeButtons.length; i++) {
-                removeButtons[i].addEventListener('click', function(e) {
-                    var index = e.target.getAttribute('data-index');
-                    removeFromSale(index);
-                });
-            }
         }
 
         function removeFromSale(index) {
@@ -611,11 +599,7 @@
                 }
                 renderShiftSummary();
                 modalTitle.textContent = 'Fim de Turno';
-                modalButtons.innerHTML = '<button class="btn-cancel" id="cancelEndBtn">Cancelar</button><button class="btn-danger" id="endShiftBtn">Finalizar Turno</button>';
-                
-                document.getElementById('endShiftBtn').addEventListener('click', endShift);
-                document.getElementById('cancelEndBtn').addEventListener('click', hideModal);
-
+                modalButtons.innerHTML = '<button class="btn-cancel" onclick="hideModal()">Cancelar</button><button class="btn-danger" onclick="endShift()">Finalizar Turno</button>';
                 modalContainer.classList.add('active');
                 return;
             }
@@ -638,7 +622,7 @@
                             <input type="number" id="startValue" placeholder="Ex: 50,00">
                         </div>
                     `;
-                    actionButton = '<button class="btn-cash" id="startShiftBtn">Iniciar Turno</button>';
+                    actionButton = '<button class="btn-cash" onclick="startShift()">Iniciar Turno</button>';
                     break;
                 case 'sangria':
                     if (!dailySales.started) {
@@ -660,7 +644,7 @@
                             <textarea id="sangriaNotes" rows="3"></textarea>
                         </div>
                     `;
-                    actionButton = '<button class="btn-cash" id="confirmSangriaBtn">Confirmar</button>';
+                    actionButton = '<button class="btn-cash" onclick="addTransaction(\'Sangria\')">Confirmar</button>';
                     break;
                 case 'suplemento':
                     if (!dailySales.started) {
@@ -678,24 +662,12 @@
                             <textarea id="suplementoNotes" rows="3"></textarea>
                         </div>
                     `;
-                    actionButton = '<button class="btn-cash" id="confirmSuplementoBtn">Confirmar</button>';
+                    actionButton = '<button class="btn-cash" onclick="addTransaction(\'Suplemento\')">Confirmar</button>';
                     break;
             }
 
             modalTitle.textContent = title;
-            modalButtons.innerHTML = '<button class="btn-cancel" id="cancelModalBtn">Cancelar</button>' + actionButton;
-            
-            if (document.getElementById('startShiftBtn')) {
-                document.getElementById('startShiftBtn').addEventListener('click', startShift);
-            }
-            if (document.getElementById('confirmSangriaBtn')) {
-                document.getElementById('confirmSangriaBtn').addEventListener('click', function() { addTransaction('Sangria'); });
-            }
-            if (document.getElementById('confirmSuplementoBtn')) {
-                document.getElementById('confirmSuplementoBtn').addEventListener('click', function() { addTransaction('Suplemento'); });
-            }
-            document.getElementById('cancelModalBtn').addEventListener('click', hideModal);
-
+            modalButtons.innerHTML = '<button class="btn-cancel" onclick="hideModal()">Cancelar</button>' + actionButton;
             modalContainer.classList.add('active');
         }
 
@@ -867,27 +839,10 @@
             `;
             summaryCard.style.display = 'block';
         }
-
-        function setupEventListeners() {
-            document.getElementById('startBtn').addEventListener('click', function() { showModal('start'); });
-            document.getElementById('sangriaBtn').addEventListener('click', function() { showModal('sangria'); });
-            document.getElementById('suplementoBtn').addEventListener('click', function() { showModal('suplemento'); });
-            document.getElementById('historyBtn').addEventListener('click', toggleHistoryPanel);
-            document.getElementById('endBtn').addEventListener('click', function() { showModal('end'); });
-            
-            document.getElementById('addManualBtn').addEventListener('click', addManualValue);
-            document.getElementById('cashBtn').addEventListener('click', function() { finishSale('Dinheiro'); });
-            document.getElementById('cardBtn').addEventListener('click', function() { finishSale('Cartão'); });
-            document.getElementById('pixBtn').addEventListener('click', function() { finishSale('Pix'); });
-
-            document.getElementById('closeHistoryBtn').addEventListener('click', toggleHistoryPanel);
-            document.getElementById('closeModalBtn').addEventListener('click', hideModal);
-        }
         
         document.addEventListener('DOMContentLoaded', function() {
             renderValues();
             renderSaleList();
-            setupEventListeners();
         });
     </script>
 </body>
