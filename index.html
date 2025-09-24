@@ -40,7 +40,7 @@
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            flex-wrap: wrap; /* Permite que os botões quebrem a linha em telas pequenas */
+            flex-wrap: wrap;
         }
 
         .header h1 {
@@ -59,7 +59,7 @@
             background: none;
             border: 1px solid rgba(255, 255, 255, 0.5);
             color: #fff;
-            font-size: 0.9em; /* Fonte menor para caber mais botões */
+            font-size: 0.9em;
             cursor: pointer;
             padding: 8px 12px;
             border-radius: 8px;
@@ -72,11 +72,11 @@
             padding: 10px;
             gap: 10px;
             overflow: hidden;
-            flex-direction: column; /* Padrão em tablets: colunas */
+            flex-direction: column;
         }
 
         .left-panel {
-            flex: 1; /* Ocupa metade do espaço em tablets */
+            flex: 1;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -84,7 +84,7 @@
         }
 
         .right-panel {
-            flex: 1; /* Ocupa metade do espaço em tablets */
+            flex: 1;
             display: flex;
             flex-direction: column;
             background-color: var(--card-background);
@@ -135,7 +135,7 @@
             text-align: center;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
-            height: 60px; 
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -148,7 +148,7 @@
         }
 
         .value-card .price {
-            font-size: 1.5em; 
+            font-size: 1.5em;
             font-weight: bold;
             color: var(--primary-color);
             margin: 0;
@@ -364,13 +364,15 @@
         /* Media Queries para telas de tablet (horizontal) */
         @media (min-width: 768px) and (orientation: landscape) {
             .main-container {
-                flex-direction: row; /* Layout em duas colunas em tablets horizontais */
+                flex-direction: row;
             }
             .left-panel {
-                flex: 2; /* Deixa o painel de valores maior */
+                flex: 2;
+                overflow-y: auto;
             }
             .right-panel {
-                flex: 1.5; /* Mantém o painel de carrinho um pouco menor */
+                flex: 1.5;
+                overflow-y: auto;
             }
         }
         
@@ -391,10 +393,31 @@
                 flex: none;
             }
             .right-panel {
-                height: 50vh; /* Garante que o painel de carrinho seja sempre visível */
+                height: 50vh;
             }
             .value-grid {
                 grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            }
+        }
+        
+        /* NOVO: Media Query para telas de tablet (vertical) */
+        @media (min-width: 768px) and (orientation: portrait) {
+            body {
+                overflow-y: auto; /* Permite rolagem quando necessário */
+            }
+            .main-container {
+                flex-direction: column;
+                overflow-y: auto;
+            }
+            .left-panel {
+                flex: none;
+                height: 50vh;
+                overflow-y: auto;
+            }
+            .right-panel {
+                flex: none;
+                height: 50vh;
+                overflow-y: auto;
             }
         }
     </style>
