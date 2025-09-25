@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Eleve Caixa</title>
+    <title>M&A Caixa</title>
     <style>
         /* Estilos CSS */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #e06b2c;
+            background-color: #15325d;
             margin: 0;
             padding: 0;
             display: flex;
@@ -19,13 +19,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #c25920;
+            background-color: #15325d;
             padding: 10px 15px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .header-bar button {
-            background-color: #3a84d4;
-            color: #ffffff;
+            background-color: #183774;
+            color: #fff;
             border: none;
             padding: 8px 12px;
             border-radius: 5px;
@@ -33,12 +33,12 @@
             font-size: 0.9rem;
         }
         .header-bar button:hover {
-            background-color: #396ba0;
+            background-color: #0056b3;
         }
         .total-do-dia {
             font-size: 1.2rem;
             font-weight: bold;
-            color: #000000;
+            color: #dfdfdf;
         }
         .container {
             flex: 1;
@@ -126,7 +126,7 @@
         .cart-item-remove {
             background: none;
             border: none;
-            color: #dc3545;
+            color: #183774;
             cursor: pointer;
             font-size: 1.1rem;
         }
@@ -157,14 +157,14 @@
             margin: 0 4px;
         }
         .payment-button.active {
-            background-color: #007bff;
+            background-color: #2b5179;
             color: #fff;
-            border-color: #007bff;
+            border-color: #2b5179;
         }
         .checkout-button {
             width: 100%;
             padding: 12px;
-            background-color: #28a745;
+            background-color: #167479;
             color: #fff;
             border: none;
             border-radius: 8px;
@@ -173,7 +173,7 @@
             margin-top: 10px;
         }
         .checkout-button:hover {
-            background-color: #218838;
+            background-color: #167479;
         }
         .history-main {
             background-color: #fff;
@@ -198,8 +198,8 @@
             border: none;
             cursor: pointer;
         }
-        #iniciarTurnoBtn { background-color: #28a745; }
-        #finalizarTurnoBtn { background-color: #dc3545; }
+        #iniciarTurnoBtn { background-color: #167479; }
+        #finalizarTurnoBtn { background-color: #183774; }
         #baixarHistoricoBtn, #verHistoricoCompletoBtn { background-color: #007bff; }
         .history-item, .saque-item {
             display: flex;
@@ -252,14 +252,14 @@
         .modal-content .valor-display {
             font-size: 2rem;
             font-weight: bold;
-            color: #007bff;
+            color: #2b5179;
         }
         .modal-content input {
             width: 100%;
             padding: 10px;
             font-size: 1.5rem;
             text-align: right;
-            border: 1px solid #ddd;
+            border: 1px solid #2f4180;
             border-radius: 8px;
             box-sizing: border-box;
             margin: 10px 0;
@@ -278,10 +278,10 @@
             flex-grow: 1;
             margin: 0 5px;
         }
-        #finalizarTrocoBtn { background-color: #28a745; color: #fff; border: none; }
-        #finalizarTrocoBtn:hover { background-color: #218838; }
-        #cancelarTrocoBtn { background-color: #dc3545; color: #fff; border: none; }
-        #cancelarTrocoBtn:hover { background-color: #c82333; }
+        #finalizarTrocoBtn { background-color: #167479; color: #fff; border: none; }
+        #finalizarTrocoBtn:hover { background-color: #167479; }
+        #cancelarTrocoBtn { background-color: #183774; color: #fff; border: none; }
+        #cancelarTrocoBtn:hover { background-color: #183774; }
         #exatoBtn { background-color: #6c757d; color: #fff; border: none; }
         #exatoBtn:hover { background-color: #5a6268; }
         .saque-section {
@@ -298,7 +298,7 @@
             justify-content: space-between;
             font-size: 1rem;
             font-weight: bold;
-            color: #dc3545;
+            color: #183774;
         }
         .history-section {
             margin-top: 15px;
@@ -364,12 +364,12 @@
         <div class="caixa-main">
             <div class="quick-values" id="quickValues"></div>
             <input type="text" id="valorInput" class="input-valor" placeholder="0,00" value="0,00">
-            <button id="adicionarButton" class="checkout-button" style="background-color: #007bff; margin-top: 0;">Adicionar</button>
+            <button id="adicionarButton" class="checkout-button" style="background-color: #167479; margin-top: 0;">Adicionar</button>
             
             <div class="saque-section">
                 <h2>Retirada de Caixa (Sangria)</h2>
                 <input type="text" id="saqueInput" class="input-valor" placeholder="0,00" value="0,00">
-                <button id="saqueButton" class="checkout-button" style="background-color: #dc3545;">Registrar Saque</button>
+                <button id="saqueButton" class="checkout-button" style="background-color: #183774;">Registrar Saque</button>
             </div>
         </div>
         
@@ -394,8 +394,8 @@
     <div id="historico" class="page container">
         <div class="history-main">
             <div class="history-actions">
-                <button id="iniciarTurnoBtn" style="background-color: #28a745;">Iniciar Turno</button>
-                <button id="finalizarTurnoBtn" style="background-color: #dc3545;">Finalizar Turno</button>
+                <button id="iniciarTurnoBtn" style="background-color: #167479;">Iniciar Turno</button>
+                <button id="finalizarTurnoBtn" style="background-color: #183774;">Finalizar Turno</button>
             </div>
             <div class="turno-status">Turno iniciado: <span id="turnoStartTime">N/A</span> | Tempo de trabalho: <span id="workTime">00:00:00</span></div>
 
@@ -418,7 +418,7 @@
             </div>
 
             <div class="history-actions" style="justify-content: center; margin-top: 20px;">
-                <button id="baixarHistoricoBtn" style="background-color: #007bff; margin-right: 10px;">Baixar Histórico (Excel)</button>
+                <button id="baixarHistoricoBtn" style="background-color: #183774; margin-right: 10px;">Baixar Histórico (Excel)</button>
                 <button id="verHistoricoCompletoBtn">Ver Histórico Completo</button>
             </div>
 
@@ -724,7 +724,20 @@
                 alert("Não há histórico para baixar.");
                 return;
             }
+            
+            const totalVendasTurno = historicoTurno.reduce((sum, transacao) => sum + transacao.total, 0);
+            const totalSaquesTurno = saquesTurno.reduce((sum, saque) => sum + saque.valor, 0);
+            const quantidadeVendas = historicoTurno.length;
+            const valorFinalCaixa = totalVendasTurno - totalSaquesTurno;
+
             let csvContent = "data:text/csv;charset=utf-8,";
+            
+            csvContent += "Resumo do Turno\n";
+            csvContent += `"Quantidade de Vendas","${quantidadeVendas}"\n`;
+            csvContent += `"Total de Vendas","${totalVendasTurno.toFixed(2).replace('.', ',')}"\n`;
+            csvContent += `"Total de Saques","${totalSaquesTurno.toFixed(2).replace('.', ',')}"\n`;
+            csvContent += `"Valor Final (Vendas - Saques)","${valorFinalCaixa.toFixed(2).replace('.', ',')}"\n\n`;
+
             csvContent += "Tipo,Data e Hora,Valor,Forma de Pagamento\n";
 
             historicoTurno.forEach(transacao => {
