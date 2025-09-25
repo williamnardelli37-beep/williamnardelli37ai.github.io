@@ -35,7 +35,7 @@
         .header {
             background-color: var(--primary-color);
             color: #fff;
-            padding: 10px; /* Reduzido */
+            padding: 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -45,12 +45,12 @@
 
         .header h1 {
             margin: 0;
-            font-size: 1.2em; /* Reduzido */
+            font-size: 1.2em;
         }
 
         .header-buttons {
             display: flex;
-            gap: 8px; /* Reduzido */
+            gap: 8px;
             margin-top: 5px;
             flex-wrap: wrap;
         }
@@ -59,9 +59,9 @@
             background: none;
             border: 1px solid rgba(255, 255, 255, 0.5);
             color: #fff;
-            font-size: 0.8em; /* Reduzido */
+            font-size: 0.8em;
             cursor: pointer;
-            padding: 6px 10px; /* Reduzido */
+            padding: 6px 10px;
             border-radius: 8px;
             transition: background-color 0.2s, transform 0.1s;
         }
@@ -69,8 +69,8 @@
         .main-container {
             display: flex;
             flex: 1;
-            padding: 8px; /* Reduzido */
-            gap: 8px; /* Reduzido */
+            padding: 8px;
+            gap: 8px;
             overflow: hidden;
             flex-direction: column;
         }
@@ -79,7 +79,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 8px; /* Reduzido */
+            gap: 8px;
             overflow: hidden;
         }
 
@@ -90,12 +90,12 @@
             background-color: var(--card-background);
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 12px; /* Reduzido */
+            padding: 12px;
             overflow: hidden;
         }
 
         .right-panel h2 {
-            font-size: 1.2em; /* Reduzido */
+            font-size: 1.2em;
             margin-top: 0;
         }
 
@@ -106,10 +106,10 @@
 
         .input-bar input {
             flex: 1;
-            padding: 10px; /* Reduzido */
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 8px;
-            font-size: 0.9em; /* Reduzido */
+            font-size: 0.9em;
             outline: none;
         }
         
@@ -117,7 +117,7 @@
             background-color: var(--primary-color);
             color: #fff;
             border: none;
-            padding: 10px; /* Reduzido */
+            padding: 10px;
             border-radius: 8px;
             cursor: pointer;
         }
@@ -125,8 +125,8 @@
         .value-grid {
             flex: 1;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); /* Min-width reduzido */
-            gap: 6px; /* Reduzido */
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 6px;
             overflow-y: auto;
             padding-right: 5px;
         }
@@ -136,11 +136,11 @@
             border: 2px solid var(--primary-color);
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 6px; /* Reduzido */
+            padding: 6px;
             text-align: center;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
-            height: 50px; /* Reduzido */
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -153,7 +153,7 @@
         }
 
         .value-card .price {
-            font-size: 1.3em; /* Reduzido */
+            font-size: 1.3em;
             font-weight: bold;
             color: var(--primary-color);
             margin: 0;
@@ -163,14 +163,14 @@
             flex: 1;
             overflow-y: auto;
             border-bottom: 1px solid #eee;
-            margin-bottom: 8px; /* Reduzido */
+            margin-bottom: 8px;
         }
 
         .sale-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0; /* Reduzido */
+            padding: 8px 0;
             border-bottom: 1px solid #eee;
         }
 
@@ -184,14 +184,14 @@
 
         .item-info h4 {
             margin: 0;
-            font-size: 0.9em; /* Reduzido */
+            font-size: 0.9em;
             font-weight: normal;
         }
         
         .item-actions {
             display: flex;
             align-items: center;
-            gap: 8px; /* Reduzido */
+            gap: 8px;
         }
 
         .item-actions button {
@@ -199,16 +199,16 @@
             color: #fff;
             border: none;
             border-radius: 50%;
-            width: 24px; /* Reduzido */
-            height: 24px; /* Reduzido */
-            font-size: 0.7em; /* Reduzido */
+            width: 24px;
+            height: 24px;
+            font-size: 0.7em;
             cursor: pointer;
             font-weight: bold;
             transition: background-color 0.2s;
         }
 
         .item-price {
-            min-width: 50px; /* Reduzido */
+            min-width: 50px;
             text-align: right;
             font-weight: bold;
         }
@@ -217,16 +217,16 @@
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            padding-top: 8px; /* Reduzido */
+            padding-top: 8px;
         }
 
         .total-section .total-label {
-            font-size: 1em; /* Reduzido */
+            font-size: 1em;
             font-weight: bold;
         }
 
         .total-section .total-price {
-            font-size: 1.8em; /* Reduzido */
+            font-size: 1.8em;
             font-weight: bold;
             color: var(--primary-color);
         }
@@ -234,29 +234,20 @@
         .payment-method-buttons {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px; /* Reduzido */
-            margin-top: 12px; /* Reduzido */
+            gap: 8px;
+            margin-top: 12px;
         }
         
         .payment-method-buttons button {
-            padding: 10px; /* Reduzido */
+            padding: 10px;
             border: none;
             border-radius: 8px;
-            font-size: 0.9em; /* Reduzido */
+            font-size: 0.9em;
             font-weight: bold;
             color: #fff;
             cursor: pointer;
             transition: background-color 0.2s;
         }
-
-        /* Classes de Cores */
-        .btn-cash { background-color: #4CAF50; }
-        .btn-card { background-color: #2196F3; }
-        .btn-pix { background-color: #f44336; }
-
-        .btn-cash:hover { background-color: #43a047; }
-        .btn-card:hover { background-color: #1976d2; }
-        .btn-pix:hover { background-color: #d32f2f; }
 
         .history-panel, .modal {
             position: absolute;
@@ -268,7 +259,7 @@
             transform: translateX(100%);
             transition: transform 0.3s ease-in-out;
             z-index: 10;
-            padding: 15px; /* Reduzido */
+            padding: 15px;
             display: flex;
             flex-direction: column;
         }
@@ -281,12 +272,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px; /* Reduzido */
+            margin-bottom: 15px;
         }
 
         .history-panel .history-header h2, .modal-header h2 {
             margin: 0;
-            font-size: 1.3em; /* Reduzido */
+            font-size: 1.3em;
         }
         
         .history-list {
@@ -294,12 +285,12 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 8px; /* Reduzido */
+            gap: 8px;
         }
 
         .history-card {
             background-color: var(--card-background);
-            padding: 12px; /* Reduzido */
+            padding: 12px;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
@@ -307,38 +298,37 @@
         .history-card .sale-info {
             display: flex;
             justify-content: space-between;
-            font-size: 0.8em; /* Reduzido */
+            font-size: 0.8em;
             color: #777;
-            margin-bottom: 8px; /* Reduzido */
+            margin-bottom: 8px;
         }
 
         .history-card .item-list {
             border-top: 1px solid #eee;
-            padding-top: 8px; /* Reduzido */
+            padding-top: 8px;
         }
         
         .history-card .item-list p {
-            margin: 3px 0; /* Reduzido */
-            font-size: 0.8em; /* Reduzido */
+            margin: 3px 0;
+            font-size: 0.8em;
         }
 
         .summary-card {
             background-color: var(--primary-color);
             color: #fff;
-            padding: 15px; /* Reduzido */
+            padding: 15px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            margin-top: 15px; /* Reduzido */
+            margin-top: 15px;
         }
 
         .summary-card p {
-            margin: 4px 0; /* Reduzido */
-            font-size: 1em; /* Reduzido */
+            margin: 4px 0;
+            font-size: 1em;
             display: flex;
             justify-content: space-between;
         }
         
-        /* Layout de duas colunas para tablets e desktops */
         @media (min-width: 768px) {
             .main-container {
                 flex-direction: row;
@@ -370,7 +360,7 @@
         
         <div class="left-panel">
             <div class="input-bar">
-                <input type="number" id="manualInput" placeholder="Inserir valor (ex: 7,50)">
+                <input type="text" id="manualInput" placeholder="Inserir valor (ex: 7,50)">
                 <button onclick="addManualValue()">Adicionar</button>
             </div>
             
@@ -419,38 +409,38 @@
     </div>
 
     <script>
-        const predefinedValues = [2, 5, 10, 20, 50, 100, 150, 200];
-        let currentSale = [];
-        let dailySales = JSON.parse(localStorage.getItem('dailySales')) || {
+        var predefinedValues = [2, 5, 10, 20, 50, 100, 150, 200];
+        var currentSale = [];
+        var dailySales = JSON.parse(localStorage.getItem('dailySales')) || {
             sales: [],
             total: { Dinheiro: 0, Cartão: 0, Pix: 0 },
             transactions: [],
             started: false
         };
 
-        const valueGrid = document.getElementById('valueGrid');
-        const saleList = document.getElementById('saleList');
-        const totalPriceEl = document.getElementById('totalPrice');
-        const manualInput = document.getElementById('manualInput');
-        const historyPanel = document.getElementById('historyPanel');
-        const historyList = document.getElementById('historyList');
-        const summaryCard = document.getElementById('summaryCard');
-        const modalContainer = document.getElementById('modalContainer');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalContent = document.getElementById('modalContent');
-        const modalButtons = document.getElementById('modalButtons');
+        var valueGrid = document.getElementById('valueGrid');
+        var saleList = document.getElementById('saleList');
+        var totalPriceEl = document.getElementById('totalPrice');
+        var manualInput = document.getElementById('manualInput');
+        var historyPanel = document.getElementById('historyPanel');
+        var historyList = document.getElementById('historyList');
+        var summaryCard = document.getElementById('summaryCard');
+        var modalContainer = document.getElementById('modalContainer');
+        var modalTitle = document.getElementById('modalTitle');
+        var modalContent = document.getElementById('modalContent');
+        var modalButtons = document.getElementById('modalButtons');
 
         function formatCurrency(value) {
-            return `R$ ${value.toFixed(2).replace('.', ',')}`;
+            return `R$ ${parseFloat(value).toFixed(2).replace('.', ',')}`;
         }
 
         function renderValues() {
             valueGrid.innerHTML = '';
-            predefinedValues.forEach(value => {
-                const card = document.createElement('div');
+            predefinedValues.forEach(function(value) {
+                var card = document.createElement('div');
                 card.className = 'value-card';
                 card.innerHTML = `<span class="price">${formatCurrency(value)}</span>`;
-                card.onclick = () => addToSale({ id: Date.now() + Math.random(), value: value });
+                card.onclick = function() { addToSale({ id: Date.now() + Math.random(), value: value }); };
                 valueGrid.appendChild(card);
             });
         }
@@ -460,12 +450,12 @@
                 alert('Inicie o turno para começar as vendas.');
                 return;
             }
-            currentSale.push({ ...item });
+            currentSale.push(item);
             renderSaleList();
         }
 
         function addManualValue() {
-            const manualValue = parseFloat(manualInput.value.replace(',', '.'));
+            var manualValue = parseFloat(manualInput.value.replace(',', '.'));
             if (!isNaN(manualValue) && manualValue > 0) {
                 addToSale({ id: Date.now() + Math.random(), value: manualValue });
                 manualInput.value = '';
@@ -476,10 +466,10 @@
         
         function renderSaleList() {
             saleList.innerHTML = '';
-            let total = 0;
-            currentSale.forEach((item, index) => {
+            var total = 0;
+            currentSale.forEach(function(item, index) {
                 total += item.value;
-                const li = document.createElement('div');
+                var li = document.createElement('div');
                 li.className = 'sale-item';
                 li.innerHTML = `
                     <div class="item-info">
@@ -511,7 +501,7 @@
                 return;
             }
 
-            const total = currentSale.reduce((acc, item) => acc + item.value, 0);
+            var total = currentSale.reduce(function(acc, item) { return acc + item.value; }, 0);
             
             modalTitle.textContent = 'Pagamento em Dinheiro';
             modalContent.innerHTML = `
@@ -521,7 +511,7 @@
                 </div>
                 <div class="modal-input-group">
                     <label for="paidAmount">Valor Recebido:</label>
-                    <input type="number" id="paidAmount" placeholder="Ex: 50,00" required>
+                    <input type="text" id="paidAmount" placeholder="Ex: 50,00" required>
                 </div>
             `;
             modalButtons.innerHTML = `<button class="btn-cancel" onclick="hideModal()">Cancelar</button><button class="btn-cash" onclick="processCashPayment()">Confirmar</button>`;
@@ -530,15 +520,15 @@
         }
 
         function processCashPayment() {
-            const paidAmount = parseFloat(document.getElementById('paidAmount').value.replace(',', '.'));
-            const totalSale = currentSale.reduce((acc, item) => acc + item.value, 0);
+            var paidAmount = parseFloat(document.getElementById('paidAmount').value.replace(',', '.'));
+            var totalSale = currentSale.reduce(function(acc, item) { return acc + item.value; }, 0);
 
             if (isNaN(paidAmount) || paidAmount < totalSale) {
                 alert('O valor recebido é inválido ou insuficiente.');
                 return;
             }
 
-            const change = paidAmount - totalSale;
+            var change = paidAmount - totalSale;
             showChangeModal(change);
         }
         
@@ -565,11 +555,11 @@
                 return;
             }
 
-            const totalSale = currentSale.reduce((acc, item) => acc + item.value, 0);
-            const newSale = {
+            var totalSale = currentSale.reduce(function(acc, item) { return acc + item.value; }, 0);
+            var newSale = {
                 id: Date.now(),
                 date: new Date().toLocaleString('pt-BR'),
-                items: [...currentSale],
+                items: currentSale,
                 total: totalSale,
                 type: 'Venda',
                 payment: paymentMethod
@@ -593,8 +583,8 @@
         function showModal(type) {
             modalContent.innerHTML = '';
             modalButtons.innerHTML = '';
-            let title = '';
-            let actionButton = '';
+            var title = '';
+            var actionButton = '';
 
             switch (type) {
                 case 'start':
@@ -606,7 +596,7 @@
                     modalContent.innerHTML = `
                         <div class="modal-input-group">
                             <label for="startValue">Valor Inicial (Fundo de Troco)</label>
-                            <input type="number" id="startValue" placeholder="Ex: 50,00">
+                            <input type="text" id="startValue" placeholder="Ex: 50,00">
                         </div>
                     `;
                     actionButton = `<button class="btn-cash" onclick="startShift()">Iniciar Turno</button>`;
@@ -620,7 +610,7 @@
                     modalContent.innerHTML = `
                         <div class="modal-input-group">
                             <label for="sangriaValue">Valor da Sangria</label>
-                            <input type="number" id="sangriaValue" placeholder="Ex: 100,00">
+                            <input type="text" id="sangriaValue" placeholder="Ex: 100,00">
                         </div>
                         <div class="modal-input-group">
                             <label for="sangriaNotes">Observações (opcional)</label>
@@ -638,7 +628,7 @@
                     modalContent.innerHTML = `
                         <div class="modal-input-group">
                             <label for="suplementoValue">Valor do Suplemento</label>
-                            <input type="number" id="suplementoValue" placeholder="Ex: 50,00">
+                            <input type="text" id="suplementoValue" placeholder="Ex: 50,00">
                         </div>
                         <div class="modal-input-group">
                             <label for="suplementoNotes">Observações (opcional)</label>
@@ -668,7 +658,7 @@
         }
 
         function startShift() {
-            const startValue = parseFloat(document.getElementById('startValue').value.replace(',', '.'));
+            var startValue = parseFloat(document.getElementById('startValue').value.replace(',', '.'));
             if (isNaN(startValue) || startValue < 0) {
                 alert('Por favor, insira um valor inicial válido.');
                 return;
@@ -686,7 +676,7 @@
         }
 
         function endShift() {
-            const confirmation = confirm('Tem certeza que deseja finalizar o turno?');
+            var confirmation = confirm('Tem certeza que deseja finalizar o turno?');
             if (confirmation) {
                 addTransaction('Fim de Turno');
                 dailySales.started = false;
@@ -696,9 +686,9 @@
             }
         }
 
-        function addTransaction(type, value = null) {
-            let transactionValue = value;
-            let notes = '';
+        function addTransaction(type, value) {
+            var transactionValue = value;
+            var notes = '';
 
             if (type === 'Sangria') {
                 transactionValue = parseFloat(document.getElementById('sangriaValue').value.replace(',', '.'));
@@ -737,7 +727,7 @@
         function renderHistory() {
             historyList.innerHTML = '';
             
-            const allEvents = [...dailySales.sales, ...dailySales.transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+            var allEvents = dailySales.sales.concat(dailySales.transactions).sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
 
             if (allEvents.length === 0) {
                 historyList.innerHTML = '<p style="text-align: center; color: #777;">Nenhuma atividade registrada.</p>';
@@ -745,13 +735,13 @@
                 return;
             }
 
-            allEvents.forEach(event => {
-                const card = document.createElement('div');
+            allEvents.forEach(function(event) {
+                var card = document.createElement('div');
                 card.className = 'history-card';
                 
-                let cardContent = '';
+                var cardContent = '';
                 if (event.type === 'Venda') {
-                    const totalItems = event.items.reduce((acc, item) => acc + item.value, 0);
+                    var totalItems = event.items.reduce(function(acc, item) { return acc + item.value; }, 0);
                     cardContent = `
                         <div class="sale-info">
                             <span><strong>Venda #${event.id.toString().slice(-4)}</strong></span>
@@ -782,11 +772,11 @@
         }
 
         function renderShiftSummary() {
-            const salesTotal = Object.values(dailySales.total).reduce((acc, val) => acc + val, 0);
-            const initialCash = dailySales.transactions.find(t => t.type === 'Início de Turno')?.value || 0;
-            const sangrias = dailySales.transactions.filter(t => t.type === 'Sangria').reduce((acc, t) => acc + t.value, 0);
-            const suplementos = dailySales.transactions.filter(t => t.type === 'Suplemento').reduce((acc, t) => acc + t.value, 0);
-            const totalCash = dailySales.total.Dinheiro + initialCash + suplementos - sangrias;
+            var salesTotal = Object.values(dailySales.total).reduce(function(acc, val) { return acc + val; }, 0);
+            var initialCash = (dailySales.transactions.find(function(t) { return t.type === 'Início de Turno'; }) || {}).value || 0;
+            var sangrias = dailySales.transactions.filter(function(t) { return t.type === 'Sangria'; }).reduce(function(acc, t) { return acc + t.value; }, 0);
+            var suplementos = dailySales.transactions.filter(function(t) { return t.type === 'Suplemento'; }).reduce(function(acc, t) { return acc + t.value; }, 0);
+            var totalCash = dailySales.total.Dinheiro + initialCash + suplementos - sangrias;
 
             summaryCard.innerHTML = `
                 <h3>Resumo do Turno</h3>
@@ -805,7 +795,7 @@
             summaryCard.style.display = 'block';
         }
         
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', function() {
             renderValues();
             renderSaleList();
         });
