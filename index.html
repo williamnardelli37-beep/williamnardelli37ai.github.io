@@ -2,803 +2,536 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Caixa Profissional - Foco Tablet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Eleve Caixa</title>
     <style>
-        :root {
-            --primary-color: #790000;
-            --secondary-color: #ffc107;
-            --background-color: #e0f2f1;
-            --card-background: #fff;
-            --font-color: #000000;
-            --accent-color: #af4c4c;
-            --danger-color: #f43636;
-        }
-
-        * {
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        /* Estilos CSS */
         body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f0f2f5;
             margin: 0;
             padding: 0;
-            background-color: var(--background-color);
-            color: var(--font-color);
             display: flex;
             flex-direction: column;
             height: 100vh;
-            overflow: hidden;
         }
-
-        .header {
-            background-color: var(--primary-color);
-            color: #fff;
-            padding: 10px;
+        .header-bar {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            flex-wrap: wrap;
+            align-items: center;
+            background-color: #fff;
+            padding: 10px 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-
-        .header h1 {
-            margin: 0;
-            font-size: 1.2em;
-        }
-
-        .header-buttons {
-            display: flex;
-            gap: 8px;
-            margin-top: 5px;
-            flex-wrap: wrap;
-        }
-
-        .header .btn-header {
-            background: none;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            color: #fff;
-            font-size: 0.8em;
-            cursor: pointer;
-            padding: 6px 10px;
-            border-radius: 8px;
-            transition: background-color 0.2s, transform 0.1s;
-        }
-
-        .main-container {
-            display: flex;
-            flex: 1;
-            padding: 8px;
-            gap: 8px;
-            overflow: hidden;
-            flex-direction: column;
-        }
-
-        .left-panel {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            overflow: hidden;
-        }
-
-        .right-panel {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--card-background);
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 12px;
-            overflow: hidden;
-        }
-
-        .right-panel h2 {
-            font-size: 1.2em;
-            margin-top: 0;
-        }
-
-        .input-bar {
-            display: flex;
-            gap: 5px;
-        }
-
-        .input-bar input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 0.9em;
-            outline: none;
-        }
-        
-        .input-bar button {
-            background-color: var(--primary-color);
+        .header-bar button {
+            background-color: #007bff;
             color: #fff;
             border: none;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 8px 12px;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 0.9rem;
         }
-
-        .value-grid {
-            flex: 1;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-            gap: 6px;
-            overflow-y: auto;
-            padding-right: 5px;
+        .header-bar button:hover {
+            background-color: #0056b3;
         }
-
-        .value-card {
-            background-color: var(--card-background);
-            border: 2px solid var(--primary-color);
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 6px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .value-card:active {
-            transform: scale(0.98);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            background-color: #e0f2f1;
-        }
-
-        .value-card .price {
-            font-size: 1.3em;
+        .total-do-dia {
+            font-size: 1.2rem;
             font-weight: bold;
-            color: var(--primary-color);
-            margin: 0;
+            color: #28a745;
         }
-        
-        .sale-list {
+        .container {
             flex: 1;
-            overflow-y: auto;
-            border-bottom: 1px solid #eee;
-            margin-bottom: 8px;
+            display: flex;
+            padding: 10px;
         }
-
-        .sale-item {
+        .page {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+        .page.active {
+            display: flex;
+        }
+        .caixa-main {
+            flex: 2;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            margin-right: 10px;
+            overflow: hidden; /* Evita rolagem */
+        }
+        .caixa-sidebar {
+            flex: 1;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Evita rolagem */
+        }
+        .quick-values {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+            max-height: 40%; /* Limita a altura para caber na tela */
+            overflow-y: auto; /* Permite rolagem apenas nessa área */
+        }
+        .quick-value-button {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1 1 20%;
+            min-width: 60px;
+            text-align: center;
+        }
+        .input-valor {
+            width: 100%;
+            padding: 10px;
+            font-size: 2rem;
+            text-align: right;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        .cart-list, .history-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        .cart-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 8px 0;
             border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
         }
-
-        .sale-item:last-child {
+        .cart-item:last-child {
             border-bottom: none;
         }
-
-        .item-info {
-            flex: 1;
+        .cart-item-price {
+            font-weight: bold;
         }
-
-        .item-info h4 {
-            margin: 0;
-            font-size: 0.9em;
-            font-weight: normal;
-        }
-        
-        .item-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .item-actions button {
-            background-color: var(--danger-color);
-            color: #fff;
+        .cart-item-remove {
+            background: none;
             border: none;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            font-size: 0.7em;
+            color: #dc3545;
             cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.2s;
+            font-size: 1.1rem;
         }
-
-        .item-price {
-            min-width: 50px;
-            text-align: right;
-            font-weight: bold;
+        .cart-summary {
+            border-top: 2px solid #eee;
+            padding-top: 10px;
         }
-
-        .total-section {
+        .cart-summary .total {
             display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            padding-top: 8px;
-        }
-
-        .total-section .total-label {
-            font-size: 1em;
+            justify-content: space-between;
+            font-size: 1.5rem;
             font-weight: bold;
+            color: #218838;
         }
-
-        .total-section .total-price {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: var(--primary-color);
+        .payment-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
         }
-
-        .payment-method-buttons {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-top: 12px;
+        .payment-button {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            font-size: 0.9rem;
+            flex-grow: 1;
+            margin: 0 4px;
         }
-        
-        .payment-method-buttons button {
-            padding: 10px;
+        .checkout-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: #fff;
             border: none;
             border-radius: 8px;
-            font-size: 0.9em;
+            font-size: 1rem;
             font-weight: bold;
-            color: #fff;
-            cursor: pointer;
-            transition: background-color 0.2s;
+            margin-top: 10px;
         }
-
-        .history-panel, .modal {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--background-color);
-            transform: translateX(100%);
-            transition: transform 0.3s ease-in-out;
-            z-index: 10;
+        .checkout-button:hover {
+            background-color: #218838;
+        }
+        .history-main {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             padding: 15px;
+            width: 100%;
             display: flex;
             flex-direction: column;
+            overflow: hidden; /* Evita rolagem */
         }
-
-        .history-panel.active, .modal.active {
-            transform: translateX(0);
-        }
-
-        .history-panel .history-header, .modal-header {
+        .history-actions {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             margin-bottom: 15px;
         }
-
-        .history-panel .history-header h2, .modal-header h2 {
-            margin: 0;
-            font-size: 1.3em;
-        }
-        
-        .history-list {
-            flex: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .history-card {
-            background-color: var(--card-background);
-            padding: 12px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .history-card .sale-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8em;
-            color: #777;
-            margin-bottom: 8px;
-        }
-
-        .history-card .item-list {
-            border-top: 1px solid #eee;
-            padding-top: 8px;
-        }
-        
-        .history-card .item-list p {
-            margin: 3px 0;
-            font-size: 0.8em;
-        }
-
-        .summary-card {
-            background-color: var(--primary-color);
+        .history-actions button {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
             color: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            margin-top: 15px;
+            border: none;
+            cursor: pointer;
         }
-
-        .summary-card p {
-            margin: 4px 0;
-            font-size: 1em;
+        #iniciarTurnoBtn { background-color: #28a745; }
+        #finalizarTurnoBtn { background-color: #dc3545; }
+        #baixarHistoricoBtn { background-color: #007bff; }
+        .history-item {
             display: flex;
             justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
         }
-        
-        @media (min-width: 768px) {
-            .main-container {
-                flex-direction: row;
-                padding: 10px;
-            }
-            .left-panel {
-                flex: 2;
-            }
-            .right-panel {
-                flex: 1.5;
-            }
+        .history-item-info span {
+            display: block;
+            color: #666;
+        }
+        .turno-status {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 10px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>Caixa M&A</h1>
-        <div class="header-buttons">
-            <button class="btn-header" onclick="showModal('start')">Início de Turno</button>
-            <button class="btn-header" onclick="showModal('sangria')">Sangria</button>
-            <button class="btn-header" onclick="showModal('suplemento')">Suplemento</button>
-            <button class="btn-header" onclick="toggleHistoryPanel()">Histórico</button>
-            <button class="btn-header" onclick="showModal('end')">Fim de Turno</button>
-        </div>
+    <div class="header-bar">
+        <button onclick="showPage('caixa')">Caixa</button>
+        <button onclick="showPage('historico')">Histórico</button>
+        <div class="total-do-dia">Total do Turno: <span id="totalDoDia">R$ 0,00</span></div>
     </div>
 
-    <div class="main-container">
+    <div id="caixa" class="page active container">
+        <div class="caixa-main">
+            <div class="quick-values" id="quickValues"></div>
+            <input type="text" id="valorInput" class="input-valor" placeholder="0,00" value="0,00">
+            <button id="adicionarButton" class="checkout-button" style="background-color: #007bff; margin-top: 0;">Adicionar</button>
+        </div>
         
-        <div class="left-panel">
-            <div class="input-bar">
-                <input type="text" id="manualInput" placeholder="Inserir valor (ex: 7,50)">
-                <button onclick="addManualValue()">Adicionar</button>
-            </div>
-            
-            <div class="value-grid" id="valueGrid">
-            </div>
-        </div>
-
-        <div class="right-panel">
-            <h2>Carrinho de Vendas</h2>
-            <div class="sale-list" id="saleList">
-            </div>
-            
-            <div class="total-section">
-                <span class="total-label">Total a Pagar:</span>
-                <span class="total-price" id="totalPrice">R$ 0,00</span>
-            </div>
-            
-            <div class="payment-method-buttons">
-                <button class="btn-cash" onclick="showCashModal()">Dinheiro</button>
-                <button class="btn-card" onclick="finishSale('Cartão')">Cartão</button>
-                <button class="btn-pix" onclick="finishSale('Pix')">Pix</button>
+        <div class="caixa-sidebar">
+            <h2 style="font-size: 1.2rem; margin-top: 0;">Transação</h2>
+            <div id="cartList" class="cart-list"></div>
+            <div class="cart-summary">
+                <div class="total">
+                    <span>Total:</span>
+                    <span id="cartTotal">R$ 0,00</span>
+                </div>
+                <div class="payment-buttons">
+                    <button class="payment-button active" data-type="Dinheiro">Dinheiro</button>
+                    <button class="payment-button" data-type="Cartão">Cartão</button>
+                    <button class="payment-button" data-type="PIX">PIX</button>
+                </div>
+                <button id="finalizarButton" class="checkout-button">Finalizar Venda</button>
             </div>
         </div>
     </div>
 
-    <div class="history-panel" id="historyPanel">
-        <div class="history-header">
-            <h2>Histórico de Vendas</h2>
-            <button class="btn-header" onclick="toggleHistoryPanel()">Fechar</button>
-        </div>
-        <div class="history-list" id="historyList">
-        </div>
-        <div id="summaryCard" class="summary-card" style="display: none;">
-        </div>
-    </div>
-
-    <div id="modalContainer" class="modal">
-        <div class="modal-header">
-            <h2 id="modalTitle"></h2>
-            <button class="btn-header" onclick="hideModal()">X</button>
-        </div>
-        <div id="modalContent" class="modal-content">
-        </div>
-        <div id="modalButtons" class="modal-buttons">
+    <div id="historico" class="page container">
+        <div class="history-main">
+            <div class="history-actions">
+                <button id="iniciarTurnoBtn" style="background-color: #28a745;">Iniciar Turno</button>
+                <button id="finalizarTurnoBtn" style="background-color: #dc3545;">Finalizar Turno</button>
+            </div>
+            <div class="turno-status">Turno iniciado: <span id="turnoStartTime">N/A</span> | Tempo de trabalho: <span id="workTime">00:00:00</span></div>
+            <h2 style="font-size: 1.2rem; margin-top: 0;">Histórico de Vendas</h2>
+            <div id="historyList" class="history-list"></div>
+            <div class="history-actions" style="justify-content: center;">
+                <button id="baixarHistoricoBtn" style="background-color: #007bff;">Baixar Histórico (Excel)</button>
+            </div>
+            <div class="total-historico">
+                <h3 style="font-size: 1rem;">Total do Histórico: <span id="totalHistorico">R$ 0,00</span></h3>
+            </div>
         </div>
     </div>
 
     <script>
-        var predefinedValues = [2, 5, 10, 20, 50, 100, 150, 200];
-        var currentSale = [];
-        var dailySales = JSON.parse(localStorage.getItem('dailySales')) || {
-            sales: [],
-            total: { Dinheiro: 0, Cartão: 0, Pix: 0 },
-            transactions: [],
-            started: false
-        };
+        let carrinho = [];
+        let historicoTurno = [];
+        let historicoCompleto = [];
+        let tipoPagamento = 'Dinheiro';
+        let turnoStartTime = null;
+        let workTimeInterval;
 
-        var valueGrid = document.getElementById('valueGrid');
-        var saleList = document.getElementById('saleList');
-        var totalPriceEl = document.getElementById('totalPrice');
-        var manualInput = document.getElementById('manualInput');
-        var historyPanel = document.getElementById('historyPanel');
-        var historyList = document.getElementById('historyList');
-        var summaryCard = document.getElementById('summaryCard');
-        var modalContainer = document.getElementById('modalContainer');
-        var modalTitle = document.getElementById('modalTitle');
-        var modalContent = document.getElementById('modalContent');
-        var modalButtons = document.getElementById('modalButtons');
+        const pages = document.querySelectorAll('.page');
+        const valorInput = document.getElementById('valorInput');
+        const adicionarButton = document.getElementById('adicionarButton');
+        const cartList = document.getElementById('cartList');
+        const cartTotal = document.getElementById('cartTotal');
+        const finalizarButton = document.getElementById('finalizarButton');
+        const paymentButtons = document.querySelectorAll('.payment-button');
+        const quickValuesContainer = document.getElementById('quickValues');
+        const historyList = document.getElementById('historyList');
+        const totalHistoricoSpan = document.getElementById('totalHistorico');
+        const totalDoDiaSpan = document.getElementById('totalDoDia');
+        const iniciarTurnoBtn = document.getElementById('iniciarTurnoBtn');
+        const finalizarTurnoBtn = document.getElementById('finalizarTurnoBtn');
+        const baixarHistoricoBtn = document.getElementById('baixarHistoricoBtn');
+        const turnoStartTimeSpan = document.getElementById('turnoStartTime');
+        const workTimeSpan = document.getElementById('workTime');
 
-        function formatCurrency(value) {
-            return `R$ ${parseFloat(value).toFixed(2).replace('.', ',')}`;
+        const quickValues = [1.50, 2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+
+        function saveState() {
+            localStorage.setItem('historicoTurno', JSON.stringify(historicoTurno));
+            localStorage.setItem('historicoCompleto', JSON.stringify(historicoCompleto));
+            localStorage.setItem('turnoStartTime', turnoStartTime);
         }
 
-        function renderValues() {
-            valueGrid.innerHTML = '';
-            predefinedValues.forEach(function(value) {
-                var card = document.createElement('div');
-                card.className = 'value-card';
-                card.innerHTML = `<span class="price">${formatCurrency(value)}</span>`;
-                card.onclick = function() { addToSale({ id: Date.now() + Math.random(), value: value }); };
-                valueGrid.appendChild(card);
+        function loadState() {
+            const savedHistoricoTurno = localStorage.getItem('historicoTurno');
+            const savedHistoricoCompleto = localStorage.getItem('historicoCompleto');
+            const savedTurnoStartTime = localStorage.getItem('turnoStartTime');
+
+            if (savedHistoricoTurno) {
+                historicoTurno = JSON.parse(savedHistoricoTurno);
+            }
+            if (savedHistoricoCompleto) {
+                historicoCompleto = JSON.parse(savedHistoricoCompleto);
+            }
+            if (savedTurnoStartTime !== 'null') {
+                turnoStartTime = savedTurnoStartTime;
+                startWorkTimeCounter();
+            }
+        }
+
+        function updateWorkTime() {
+            if (turnoStartTime) {
+                const now = new Date().getTime();
+                const diff = now - parseInt(turnoStartTime);
+                const seconds = Math.floor(diff / 1000);
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const remainingSeconds = seconds % 60;
+
+                const pad = (num) => num.toString().padStart(2, '0');
+                workTimeSpan.textContent = `${pad(hours)}:${pad(minutes)}:${pad(remainingSeconds)}`;
+            }
+        }
+
+        function startWorkTimeCounter() {
+            clearInterval(workTimeInterval);
+            turnoStartTimeSpan.textContent = new Date(parseInt(turnoStartTime)).toLocaleString('pt-BR');
+            workTimeInterval = setInterval(updateWorkTime, 1000);
+        }
+
+        function stopWorkTimeCounter() {
+            clearInterval(workTimeInterval);
+            workTimeSpan.textContent = '00:00:00';
+            turnoStartTimeSpan.textContent = 'N/A';
+        }
+
+        quickValues.forEach(valor => {
+            const button = document.createElement('button');
+            button.className = 'quick-value-button';
+            button.textContent = `R$ ${valor.toFixed(2).replace('.', ',')}`;
+            button.addEventListener('click', () => {
+                let valorAtual = parseFloat(valorInput.value.replace(',', '.')) || 0;
+                valorAtual += valor;
+                valorInput.value = valorAtual.toFixed(2).replace('.', ',');
             });
-        }
-
-        function addToSale(item) {
-            if (!dailySales.started) {
-                alert('Inicie o turno para começar as vendas.');
-                return;
-            }
-            currentSale.push(item);
-            renderSaleList();
-        }
-
-        function addManualValue() {
-            var manualValue = parseFloat(manualInput.value.replace(',', '.'));
-            if (!isNaN(manualValue) && manualValue > 0) {
-                addToSale({ id: Date.now() + Math.random(), value: manualValue });
-                manualInput.value = '';
-            } else {
-                alert('Por favor, insira um valor válido.');
-            }
-        }
-        
-        function renderSaleList() {
-            saleList.innerHTML = '';
-            var total = 0;
-            currentSale.forEach(function(item, index) {
-                total += item.value;
-                var li = document.createElement('div');
-                li.className = 'sale-item';
-                li.innerHTML = `
-                    <div class="item-info">
-                        <h4>Valor Adicionado</h4>
-                        <p>${formatCurrency(item.value)}</p>
-                    </div>
-                    <div class="item-actions">
-                        <span class="item-price">${formatCurrency(item.value)}</span>
-                        <button onclick="removeFromSale(${index})">x</button>
-                    </div>
-                `;
-                saleList.appendChild(li);
-            });
-            totalPriceEl.textContent = formatCurrency(total);
-        }
-
-        function removeFromSale(index) {
-            currentSale.splice(index, 1);
-            renderSaleList();
-        }
-
-        function showCashModal() {
-            if (!dailySales.started) {
-                alert('Inicie o turno para começar as vendas.');
-                return;
-            }
-            if (currentSale.length === 0) {
-                alert('O carrinho está vazio.');
-                return;
-            }
-
-            var total = currentSale.reduce(function(acc, item) { return acc + item.value; }, 0);
-            
-            modalTitle.textContent = 'Pagamento em Dinheiro';
-            modalContent.innerHTML = `
-                <div class="modal-input-group">
-                    <label>Total a Pagar:</label>
-                    <span style="font-size: 1.5em; font-weight: bold;">${formatCurrency(total)}</span>
-                </div>
-                <div class="modal-input-group">
-                    <label for="paidAmount">Valor Recebido:</label>
-                    <input type="text" id="paidAmount" placeholder="Ex: 50,00" required>
-                </div>
-            `;
-            modalButtons.innerHTML = `<button class="btn-cancel" onclick="hideModal()">Cancelar</button><button class="btn-cash" onclick="processCashPayment()">Confirmar</button>`;
-            modalContainer.classList.add('active');
-            document.getElementById('paidAmount').focus();
-        }
-
-        function processCashPayment() {
-            var paidAmount = parseFloat(document.getElementById('paidAmount').value.replace(',', '.'));
-            var totalSale = currentSale.reduce(function(acc, item) { return acc + item.value; }, 0);
-
-            if (isNaN(paidAmount) || paidAmount < totalSale) {
-                alert('O valor recebido é inválido ou insuficiente.');
-                return;
-            }
-
-            var change = paidAmount - totalSale;
-            showChangeModal(change);
-        }
-        
-        function showChangeModal(changeAmount) {
-            modalTitle.textContent = 'Troco';
-            modalContent.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <p style="font-size: 1.2em;">Troco a ser dado:</p>
-                    <p style="font-size: 2.5em; font-weight: bold; color: var(--primary-color);">${formatCurrency(changeAmount)}</p>
-                </div>
-            `;
-            modalButtons.innerHTML = `<button class="btn-cash" onclick="finishSale('Dinheiro')">Fechar</button>`;
-            modalContainer.classList.add('active');
-        }
-
-        function finishSale(paymentMethod) {
-            if (!dailySales.started) {
-                alert('Inicie o turno para começar as vendas.');
-                return;
-            }
-
-            if (currentSale.length === 0) {
-                alert('O carrinho está vazio.');
-                return;
-            }
-
-            var totalSale = currentSale.reduce(function(acc, item) { return acc + item.value; }, 0);
-            var newSale = {
-                id: Date.now(),
-                date: new Date().toLocaleString('pt-BR'),
-                items: currentSale,
-                total: totalSale,
-                type: 'Venda',
-                payment: paymentMethod
-            };
-            
-            dailySales.sales.unshift(newSale);
-            dailySales.total[paymentMethod] += totalSale;
-            
-            localStorage.setItem('dailySales', JSON.stringify(dailySales));
-            
-            alert(`Venda de ${formatCurrency(totalSale)} finalizada com sucesso via ${paymentMethod}!`);
-            clearSale();
-            hideModal();
-        }
-
-        function clearSale() {
-            currentSale = [];
-            renderSaleList();
-        }
-
-        function showModal(type) {
-            modalContent.innerHTML = '';
-            modalButtons.innerHTML = '';
-            var title = '';
-            var actionButton = '';
-
-            switch (type) {
-                case 'start':
-                    if (dailySales.started) {
-                        alert('O turno já foi iniciado.');
-                        return;
-                    }
-                    title = 'Início de Turno';
-                    modalContent.innerHTML = `
-                        <div class="modal-input-group">
-                            <label for="startValue">Valor Inicial (Fundo de Troco)</label>
-                            <input type="text" id="startValue" placeholder="Ex: 50,00">
-                        </div>
-                    `;
-                    actionButton = `<button class="btn-cash" onclick="startShift()">Iniciar Turno</button>`;
-                    break;
-                case 'sangria':
-                    if (!dailySales.started) {
-                        alert('Inicie o turno para realizar sangrias.');
-                        return;
-                    }
-                    title = 'Sangria (Retirada)';
-                    modalContent.innerHTML = `
-                        <div class="modal-input-group">
-                            <label for="sangriaValue">Valor da Sangria</label>
-                            <input type="text" id="sangriaValue" placeholder="Ex: 100,00">
-                        </div>
-                        <div class="modal-input-group">
-                            <label for="sangriaNotes">Observações (opcional)</label>
-                            <textarea id="sangriaNotes" rows="3"></textarea>
-                        </div>
-                    `;
-                    actionButton = `<button class="btn-cash" onclick="addTransaction('Sangria')">Confirmar</button>`;
-                    break;
-                case 'suplemento':
-                    if (!dailySales.started) {
-                        alert('Inicie o turno para realizar suplementos.');
-                        return;
-                    }
-                    title = 'Suplemento (Reforço)';
-                    modalContent.innerHTML = `
-                        <div class="modal-input-group">
-                            <label for="suplementoValue">Valor do Suplemento</label>
-                            <input type="text" id="suplementoValue" placeholder="Ex: 50,00">
-                        </div>
-                        <div class="modal-input-group">
-                            <label for="suplementoNotes">Observações (opcional)</label>
-                            <textarea id="suplementoNotes" rows="3"></textarea>
-                        </div>
-                    `;
-                    actionButton = `<button class="btn-cash" onclick="addTransaction('Suplemento')">Confirmar</button>`;
-                    break;
-                case 'end':
-                    if (!dailySales.started) {
-                        alert('Nenhum turno em andamento.');
-                        return;
-                    }
-                    title = 'Fim de Turno';
-                    renderShiftSummary();
-                    actionButton = `<button class="btn-danger" onclick="endShift()">Finalizar Turno</button>`;
-                    break;
-            }
-
-            modalTitle.textContent = title;
-            modalButtons.innerHTML = `<button class="btn-cancel" onclick="hideModal()">Cancelar</button>${actionButton}`;
-            modalContainer.classList.add('active');
-        }
-
-        function hideModal() {
-            modalContainer.classList.remove('active');
-        }
-
-        function startShift() {
-            var startValue = parseFloat(document.getElementById('startValue').value.replace(',', '.'));
-            if (isNaN(startValue) || startValue < 0) {
-                alert('Por favor, insira um valor inicial válido.');
-                return;
-            }
-            dailySales = {
-                sales: [],
-                total: { Dinheiro: 0, Cartão: 0, Pix: 0 },
-                transactions: [],
-                started: true
-            };
-            addTransaction('Início de Turno', startValue);
-            localStorage.setItem('dailySales', JSON.stringify(dailySales));
-            hideModal();
-            alert('Turno iniciado com sucesso!');
-        }
-
-        function endShift() {
-            var confirmation = confirm('Tem certeza que deseja finalizar o turno?');
-            if (confirmation) {
-                addTransaction('Fim de Turno');
-                dailySales.started = false;
-                localStorage.setItem('dailySales', JSON.stringify(dailySales));
-                hideModal();
-                alert('Turno finalizado. O histórico do dia foi salvo.');
-            }
-        }
-
-        function addTransaction(type, value) {
-            var transactionValue = value;
-            var notes = '';
-
-            if (type === 'Sangria') {
-                transactionValue = parseFloat(document.getElementById('sangriaValue').value.replace(',', '.'));
-                notes = document.getElementById('sangriaNotes').value;
-            } else if (type === 'Suplemento') {
-                transactionValue = parseFloat(document.getElementById('suplementoValue').value.replace(',', '.'));
-                notes = document.getElementById('suplementoNotes').value;
-            }
-            
-            if (type !== 'Início de Turno' && type !== 'Fim de Turno') {
-                if (isNaN(transactionValue) || transactionValue <= 0) {
-                    alert('Por favor, insira um valor válido.');
-                    return;
-                }
-            }
-            
-            dailySales.transactions.push({
-                type: type,
-                value: transactionValue,
-                date: new Date().toLocaleString('pt-BR'),
-                notes: notes
-            });
-            
-            localStorage.setItem('dailySales', JSON.stringify(dailySales));
-            hideModal();
-            alert(`${type} de ${formatCurrency(transactionValue || 0)} registrado com sucesso.`);
-        }
-        
-        function toggleHistoryPanel() {
-            historyPanel.classList.toggle('active');
-            if (historyPanel.classList.contains('active')) {
-                renderHistory();
-            }
-        }
-        
-        function renderHistory() {
-            historyList.innerHTML = '';
-            
-            var allEvents = dailySales.sales.concat(dailySales.transactions).sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
-
-            if (allEvents.length === 0) {
-                historyList.innerHTML = '<p style="text-align: center; color: #777;">Nenhuma atividade registrada.</p>';
-                summaryCard.style.display = 'none';
-                return;
-            }
-
-            allEvents.forEach(function(event) {
-                var card = document.createElement('div');
-                card.className = 'history-card';
-                
-                var cardContent = '';
-                if (event.type === 'Venda') {
-                    var totalItems = event.items.reduce(function(acc, item) { return acc + item.value; }, 0);
-                    cardContent = `
-                        <div class="sale-info">
-                            <span><strong>Venda #${event.id.toString().slice(-4)}</strong></span>
-                            <span>${event.date}</span>
-                        </div>
-                        <div class="item-list">
-                            <p><strong>Tipo:</strong> Venda (${event.payment})</p>
-                        </div>
-                        <p style="text-align: right; font-weight: bold; margin: 10px 0 0;">Total: ${formatCurrency(totalItems)}</p>
-                    `;
-                } else {
-                    cardContent = `
-                        <div class="sale-info">
-                            <span><strong>${event.type}</strong></span>
-                            <span>${event.date}</span>
-                        </div>
-                        <div class="item-list">
-                            <p><strong>Valor:</strong> ${formatCurrency(event.value)}</p>
-                            ${event.notes ? `<p><strong>Observações:</strong> ${event.notes}</p>` : ''}
-                        </div>
-                    `;
-                }
-                card.innerHTML = cardContent;
-                historyList.appendChild(card);
-            });
-            
-            renderShiftSummary();
-        }
-
-        function renderShiftSummary() {
-            var salesTotal = Object.values(dailySales.total).reduce(function(acc, val) { return acc + val; }, 0);
-            var initialCash = (dailySales.transactions.find(function(t) { return t.type === 'Início de Turno'; }) || {}).value || 0;
-            var sangrias = dailySales.transactions.filter(function(t) { return t.type === 'Sangria'; }).reduce(function(acc, t) { return acc + t.value; }, 0);
-            var suplementos = dailySales.transactions.filter(function(t) { return t.type === 'Suplemento'; }).reduce(function(acc, t) { return acc + t.value; }, 0);
-            var totalCash = dailySales.total.Dinheiro + initialCash + suplementos - sangrias;
-
-            summaryCard.innerHTML = `
-                <h3>Resumo do Turno</h3>
-                <p><span>Total de Vendas:</span> <strong>${formatCurrency(salesTotal)}</strong></p>
-                <hr style="border: none; border-top: 1px dashed rgba(255,255,255,0.5);">
-                <p><span>Vendas Dinheiro:</span> <strong>${formatCurrency(dailySales.total.Dinheiro)}</strong></p>
-                <p><span>Vendas Cartão:</span> <strong>${formatCurrency(dailySales.total.Cartão)}</strong></p>
-                <p><span>Vendas Pix:</span> <strong>${formatCurrency(dailySales.total.Pix)}</strong></p>
-                <hr style="border: none; border-top: 1px dashed rgba(255,255,255,0.5);">
-                <p><span>Fundo de Troco Inicial:</span> <strong>${formatCurrency(initialCash)}</strong></p>
-                <p><span>Total Sangrias:</span> <strong>${formatCurrency(sangrias)}</strong></p>
-                <p><span>Total Suplementos:</span> <strong>${formatCurrency(suplementos)}</strong></p>
-                <hr style="border: none; border-top: 1px dashed rgba(255,255,255,0.5);">
-                <p><span><strong>Total em Caixa:</strong></span> <strong>${formatCurrency(totalCash)}</strong></p>
-            `;
-            summaryCard.style.display = 'block';
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            renderValues();
-            renderSaleList();
+            quickValuesContainer.appendChild(button);
         });
+
+        adicionarButton.addEventListener('click', () => {
+            // ** Nova verificação **
+            if (!turnoStartTime) {
+                alert("Por favor, inicie um turno antes de adicionar vendas.");
+                return;
+            }
+
+            let valor = parseFloat(valorInput.value.replace(',', '.'));
+            if (isNaN(valor) || valor <= 0) {
+                alert("Por favor, insira um valor válido.");
+                return;
+            }
+            carrinho.push(valor);
+            renderizarCarrinho();
+            valorInput.value = '0,00';
+        });
+
+        paymentButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                paymentButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                tipoPagamento = button.dataset.type;
+            });
+        });
+
+        finalizarButton.addEventListener('click', () => {
+            // ** Nova verificação **
+            if (!turnoStartTime) {
+                alert("Por favor, inicie um turno antes de finalizar vendas.");
+                return;
+            }
+            
+            if (carrinho.length === 0) {
+                alert("O carrinho está vazio. Adicione itens para finalizar a venda.");
+                return;
+            }
+            const total = carrinho.reduce((sum, item) => sum + item, 0);
+            const dataVenda = new Date().toLocaleString('pt-BR');
+            const transacao = { total, pagamento: tipoPagamento, data: dataVenda };
+            historicoTurno.push(transacao);
+            carrinho = [];
+            renderizarCarrinho();
+            atualizarTotalDoDia();
+            saveState();
+            alert(`Venda finalizada com sucesso!\nTotal: R$ ${total.toFixed(2).replace('.', ',')}\nPagamento: ${tipoPagamento}`);
+        });
+
+        iniciarTurnoBtn.addEventListener('click', () => {
+            historicoTurno = [];
+            turnoStartTime = new Date().getTime();
+            saveState();
+            startWorkTimeCounter();
+            alert("Novo turno iniciado! O caixa foi zerado.");
+            renderizarHistorico();
+            atualizarTotalDoDia();
+        });
+
+        finalizarTurnoBtn.addEventListener('click', () => {
+            if (!turnoStartTime) {
+                alert("Nenhum turno em andamento para finalizar.");
+                return;
+            }
+            const totalTurno = historicoTurno.reduce((sum, transacao) => sum + transacao.total, 0);
+            historicoCompleto.unshift({
+                data: new Date().toLocaleString('pt-BR'),
+                total: totalTurno,
+                vendas: [...historicoTurno]
+            });
+            alert(`Turno finalizado! Total de vendas do turno: R$ ${totalTurno.toFixed(2).replace('.', ',')}.`);
+            
+            historicoTurno = [];
+            turnoStartTime = null;
+            saveState();
+            stopWorkTimeCounter();
+            renderizarHistorico();
+            atualizarTotalDoDia();
+        });
+
+        baixarHistoricoBtn.addEventListener('click', () => {
+            if (historicoTurno.length === 0) {
+                alert("Não há histórico de vendas para baixar.");
+                return;
+            }
+            
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Data e Hora,Valor,Forma de Pagamento\n";
+
+            historicoTurno.forEach(transacao => {
+                const row = [
+                    `"${transacao.data}"`,
+                    `"${transacao.total.toFixed(2).replace('.', ',')}"`,
+                    `"${transacao.pagamento}"`
+                ].join(",");
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "historico_vendas.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        function renderizarCarrinho() {
+            cartList.innerHTML = '';
+            let total = 0;
+            if (carrinho.length === 0) {
+                cartList.innerHTML = '<p style="text-align: center; color: #888; font-size: 0.9rem;">Carrinho vazio</p>';
+            } else {
+                carrinho.forEach((item, index) => {
+                    const listItem = document.createElement('div');
+                    listItem.className = 'cart-item';
+                    listItem.innerHTML = `
+                        <span class="cart-item-price">R$ ${item.toFixed(2).replace('.', ',')}</span>
+                        <button class="cart-item-remove" data-index="${index}">×</button>
+                    `;
+                    cartList.appendChild(listItem);
+                    total += item;
+                });
+                document.querySelectorAll('.cart-item-remove').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const index = e.target.getAttribute('data-index');
+                        carrinho.splice(index, 1);
+                        renderizarCarrinho();
+                    });
+                });
+            }
+            cartTotal.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            saveState();
+        }
+
+        function renderizarHistorico() {
+            historyList.innerHTML = '';
+            let totalHistorico = 0;
+            historicoTurno.forEach(transacao => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `
+                    <div class="history-item-info">
+                        <span>${transacao.data}</span>
+                        <span>${transacao.pagamento}</span>
+                    </div>
+                    <span class="history-item-price">R$ ${transacao.total.toFixed(2).replace('.', ',')}</span>
+                `;
+                historyList.prepend(historyItem);
+                totalHistorico += transacao.total;
+            });
+            totalHistoricoSpan.textContent = `R$ ${totalHistorico.toFixed(2).replace('.', ',')}`;
+        }
+
+        function atualizarTotalDoDia() {
+            const total = historicoTurno.reduce((sum, transacao) => sum + transacao.total, 0);
+            totalDoDiaSpan.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        }
+
+        function showPage(pageId) {
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            if (pageId === 'historico') {
+                renderizarHistorico();
+            }
+        }
+
+        valorInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            value = (value / 100).toFixed(2);
+            valorInput.value = value.replace('.', ',');
+        });
+
+        window.addEventListener('load', () => {
+            loadState();
+            renderizarCarrinho();
+            renderizarHistorico();
+            atualizarTotalDoDia();
+        });
+
     </script>
 </body>
 </html>
