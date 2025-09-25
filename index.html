@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Caixa Profissional - Foco Tablet</title>
     <style>
+        :root {
+            --primary-color: #790000;
+            --secondary-color: #ffc107;
+            --background-color: #e0f2f1;
+            --card-background: #fff;
+            --font-color: #000000;
+            --accent-color: #af4c4c;
+            --danger-color: #f43636;
+        }
+
         * {
             box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -14,34 +24,33 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #e0f2f1;
-            color: #000000;
+            background-color: var(--background-color);
+            color: var(--font-color);
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-            overflow-x: hidden;
+            height: 100vh;
+            overflow: hidden;
         }
 
         .header {
-            background-color: #790000;
+            background-color: var(--primary-color);
             color: #fff;
-            padding: 15px;
+            padding: 10px; /* Reduzido */
             display: flex;
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             flex-wrap: wrap;
-            z-index: 2;
         }
 
         .header h1 {
             margin: 0;
-            font-size: 1.5em;
+            font-size: 1.2em; /* Reduzido */
         }
 
         .header-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px; /* Reduzido */
             margin-top: 5px;
             flex-wrap: wrap;
         }
@@ -50,19 +59,18 @@
             background: none;
             border: 1px solid rgba(255, 255, 255, 0.5);
             color: #fff;
-            font-size: 0.9em;
+            font-size: 0.8em; /* Reduzido */
             cursor: pointer;
-            padding: 8px 12px;
+            padding: 6px 10px; /* Reduzido */
             border-radius: 8px;
             transition: background-color 0.2s, transform 0.1s;
-            touch-action: manipulation;
         }
 
         .main-container {
             display: flex;
             flex: 1;
-            padding: 10px;
-            gap: 10px;
+            padding: 8px; /* Reduzido */
+            gap: 8px; /* Reduzido */
             overflow: hidden;
             flex-direction: column;
         }
@@ -71,7 +79,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px; /* Reduzido */
             overflow: hidden;
         }
 
@@ -79,11 +87,16 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background-color: #fff;
+            background-color: var(--card-background);
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 15px;
+            padding: 12px; /* Reduzido */
             overflow: hidden;
+        }
+
+        .right-panel h2 {
+            font-size: 1.2em; /* Reduzido */
+            margin-top: 0;
         }
 
         .input-bar {
@@ -93,46 +106,44 @@
 
         .input-bar input {
             flex: 1;
-            padding: 12px;
+            padding: 10px; /* Reduzido */
             border: 1px solid #ccc;
             border-radius: 8px;
-            font-size: 1em;
+            font-size: 0.9em; /* Reduzido */
             outline: none;
         }
         
         .input-bar button {
-            background-color: #790000;
+            background-color: var(--primary-color);
             color: #fff;
             border: none;
-            padding: 12px;
+            padding: 10px; /* Reduzido */
             border-radius: 8px;
             cursor: pointer;
-            touch-action: manipulation;
         }
 
         .value-grid {
             flex: 1;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 8px;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); /* Min-width reduzido */
+            gap: 6px; /* Reduzido */
             overflow-y: auto;
             padding-right: 5px;
         }
 
         .value-card {
-            background-color: #fff;
-            border: 2px solid #790000;
+            background-color: var(--card-background);
+            border: 2px solid var(--primary-color);
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 8px;
+            padding: 6px; /* Reduzido */
             text-align: center;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
-            height: 60px;
+            height: 50px; /* Reduzido */
             display: flex;
             align-items: center;
             justify-content: center;
-            touch-action: manipulation;
         }
 
         .value-card:active {
@@ -142,9 +153,9 @@
         }
 
         .value-card .price {
-            font-size: 1.5em;
+            font-size: 1.3em; /* Reduzido */
             font-weight: bold;
-            color: #790000;
+            color: var(--primary-color);
             margin: 0;
         }
         
@@ -152,14 +163,14 @@
             flex: 1;
             overflow-y: auto;
             border-bottom: 1px solid #eee;
-            margin-bottom: 10px;
+            margin-bottom: 8px; /* Reduzido */
         }
 
         .sale-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
+            padding: 8px 0; /* Reduzido */
             border-bottom: 1px solid #eee;
         }
 
@@ -173,31 +184,31 @@
 
         .item-info h4 {
             margin: 0;
-            font-size: 1em;
+            font-size: 0.9em; /* Reduzido */
             font-weight: normal;
         }
         
         .item-actions {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px; /* Reduzido */
         }
 
         .item-actions button {
-            background-color: #f43636;
+            background-color: var(--danger-color);
             color: #fff;
             border: none;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 24px; /* Reduzido */
+            height: 24px; /* Reduzido */
+            font-size: 0.7em; /* Reduzido */
             cursor: pointer;
             font-weight: bold;
             transition: background-color 0.2s;
-            touch-action: manipulation;
         }
 
         .item-price {
-            min-width: 60px;
+            min-width: 50px; /* Reduzido */
             text-align: right;
             font-weight: bold;
         }
@@ -206,39 +217,39 @@
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            padding-top: 10px;
+            padding-top: 8px; /* Reduzido */
         }
 
         .total-section .total-label {
-            font-size: 1.2em;
+            font-size: 1em; /* Reduzido */
             font-weight: bold;
         }
 
         .total-section .total-price {
-            font-size: 2em;
+            font-size: 1.8em; /* Reduzido */
             font-weight: bold;
-            color: #790000;
+            color: var(--primary-color);
         }
 
         .payment-method-buttons {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 15px;
+            gap: 8px; /* Reduzido */
+            margin-top: 12px; /* Reduzido */
         }
         
         .payment-method-buttons button {
-            padding: 12px;
+            padding: 10px; /* Reduzido */
             border: none;
             border-radius: 8px;
-            font-size: 1em;
+            font-size: 0.9em; /* Reduzido */
             font-weight: bold;
             color: #fff;
             cursor: pointer;
             transition: background-color 0.2s;
-            touch-action: manipulation;
         }
 
+        /* Classes de Cores */
         .btn-cash { background-color: #4CAF50; }
         .btn-card { background-color: #2196F3; }
         .btn-pix { background-color: #f44336; }
@@ -248,16 +259,16 @@
         .btn-pix:hover { background-color: #d32f2f; }
 
         .history-panel, .modal {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #e0f2f1;
+            background-color: var(--background-color);
             transform: translateX(100%);
             transition: transform 0.3s ease-in-out;
             z-index: 10;
-            padding: 20px;
+            padding: 15px; /* Reduzido */
             display: flex;
             flex-direction: column;
         }
@@ -270,11 +281,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* Reduzido */
         }
 
         .history-panel .history-header h2, .modal-header h2 {
             margin: 0;
+            font-size: 1.3em; /* Reduzido */
         }
         
         .history-list {
@@ -282,12 +294,12 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px; /* Reduzido */
         }
 
         .history-card {
-            background-color: #fff;
-            padding: 15px;
+            background-color: var(--card-background);
+            padding: 12px; /* Reduzido */
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
@@ -295,108 +307,48 @@
         .history-card .sale-info {
             display: flex;
             justify-content: space-between;
-            font-size: 0.9em;
+            font-size: 0.8em; /* Reduzido */
             color: #777;
-            margin-bottom: 10px;
+            margin-bottom: 8px; /* Reduzido */
         }
 
         .history-card .item-list {
             border-top: 1px solid #eee;
-            padding-top: 10px;
+            padding-top: 8px; /* Reduzido */
         }
         
         .history-card .item-list p {
-            margin: 5px 0;
-            font-size: 0.9em;
+            margin: 3px 0; /* Reduzido */
+            font-size: 0.8em; /* Reduzido */
         }
 
         .summary-card {
-            background-color: #790000;
+            background-color: var(--primary-color);
             color: #fff;
-            padding: 20px;
+            padding: 15px; /* Reduzido */
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            margin-top: 20px;
+            margin-top: 15px; /* Reduzido */
         }
 
         .summary-card p {
-            margin: 5px 0;
-            font-size: 1.1em;
+            margin: 4px 0; /* Reduzido */
+            font-size: 1em; /* Reduzido */
             display: flex;
             justify-content: space-between;
         }
-
-        .modal-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .modal-input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .modal-input-group label {
-            font-weight: bold;
-        }
-
-        .modal-input-group input, .modal-input-group textarea {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 1em;
-        }
-
-        .modal-buttons {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        @media (max-width: 1024px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .header-buttons {
-                margin-top: 10px;
-            }
-            .main-container {
-                flex-direction: column;
-                overflow-y: auto;
-            }
-            .left-panel, .right-panel {
-                width: 100%;
-                flex: none;
-                height: 50vh;
-                overflow-y: auto;
-            }
-            .value-grid {
-                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-            }
-        }
-
-        @media (min-width: 1025px) {
-            body {
-                overflow-y: hidden;
-            }
+        
+        /* Layout de duas colunas para tablets e desktops */
+        @media (min-width: 768px) {
             .main-container {
                 flex-direction: row;
+                padding: 10px;
             }
             .left-panel {
                 flex: 2;
             }
             .right-panel {
                 flex: 1.5;
-            }
-            .value-grid {
-                overflow-y: auto;
-            }
-            .sale-list {
-                overflow-y: auto;
             }
         }
     </style>
@@ -415,6 +367,7 @@
     </div>
 
     <div class="main-container">
+        
         <div class="left-panel">
             <div class="input-bar">
                 <input type="number" id="manualInput" placeholder="Inserir valor (ex: 7,50)">
@@ -436,7 +389,7 @@
             </div>
             
             <div class="payment-method-buttons">
-                <button class="btn-cash" onclick="finishSale('Dinheiro')">Dinheiro</button>
+                <button class="btn-cash" onclick="showCashModal()">Dinheiro</button>
                 <button class="btn-card" onclick="finishSale('Cartão')">Cartão</button>
                 <button class="btn-pix" onclick="finishSale('Pix')">Pix</button>
             </div>
@@ -466,41 +419,38 @@
     </div>
 
     <script>
-        var predefinedValues = [2, 5, 10, 20, 50, 100, 150, 200];
-        var ACCESS_PASSWORD = '2178';
-        var currentSale = [];
-        var dailySales = JSON.parse(localStorage.getItem('dailySales')) || {
+        const predefinedValues = [2, 5, 10, 20, 50, 100, 150, 200];
+        let currentSale = [];
+        let dailySales = JSON.parse(localStorage.getItem('dailySales')) || {
             sales: [],
             total: { Dinheiro: 0, Cartão: 0, Pix: 0 },
             transactions: [],
             started: false
         };
 
-        var valueGrid = document.getElementById('valueGrid');
-        var saleList = document.getElementById('saleList');
-        var totalPriceEl = document.getElementById('totalPrice');
-        var manualInput = document.getElementById('manualInput');
-        var historyPanel = document.getElementById('historyPanel');
-        var historyList = document.getElementById('historyList');
-        var summaryCard = document.getElementById('summaryCard');
-        var modalContainer = document.getElementById('modalContainer');
-        var modalTitle = document.getElementById('modalTitle');
-        var modalContent = document.getElementById('modalContent');
-        var modalButtons = document.getElementById('modalButtons');
+        const valueGrid = document.getElementById('valueGrid');
+        const saleList = document.getElementById('saleList');
+        const totalPriceEl = document.getElementById('totalPrice');
+        const manualInput = document.getElementById('manualInput');
+        const historyPanel = document.getElementById('historyPanel');
+        const historyList = document.getElementById('historyList');
+        const summaryCard = document.getElementById('summaryCard');
+        const modalContainer = document.getElementById('modalContainer');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        const modalButtons = document.getElementById('modalButtons');
 
         function formatCurrency(value) {
-            return "R$ " + value.toFixed(2).replace('.', ',');
+            return `R$ ${value.toFixed(2).replace('.', ',')}`;
         }
 
         function renderValues() {
             valueGrid.innerHTML = '';
-            predefinedValues.forEach(function(value) {
-                var card = document.createElement('div');
+            predefinedValues.forEach(value => {
+                const card = document.createElement('div');
                 card.className = 'value-card';
-                card.innerHTML = '<span class="price">' + formatCurrency(value) + '</span>';
-                card.onclick = function() {
-                    addToSale({ id: Date.now() + Math.random(), value: value });
-                };
+                card.innerHTML = `<span class="price">${formatCurrency(value)}</span>`;
+                card.onclick = () => addToSale({ id: Date.now() + Math.random(), value: value });
                 valueGrid.appendChild(card);
             });
         }
@@ -510,12 +460,12 @@
                 alert('Inicie o turno para começar as vendas.');
                 return;
             }
-            currentSale.push(item);
+            currentSale.push({ ...item });
             renderSaleList();
         }
 
         function addManualValue() {
-            var manualValue = parseFloat(manualInput.value.replace(',', '.'));
+            const manualValue = parseFloat(manualInput.value.replace(',', '.'));
             if (!isNaN(manualValue) && manualValue > 0) {
                 addToSale({ id: Date.now() + Math.random(), value: manualValue });
                 manualInput.value = '';
@@ -526,10 +476,10 @@
         
         function renderSaleList() {
             saleList.innerHTML = '';
-            var total = 0;
-            currentSale.forEach(function(item, index) {
+            let total = 0;
+            currentSale.forEach((item, index) => {
                 total += item.value;
-                var li = document.createElement('div');
+                const li = document.createElement('div');
                 li.className = 'sale-item';
                 li.innerHTML = `
                     <div class="item-info">
@@ -550,7 +500,60 @@
             currentSale.splice(index, 1);
             renderSaleList();
         }
+
+        function showCashModal() {
+            if (!dailySales.started) {
+                alert('Inicie o turno para começar as vendas.');
+                return;
+            }
+            if (currentSale.length === 0) {
+                alert('O carrinho está vazio.');
+                return;
+            }
+
+            const total = currentSale.reduce((acc, item) => acc + item.value, 0);
+            
+            modalTitle.textContent = 'Pagamento em Dinheiro';
+            modalContent.innerHTML = `
+                <div class="modal-input-group">
+                    <label>Total a Pagar:</label>
+                    <span style="font-size: 1.5em; font-weight: bold;">${formatCurrency(total)}</span>
+                </div>
+                <div class="modal-input-group">
+                    <label for="paidAmount">Valor Recebido:</label>
+                    <input type="number" id="paidAmount" placeholder="Ex: 50,00" required>
+                </div>
+            `;
+            modalButtons.innerHTML = `<button class="btn-cancel" onclick="hideModal()">Cancelar</button><button class="btn-cash" onclick="processCashPayment()">Confirmar</button>`;
+            modalContainer.classList.add('active');
+            document.getElementById('paidAmount').focus();
+        }
+
+        function processCashPayment() {
+            const paidAmount = parseFloat(document.getElementById('paidAmount').value.replace(',', '.'));
+            const totalSale = currentSale.reduce((acc, item) => acc + item.value, 0);
+
+            if (isNaN(paidAmount) || paidAmount < totalSale) {
+                alert('O valor recebido é inválido ou insuficiente.');
+                return;
+            }
+
+            const change = paidAmount - totalSale;
+            showChangeModal(change);
+        }
         
+        function showChangeModal(changeAmount) {
+            modalTitle.textContent = 'Troco';
+            modalContent.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <p style="font-size: 1.2em;">Troco a ser dado:</p>
+                    <p style="font-size: 2.5em; font-weight: bold; color: var(--primary-color);">${formatCurrency(changeAmount)}</p>
+                </div>
+            `;
+            modalButtons.innerHTML = `<button class="btn-cash" onclick="finishSale('Dinheiro')">Fechar</button>`;
+            modalContainer.classList.add('active');
+        }
+
         function finishSale(paymentMethod) {
             if (!dailySales.started) {
                 alert('Inicie o turno para começar as vendas.');
@@ -562,11 +565,11 @@
                 return;
             }
 
-            var totalSale = currentSale.reduce(function(acc, item) { return acc + item.value; }, 0);
-            var newSale = {
+            const totalSale = currentSale.reduce((acc, item) => acc + item.value, 0);
+            const newSale = {
                 id: Date.now(),
                 date: new Date().toLocaleString('pt-BR'),
-                items: currentSale.slice(),
+                items: [...currentSale],
                 total: totalSale,
                 type: 'Venda',
                 payment: paymentMethod
@@ -577,8 +580,9 @@
             
             localStorage.setItem('dailySales', JSON.stringify(dailySales));
             
-            alert('Venda de ' + formatCurrency(totalSale) + ' finalizada com sucesso via ' + paymentMethod + '!');
+            alert(`Venda de ${formatCurrency(totalSale)} finalizada com sucesso via ${paymentMethod}!`);
             clearSale();
+            hideModal();
         }
 
         function clearSale() {
@@ -587,27 +591,10 @@
         }
 
         function showModal(type) {
-            if (type === 'end') {
-                var password = prompt('Por favor, insira a senha para finalizar o turno:');
-                if (password !== ACCESS_PASSWORD) {
-                    alert('Senha incorreta.');
-                    return;
-                }
-                if (!dailySales.started) {
-                    alert('Nenhum turno em andamento.');
-                    return;
-                }
-                renderShiftSummary();
-                modalTitle.textContent = 'Fim de Turno';
-                modalButtons.innerHTML = '<button class="btn-cancel" onclick="hideModal()">Cancelar</button><button class="btn-danger" onclick="endShift()">Finalizar Turno</button>';
-                modalContainer.classList.add('active');
-                return;
-            }
-
             modalContent.innerHTML = '';
             modalButtons.innerHTML = '';
-            var title = '';
-            var actionButton = '';
+            let title = '';
+            let actionButton = '';
 
             switch (type) {
                 case 'start':
@@ -622,7 +609,7 @@
                             <input type="number" id="startValue" placeholder="Ex: 50,00">
                         </div>
                     `;
-                    actionButton = '<button class="btn-cash" onclick="startShift()">Iniciar Turno</button>';
+                    actionButton = `<button class="btn-cash" onclick="startShift()">Iniciar Turno</button>`;
                     break;
                 case 'sangria':
                     if (!dailySales.started) {
@@ -632,19 +619,15 @@
                     title = 'Sangria (Retirada)';
                     modalContent.innerHTML = `
                         <div class="modal-input-group">
-                            <label for="sangriaName">Nome do Funcionário</label>
-                            <input type="text" id="sangriaName" placeholder="Seu nome" required>
-                        </div>
-                        <div class="modal-input-group">
                             <label for="sangriaValue">Valor da Sangria</label>
-                            <input type="number" id="sangriaValue" placeholder="Ex: 100,00" required>
+                            <input type="number" id="sangriaValue" placeholder="Ex: 100,00">
                         </div>
                         <div class="modal-input-group">
                             <label for="sangriaNotes">Observações (opcional)</label>
                             <textarea id="sangriaNotes" rows="3"></textarea>
                         </div>
                     `;
-                    actionButton = '<button class="btn-cash" onclick="addTransaction(\'Sangria\')">Confirmar</button>';
+                    actionButton = `<button class="btn-cash" onclick="addTransaction('Sangria')">Confirmar</button>`;
                     break;
                 case 'suplemento':
                     if (!dailySales.started) {
@@ -662,12 +645,21 @@
                             <textarea id="suplementoNotes" rows="3"></textarea>
                         </div>
                     `;
-                    actionButton = '<button class="btn-cash" onclick="addTransaction(\'Suplemento\')">Confirmar</button>';
+                    actionButton = `<button class="btn-cash" onclick="addTransaction('Suplemento')">Confirmar</button>`;
+                    break;
+                case 'end':
+                    if (!dailySales.started) {
+                        alert('Nenhum turno em andamento.');
+                        return;
+                    }
+                    title = 'Fim de Turno';
+                    renderShiftSummary();
+                    actionButton = `<button class="btn-danger" onclick="endShift()">Finalizar Turno</button>`;
                     break;
             }
 
             modalTitle.textContent = title;
-            modalButtons.innerHTML = '<button class="btn-cancel" onclick="hideModal()">Cancelar</button>' + actionButton;
+            modalButtons.innerHTML = `<button class="btn-cancel" onclick="hideModal()">Cancelar</button>${actionButton}`;
             modalContainer.classList.add('active');
         }
 
@@ -676,7 +668,7 @@
         }
 
         function startShift() {
-            var startValue = parseFloat(document.getElementById('startValue').value.replace(',', '.'));
+            const startValue = parseFloat(document.getElementById('startValue').value.replace(',', '.'));
             if (isNaN(startValue) || startValue < 0) {
                 alert('Por favor, insira um valor inicial válido.');
                 return;
@@ -694,39 +686,23 @@
         }
 
         function endShift() {
-            var confirmation = confirm('Tem certeza que deseja finalizar o turno? Isso encerrará o histórico do dia.');
+            const confirmation = confirm('Tem certeza que deseja finalizar o turno?');
             if (confirmation) {
-                dailySales.transactions.push({
-                    type: 'Fim de Turno',
-                    value: 0,
-                    date: new Date().toLocaleString('pt-BR'),
-                    notes: ''
-                });
-                dailySales = {
-                    sales: [],
-                    total: { Dinheiro: 0, Cartão: 0, Pix: 0 },
-                    transactions: [],
-                    started: false
-                };
+                addTransaction('Fim de Turno');
+                dailySales.started = false;
                 localStorage.setItem('dailySales', JSON.stringify(dailySales));
                 hideModal();
-                alert('Turno finalizado. O histórico do dia foi encerrado.');
+                alert('Turno finalizado. O histórico do dia foi salvo.');
             }
         }
 
-        function addTransaction(type, value) {
-            var transactionValue = value;
-            var notes = '';
-            var employeeName = '';
+        function addTransaction(type, value = null) {
+            let transactionValue = value;
+            let notes = '';
 
             if (type === 'Sangria') {
-                employeeName = document.getElementById('sangriaName').value.trim();
                 transactionValue = parseFloat(document.getElementById('sangriaValue').value.replace(',', '.'));
                 notes = document.getElementById('sangriaNotes').value;
-                if (!employeeName) {
-                    alert('O nome do funcionário é obrigatório para a sangria.');
-                    return;
-                }
             } else if (type === 'Suplemento') {
                 transactionValue = parseFloat(document.getElementById('suplementoValue').value.replace(',', '.'));
                 notes = document.getElementById('suplementoNotes').value;
@@ -743,31 +719,25 @@
                 type: type,
                 value: transactionValue,
                 date: new Date().toLocaleString('pt-BR'),
-                notes: notes,
-                employee: employeeName 
+                notes: notes
             });
             
             localStorage.setItem('dailySales', JSON.stringify(dailySales));
             hideModal();
-            alert(type + ' de ' + formatCurrency(transactionValue || 0) + ' registrado com sucesso.');
+            alert(`${type} de ${formatCurrency(transactionValue || 0)} registrado com sucesso.`);
         }
         
         function toggleHistoryPanel() {
-            var password = prompt('Por favor, insira a senha para acessar o histórico:');
-            if (password === ACCESS_PASSWORD) {
-                historyPanel.classList.toggle('active');
-                if (historyPanel.classList.contains('active')) {
-                    renderHistory();
-                }
-            } else {
-                alert('Senha incorreta.');
+            historyPanel.classList.toggle('active');
+            if (historyPanel.classList.contains('active')) {
+                renderHistory();
             }
         }
         
         function renderHistory() {
             historyList.innerHTML = '';
             
-            var allEvents = dailySales.sales.concat(dailySales.transactions).sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+            const allEvents = [...dailySales.sales, ...dailySales.transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
 
             if (allEvents.length === 0) {
                 historyList.innerHTML = '<p style="text-align: center; color: #777;">Nenhuma atividade registrada.</p>';
@@ -775,13 +745,13 @@
                 return;
             }
 
-            allEvents.forEach(function(event) {
-                var card = document.createElement('div');
+            allEvents.forEach(event => {
+                const card = document.createElement('div');
                 card.className = 'history-card';
                 
-                var cardContent = '';
+                let cardContent = '';
                 if (event.type === 'Venda') {
-                    var totalItems = event.items.reduce(function(acc, item) { return acc + item.value; }, 0);
+                    const totalItems = event.items.reduce((acc, item) => acc + item.value, 0);
                     cardContent = `
                         <div class="sale-info">
                             <span><strong>Venda #${event.id.toString().slice(-4)}</strong></span>
@@ -800,8 +770,7 @@
                         </div>
                         <div class="item-list">
                             <p><strong>Valor:</strong> ${formatCurrency(event.value)}</p>
-                            ${event.employee ? '<p><strong>Funcionário:</strong> ' + event.employee + '</p>' : ''}
-                            ${event.notes ? '<p><strong>Observações:</strong> ' + event.notes + '</p>' : ''}
+                            ${event.notes ? `<p><strong>Observações:</strong> ${event.notes}</p>` : ''}
                         </div>
                     `;
                 }
@@ -813,15 +782,11 @@
         }
 
         function renderShiftSummary() {
-            var salesTotal = Object.values(dailySales.total).reduce(function(acc, val) { return acc + val; }, 0);
-            var initialCash = 0;
-            var initialTransaction = dailySales.transactions.find(function(t) { return t.type === 'Início de Turno'; });
-            if (initialTransaction) {
-                initialCash = initialTransaction.value;
-            }
-            var sangrias = dailySales.transactions.filter(function(t) { return t.type === 'Sangria'; }).reduce(function(acc, t) { return acc + t.value; }, 0);
-            var suplementos = dailySales.transactions.filter(function(t) { return t.type === 'Suplemento'; }).reduce(function(acc, t) { return acc + t.value; }, 0);
-            var totalCash = dailySales.total.Dinheiro + initialCash + suplementos - sangrias;
+            const salesTotal = Object.values(dailySales.total).reduce((acc, val) => acc + val, 0);
+            const initialCash = dailySales.transactions.find(t => t.type === 'Início de Turno')?.value || 0;
+            const sangrias = dailySales.transactions.filter(t => t.type === 'Sangria').reduce((acc, t) => acc + t.value, 0);
+            const suplementos = dailySales.transactions.filter(t => t.type === 'Suplemento').reduce((acc, t) => acc + t.value, 0);
+            const totalCash = dailySales.total.Dinheiro + initialCash + suplementos - sangrias;
 
             summaryCard.innerHTML = `
                 <h3>Resumo do Turno</h3>
@@ -840,7 +805,7 @@
             summaryCard.style.display = 'block';
         }
         
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             renderValues();
             renderSaleList();
         });
