@@ -374,6 +374,7 @@
                 <div class="total-historico">
                     <h3 style="font-size: 1rem;">Total de Vendas: <span id="totalHistorico">R$ 0,00</span></h3>
                 </div>
+                <button id="showMoreHistoryBtn" style="display: none; width: 100%; margin-top: 10px; background-color: #007bff; color: #fff; border: none; padding: 10px; border-radius: 6px; cursor: pointer;">Mostrar Mais Vendas</button>
             </div>
 
             <div class="saque-section">
@@ -383,6 +384,7 @@
                     <span>Total de Saques:</span>
                     <span id="totalSaques">R$ 0,00</span>
                 </div>
+                <button id="showMoreSaquesBtn" style="display: none; width: 100%; margin-top: 10px; background-color: #dc3545; color: #fff; border: none; padding: 10px; border-radius: 6px; cursor: pointer;">Mostrar Mais Saques</button>
             </div>
 
             <div class="history-actions" style="justify-content: center; margin-top: 20px;">
@@ -420,6 +422,7 @@
         let tipoPagamento = 'Dinheiro';
         let turnoStartTime = null;
         let workTimeInterval;
+        const historyLimit = 4; // Limite de itens para exibição inicial
 
         const pages = document.querySelectorAll('.page');
         const valorInput = document.getElementById('valorInput');
@@ -451,6 +454,10 @@
         const cancelarTrocoBtn = document.getElementById('cancelarTrocoBtn');
         const saqueInput = document.getElementById('saqueInput');
         const saqueButton = document.getElementById('saqueButton');
+
+        // Novos botões de "Mostrar Mais"
+        const showMoreHistoryBtn = document.getElementById('showMoreHistoryBtn');
+        const showMoreSaquesBtn = document.getElementById('showMoreSaquesBtn');
 
         const quickValues = [1.50, 2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 
@@ -577,7 +584,7 @@
             const dataSaque = new Date().toLocaleString('pt-BR');
             saquesTurno.push({ valor: valorSaque, data: dataSaque });
             saqueInput.value = '0,00';
-            renderizarSaques();
+            renderizarSaques(historyLimit); // Renderiza com o limite após o novo saque
             saveState();
             alert(`Saque de R$ ${valorSaque.toFixed(2).replace('.', ',')} registrado com sucesso.`);
         });
@@ -620,6 +627,7 @@
             atualizarTotalDoDia();
             saveState();
             alert(`Venda finalizada com sucesso!\nTotal: R$ ${total.toFixed(2).replace('.', ',')}\nPagamento: ${tipoPagamento}`);
+            renderizarHistorico(historyLimit); // Renderiza com o limite após a nova venda
         }
 
         iniciarTurnoBtn.addEventListener('click', () => {
@@ -629,8 +637,8 @@
             saveState();
             startWorkTimeCounter();
             alert("Novo turno iniciado! O caixa foi zerado.");
-            renderizarHistorico();
-            renderizarSaques();
+            renderizarHistorico(historyLimit);
+            renderizarSaques(historyLimit);
             atualizarTotalDoDia();
         });
 
@@ -655,8 +663,8 @@
             turnoStartTime = null;
             saveState();
             stopWorkTimeCounter();
-            renderizarHistorico();
-            renderizarSaques();
+            renderizarHistorico(historyLimit);
+            renderizarSaques(historyLimit);
             atualizarTotalDoDia();
         });
 
@@ -740,10 +748,18 @@
             saveState();
         }
 
-        function renderizarHistorico() {
+        // Função de renderização do histórico com limite
+        function renderizarHistorico(limit) {
             historyList.innerHTML = '';
             let totalHistorico = 0;
-            historicoTurno.forEach(transacao => {
+            
+            // Verifica se o histórico tem mais itens do que o limite
+            const hasMore = historicoTurno.length > limit;
+            
+            // Seleciona os itens a serem exibidos (limitados ou todos)
+            const itemsToRender = limit && hasMore ? historicoTurno.slice(0, limit) : historicoTurno;
+
+            itemsToRender.forEach(transacao => {
                 const historyItem = document.createElement('div');
                 historyItem.className = 'history-item';
                 historyItem.innerHTML = `
@@ -757,12 +773,23 @@
                 totalHistorico += transacao.total;
             });
             totalHistoricoSpan.textContent = `R$ ${totalHistorico.toFixed(2).replace('.', ',')}`;
+
+            // Exibe o botão "Mostrar Mais" se houver mais itens
+            showMoreHistoryBtn.style.display = hasMore ? 'block' : 'none';
         }
 
-        function renderizarSaques() {
+        // Função de renderização dos saques com limite
+        function renderizarSaques(limit) {
             saquesList.innerHTML = '';
             let totalSaques = 0;
-            saquesTurno.forEach(saque => {
+            
+            // Verifica se há mais saques do que o limite
+            const hasMore = saquesTurno.length > limit;
+
+            // Seleciona os itens a serem exibidos (limitados ou todos)
+            const itemsToRender = limit && hasMore ? saquesTurno.slice(0, limit) : saquesTurno;
+
+            itemsToRender.forEach(saque => {
                 const saqueItem = document.createElement('div');
                 saqueItem.className = 'saque-item';
                 saqueItem.innerHTML = `
@@ -773,6 +800,9 @@
                 totalSaques += saque.valor;
             });
             totalSaquesSpan.textContent = `R$ ${totalSaques.toFixed(2).replace('.', ',')}`;
+
+            // Exibe o botão "Mostrar Mais" se houver mais itens
+            showMoreSaquesBtn.style.display = hasMore ? 'block' : 'none';
         }
 
         function atualizarTotalDoDia() {
@@ -786,11 +816,21 @@
             pages.forEach(page => page.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             if (pageId === 'historico') {
-                renderizarHistorico();
-                renderizarSaques();
+                // Ao abrir a página, renderiza com o limite
+                renderizarHistorico(historyLimit); 
+                renderizarSaques(historyLimit);
                 historicoCompletoDiv.style.display = 'none';
             }
         }
+
+        // Eventos para os novos botões "Mostrar Mais"
+        showMoreHistoryBtn.addEventListener('click', () => {
+            renderizarHistorico(null); // Renderiza todos os itens
+        });
+
+        showMoreSaquesBtn.addEventListener('click', () => {
+            renderizarSaques(null); // Renderiza todos os itens
+        });
 
         valorInput.addEventListener('input', (e) => {
             let value = e.target.value.replace(/\D/g, '');
@@ -807,8 +847,8 @@
         window.addEventListener('load', () => {
             loadState();
             renderizarCarrinho();
-            renderizarHistorico();
-            renderizarSaques();
+            renderizarHistorico(historyLimit); // Renderiza com o limite na inicialização
+            renderizarSaques(historyLimit); // Renderiza com o limite na inicialização
             atualizarTotalDoDia();
         });
 
