@@ -669,11 +669,16 @@
         });
 
         baixarHistoricoBtn.addEventListener('click', () => {
-            if (historicoTurno.length === 0 && saquesTurno.length === 0) {
-                alert("Não há histórico para baixar.");
-                return;
-            }
+            const totalVendas = historicoTurno.reduce((sum, transacao) => sum + transacao.total, 0);
+            const numeroVendas = historicoTurno.length;
+
             let csvContent = "data:text/csv;charset=utf-8,";
+            
+            // Adiciona o resumo do dia
+            csvContent += "Resumo do Dia,Quantidade de Vendas,Total de Vendas\n";
+            csvContent += `,"${numeroVendas}","${totalVendas.toFixed(2).replace('.', ',')}"\n\n`;
+
+            // Adiciona o histórico de vendas e saques
             csvContent += "Tipo,Data e Hora,Valor,Forma de Pagamento\n";
 
             historicoTurno.forEach(transacao => {
@@ -775,7 +780,8 @@
             totalHistoricoSpan.textContent = `R$ ${totalHistorico.toFixed(2).replace('.', ',')}`;
 
             // Exibe o botão "Mostrar Mais" se houver mais itens
-            showMoreHistoryBtn.style.display = hasMore ? 'block' : 'none';
+            showMoreHistoryBtn.textContent = hasMore ? "Mostrar Mais Vendas" : "Mostrar Menos Vendas";
+            showMoreHistoryBtn.style.display = historicoTurno.length > historyLimit ? 'block' : 'none';
         }
 
         // Função de renderização dos saques com limite
@@ -802,7 +808,8 @@
             totalSaquesSpan.textContent = `R$ ${totalSaques.toFixed(2).replace('.', ',')}`;
 
             // Exibe o botão "Mostrar Mais" se houver mais itens
-            showMoreSaquesBtn.style.display = hasMore ? 'block' : 'none';
+            showMoreSaquesBtn.textContent = hasMore ? "Mostrar Mais Saques" : "Mostrar Menos Saques";
+            showMoreSaquesBtn.style.display = saquesTurno.length > historyLimit ? 'block' : 'none';
         }
 
         function atualizarTotalDoDia() {
@@ -824,12 +831,18 @@
         }
 
         // Eventos para os novos botões "Mostrar Mais"
+        let showingAllHistory = false;
         showMoreHistoryBtn.addEventListener('click', () => {
-            renderizarHistorico(null); // Renderiza todos os itens
+            showingAllHistory = !showingAllHistory;
+            renderizarHistorico(showingAllHistory ? null : historyLimit);
+            showMoreHistoryBtn.textContent = showingAllHistory ? "Mostrar Menos Vendas" : "Mostrar Mais Vendas";
         });
 
+        let showingAllSaques = false;
         showMoreSaquesBtn.addEventListener('click', () => {
-            renderizarSaques(null); // Renderiza todos os itens
+            showingAllSaques = !showingAllSaques;
+            renderizarSaques(showingAllSaques ? null : historyLimit);
+            showMoreSaquesBtn.textContent = showingAllSaques ? "Mostrar Menos Saques" : "Mostrar Mais Saques";
         });
 
         valorInput.addEventListener('input', (e) => {
