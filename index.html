@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title> M&A Caixa</title>
+    <title>Eleve Caixa</title>
     <style>
         /* Estilos CSS */
         body {
@@ -104,7 +104,7 @@
             margin-bottom: 10px;
             box-sizing: border-box;
         }
-        .cart-list, .history-list {
+        .cart-list, .history-list, .saques-list {
             flex-grow: 1;
             overflow-y: auto;
             margin-bottom: 10px;
@@ -156,6 +156,11 @@
             flex-grow: 1;
             margin: 0 4px;
         }
+        .payment-button.active {
+            background-color: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
         .checkout-button {
             width: 100%;
             padding: 12px;
@@ -195,15 +200,15 @@
         }
         #iniciarTurnoBtn { background-color: #28a745; }
         #finalizarTurnoBtn { background-color: #dc3545; }
-        #baixarHistoricoBtn { background-color: #007bff; }
-        .history-item {
+        #baixarHistoricoBtn, #verHistoricoCompletoBtn { background-color: #007bff; }
+        .history-item, .saque-item {
             display: flex;
             justify-content: space-between;
             padding: 8px 0;
             border-bottom: 1px solid #eee;
             font-size: 0.9rem;
         }
-        .history-item-info span {
+        .history-item-info span, .saque-item span {
             display: block;
             color: #666;
         }
@@ -276,12 +281,50 @@
         #cancelarTrocoBtn:hover { background-color: #c82333; }
         #exatoBtn { background-color: #6c757d; color: #fff; border: none; }
         #exatoBtn:hover { background-color: #5a6268; }
+        .saque-section {
+            display: flex;
+            flex-direction: column;
+            margin-top: 15px;
+        }
+        .saque-section h2 {
+            font-size: 1.2rem;
+            margin-top: 0;
+        }
+        .saque-section .total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #dc3545;
+        }
+        .history-section {
+            margin-top: 15px;
+        }
+        .historico-completo {
+            display: none;
+            margin-top: 15px;
+        }
+        .turno-historico {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        .turno-historico h4 {
+            margin: 0 0 5px 0;
+        }
+        .turno-historico li {
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
 
     <div class="header-bar">
-        <button onclick="showPage('caixa')">Caixa M&A </button>
+        <button onclick="showPage('caixa')">Caixa</button>
         <button onclick="showPage('historico')">Histórico</button>
         <div class="total-do-dia">Total do Turno: <span id="totalDoDia">R$ 0,00</span></div>
     </div>
@@ -291,6 +334,12 @@
             <div class="quick-values" id="quickValues"></div>
             <input type="text" id="valorInput" class="input-valor" placeholder="0,00" value="0,00">
             <button id="adicionarButton" class="checkout-button" style="background-color: #007bff; margin-top: 0;">Adicionar</button>
+            
+            <div class="saque-section">
+                <h2>Retirada de Caixa (Sangria)</h2>
+                <input type="text" id="saqueInput" class="input-valor" placeholder="0,00" value="0,00">
+                <button id="saqueButton" class="checkout-button" style="background-color: #dc3545;">Registrar Saque</button>
+            </div>
         </div>
         
         <div class="caixa-sidebar">
@@ -318,13 +367,32 @@
                 <button id="finalizarTurnoBtn" style="background-color: #dc3545;">Finalizar Turno</button>
             </div>
             <div class="turno-status">Turno iniciado: <span id="turnoStartTime">N/A</span> | Tempo de trabalho: <span id="workTime">00:00:00</span></div>
-            <h2 style="font-size: 1.2rem; margin-top: 0;">Histórico de Vendas</h2>
-            <div id="historyList" class="history-list"></div>
-            <div class="history-actions" style="justify-content: center;">
-                <button id="baixarHistoricoBtn" style="background-color: #007bff;">Baixar Histórico (Excel)</button>
+
+            <div class="history-section">
+                <h2 style="font-size: 1.2rem; margin-top: 0;">Histórico de Vendas</h2>
+                <div id="historyList" class="history-list"></div>
+                <div class="total-historico">
+                    <h3 style="font-size: 1rem;">Total de Vendas: <span id="totalHistorico">R$ 0,00</span></h3>
+                </div>
             </div>
-            <div class="total-historico">
-                <h3 style="font-size: 1rem;">Total do Histórico: <span id="totalHistorico">R$ 0,00</span></h3>
+
+            <div class="saque-section">
+                <h2>Histórico de Saques</h2>
+                <div id="saquesList" class="saques-list"></div>
+                <div class="total">
+                    <span>Total de Saques:</span>
+                    <span id="totalSaques">R$ 0,00</span>
+                </div>
+            </div>
+
+            <div class="history-actions" style="justify-content: center; margin-top: 20px;">
+                <button id="baixarHistoricoBtn" style="background-color: #007bff; margin-right: 10px;">Baixar Histórico (Excel)</button>
+                <button id="verHistoricoCompletoBtn">Ver Histórico Completo</button>
+            </div>
+
+            <div id="historicoCompleto" class="historico-completo">
+                <h2>Todos os Turnos Finalizados</h2>
+                <div id="historicoCompletoList"></div>
             </div>
         </div>
     </div>
@@ -347,6 +415,7 @@
     <script>
         let carrinho = [];
         let historicoTurno = [];
+        let saquesTurno = [];
         let historicoCompleto = [];
         let tipoPagamento = 'Dinheiro';
         let turnoStartTime = null;
@@ -361,11 +430,16 @@
         const paymentButtons = document.querySelectorAll('.payment-button');
         const quickValuesContainer = document.getElementById('quickValues');
         const historyList = document.getElementById('historyList');
+        const saquesList = document.getElementById('saquesList');
+        const totalSaquesSpan = document.getElementById('totalSaques');
         const totalHistoricoSpan = document.getElementById('totalHistorico');
         const totalDoDiaSpan = document.getElementById('totalDoDia');
         const iniciarTurnoBtn = document.getElementById('iniciarTurnoBtn');
         const finalizarTurnoBtn = document.getElementById('finalizarTurnoBtn');
         const baixarHistoricoBtn = document.getElementById('baixarHistoricoBtn');
+        const verHistoricoCompletoBtn = document.getElementById('verHistoricoCompletoBtn');
+        const historicoCompletoDiv = document.getElementById('historicoCompleto');
+        const historicoCompletoList = document.getElementById('historicoCompletoList');
         const turnoStartTimeSpan = document.getElementById('turnoStartTime');
         const workTimeSpan = document.getElementById('workTime');
         const trocoModal = document.getElementById('trocoModal');
@@ -375,22 +449,29 @@
         const exatoBtn = document.getElementById('exatoBtn');
         const finalizarTrocoBtn = document.getElementById('finalizarTrocoBtn');
         const cancelarTrocoBtn = document.getElementById('cancelarTrocoBtn');
+        const saqueInput = document.getElementById('saqueInput');
+        const saqueButton = document.getElementById('saqueButton');
 
         const quickValues = [1.50, 2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 
         function saveState() {
             localStorage.setItem('historicoTurno', JSON.stringify(historicoTurno));
+            localStorage.setItem('saquesTurno', JSON.stringify(saquesTurno));
             localStorage.setItem('historicoCompleto', JSON.stringify(historicoCompleto));
             localStorage.setItem('turnoStartTime', turnoStartTime);
         }
 
         function loadState() {
             const savedHistoricoTurno = localStorage.getItem('historicoTurno');
+            const savedSaquesTurno = localStorage.getItem('saquesTurno');
             const savedHistoricoCompleto = localStorage.getItem('historicoCompleto');
             const savedTurnoStartTime = localStorage.getItem('turnoStartTime');
 
             if (savedHistoricoTurno) {
                 historicoTurno = JSON.parse(savedHistoricoTurno);
+            }
+            if (savedSaquesTurno) {
+                saquesTurno = JSON.parse(savedSaquesTurno);
             }
             if (savedHistoricoCompleto) {
                 historicoCompleto = JSON.parse(savedHistoricoCompleto);
@@ -444,7 +525,6 @@
                 alert("Por favor, inicie um turno antes de adicionar vendas.");
                 return;
             }
-
             let valor = parseFloat(valorInput.value.replace(',', '.'));
             if (isNaN(valor) || valor <= 0) {
                 alert("Por favor, insira um valor válido.");
@@ -472,17 +552,34 @@
                 alert("O carrinho está vazio. Adicione itens para finalizar a venda.");
                 return;
             }
-
             if (tipoPagamento === 'Dinheiro') {
                 const total = carrinho.reduce((sum, item) => sum + item, 0);
                 modalTotalSpan.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
-                valorRecebidoInput.value = ''; // Limpa o campo
+                valorRecebidoInput.value = '';
                 modalTrocoSpan.textContent = `R$ 0,00`;
                 trocoModal.style.display = 'flex';
                 valorRecebidoInput.focus();
             } else {
                 finalizarVendaReal();
             }
+        });
+
+        saqueButton.addEventListener('click', () => {
+            if (!turnoStartTime) {
+                alert("Por favor, inicie um turno antes de registrar um saque.");
+                return;
+            }
+            let valorSaque = parseFloat(saqueInput.value.replace(',', '.'));
+            if (isNaN(valorSaque) || valorSaque <= 0) {
+                alert("Por favor, insira um valor de saque válido.");
+                return;
+            }
+            const dataSaque = new Date().toLocaleString('pt-BR');
+            saquesTurno.push({ valor: valorSaque, data: dataSaque });
+            saqueInput.value = '0,00';
+            renderizarSaques();
+            saveState();
+            alert(`Saque de R$ ${valorSaque.toFixed(2).replace('.', ',')} registrado com sucesso.`);
         });
 
         valorRecebidoInput.addEventListener('input', (e) => {
@@ -501,12 +598,10 @@
         finalizarTrocoBtn.addEventListener('click', () => {
             const valorRecebido = parseFloat(valorRecebidoInput.value.replace(',', '.'));
             const total = parseFloat(cartTotal.textContent.replace('R$ ', '').replace(',', '.'));
-
             if (isNaN(valorRecebido) || valorRecebido < total) {
                 alert("O valor recebido é inválido ou menor que o total. Por favor, corrija.");
                 return;
             }
-
             finalizarVendaReal();
             trocoModal.style.display = 'none';
         });
@@ -529,11 +624,13 @@
 
         iniciarTurnoBtn.addEventListener('click', () => {
             historicoTurno = [];
+            saquesTurno = [];
             turnoStartTime = new Date().getTime();
             saveState();
             startWorkTimeCounter();
             alert("Novo turno iniciado! O caixa foi zerado.");
             renderizarHistorico();
+            renderizarSaques();
             atualizarTotalDoDia();
         });
 
@@ -542,47 +639,77 @@
                 alert("Nenhum turno em andamento para finalizar.");
                 return;
             }
-            const totalTurno = historicoTurno.reduce((sum, transacao) => sum + transacao.total, 0);
+            const totalVendasTurno = historicoTurno.reduce((sum, transacao) => sum + transacao.total, 0);
+            const totalSaquesTurno = saquesTurno.reduce((sum, saque) => sum + saque.valor, 0);
             historicoCompleto.unshift({
                 data: new Date().toLocaleString('pt-BR'),
-                total: totalTurno,
-                vendas: [...historicoTurno]
+                totalVendas: totalVendasTurno,
+                totalSaques: totalSaquesTurno,
+                vendas: [...historicoTurno],
+                saques: [...saquesTurno]
             });
-            alert(`Turno finalizado! Total de vendas do turno: R$ ${totalTurno.toFixed(2).replace('.', ',')}.`);
+            alert(`Turno finalizado! Total de vendas do turno: R$ ${totalVendasTurno.toFixed(2).replace('.', ',')}.\nTotal de saques: R$ ${totalSaquesTurno.toFixed(2).replace('.', ',')}.`);
             
             historicoTurno = [];
+            saquesTurno = [];
             turnoStartTime = null;
             saveState();
             stopWorkTimeCounter();
             renderizarHistorico();
+            renderizarSaques();
             atualizarTotalDoDia();
         });
 
         baixarHistoricoBtn.addEventListener('click', () => {
-            if (historicoTurno.length === 0) {
-                alert("Não há histórico de vendas para baixar.");
+            if (historicoTurno.length === 0 && saquesTurno.length === 0) {
+                alert("Não há histórico para baixar.");
                 return;
             }
-            
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Data e Hora,Valor,Forma de Pagamento\n";
+            csvContent += "Tipo,Data e Hora,Valor,Forma de Pagamento\n";
 
             historicoTurno.forEach(transacao => {
-                const row = [
-                    `"${transacao.data}"`,
-                    `"${transacao.total.toFixed(2).replace('.', ',')}"`,
-                    `"${transacao.pagamento}"`
-                ].join(",");
+                const row = [`"Venda"`, `"${transacao.data}"`, `"${transacao.total.toFixed(2).replace('.', ',')}"`, `"${transacao.pagamento}"`].join(",");
+                csvContent += row + "\n";
+            });
+
+            saquesTurno.forEach(saque => {
+                const row = [`"Saque"`, `"${saque.data}"`, `"${saque.valor.toFixed(2).replace('.', ',')}"`, `""`].join(",");
                 csvContent += row + "\n";
             });
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "historico_vendas.csv");
+            link.setAttribute("download", "historico_geral.csv");
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        });
+
+        verHistoricoCompletoBtn.addEventListener('click', () => {
+            if (historicoCompleto.length === 0) {
+                alert("Não há histórico de turnos finalizados.");
+                return;
+            }
+            historicoCompletoDiv.style.display = 'block';
+            historicoCompletoList.innerHTML = '';
+            historicoCompleto.forEach(turno => {
+                const divTurno = document.createElement('div');
+                divTurno.className = 'turno-historico';
+                divTurno.innerHTML = `
+                    <h4>Turno de ${turno.data}</h4>
+                    <p>Total de Vendas: R$ ${turno.totalVendas.toFixed(2).replace('.', ',')}</p>
+                    <p>Total de Saques: R$ ${turno.totalSaques.toFixed(2).replace('.', ',')}</p>
+                    <ul>
+                        ${turno.vendas.map(venda => `<li>Venda (${venda.pagamento}): R$ ${venda.total.toFixed(2).replace('.', ',')}</li>`).join('')}
+                    </ul>
+                    <ul>
+                        ${turno.saques.map(saque => `<li>Saque: R$ ${saque.valor.toFixed(2).replace('.', ',')}</li>`).join('')}
+                    </ul>
+                `;
+                historicoCompletoList.appendChild(divTurno);
+            });
         });
 
         function renderizarCarrinho() {
@@ -632,9 +759,27 @@
             totalHistoricoSpan.textContent = `R$ ${totalHistorico.toFixed(2).replace('.', ',')}`;
         }
 
+        function renderizarSaques() {
+            saquesList.innerHTML = '';
+            let totalSaques = 0;
+            saquesTurno.forEach(saque => {
+                const saqueItem = document.createElement('div');
+                saqueItem.className = 'saque-item';
+                saqueItem.innerHTML = `
+                    <span>${saque.data}</span>
+                    <span style="color: #dc3545;">- R$ ${saque.valor.toFixed(2).replace('.', ',')}</span>
+                `;
+                saquesList.prepend(saqueItem);
+                totalSaques += saque.valor;
+            });
+            totalSaquesSpan.textContent = `R$ ${totalSaques.toFixed(2).replace('.', ',')}`;
+        }
+
         function atualizarTotalDoDia() {
-            const total = historicoTurno.reduce((sum, transacao) => sum + transacao.total, 0);
-            totalDoDiaSpan.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            const totalVendas = historicoTurno.reduce((sum, transacao) => sum + transacao.total, 0);
+            const totalSaques = saquesTurno.reduce((sum, saque) => sum + saque.valor, 0);
+            const totalDia = totalVendas - totalSaques;
+            totalDoDiaSpan.textContent = `R$ ${totalDia.toFixed(2).replace('.', ',')}`;
         }
 
         function showPage(pageId) {
@@ -642,6 +787,8 @@
             document.getElementById(pageId).classList.add('active');
             if (pageId === 'historico') {
                 renderizarHistorico();
+                renderizarSaques();
+                historicoCompletoDiv.style.display = 'none';
             }
         }
 
@@ -651,10 +798,17 @@
             valorInput.value = value.replace('.', ',');
         });
 
+        saqueInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            value = (value / 100).toFixed(2);
+            saqueInput.value = value.replace('.', ',');
+        });
+
         window.addEventListener('load', () => {
             loadState();
             renderizarCarrinho();
             renderizarHistorico();
+            renderizarSaques();
             atualizarTotalDoDia();
         });
 
