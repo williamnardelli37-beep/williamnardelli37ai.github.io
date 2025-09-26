@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>M&A Caixa</title>
     <style>
+        /* ... (Estilos CSS inalterados) ... */
         /* Estilos CSS */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -221,7 +222,7 @@
             margin-bottom: 10px;
             text-align: center;
         }
-        /* Estilos para o Modal (Pop-up) de Troco */
+        /* Estilos para o Modal (Pop-up) */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -278,10 +279,10 @@
             flex-grow: 1;
             margin: 0 5px;
         }
-        #finalizarTrocoBtn { background-color: #167479; color: #fff; border: none; }
-        #finalizarTrocoBtn:hover { background-color: #167479; }
-        #cancelarTrocoBtn { background-color: #183774; color: #fff; border: none; }
-        #cancelarTrocoBtn:hover { background-color: #183774; }
+        #finalizarTrocoBtn, #finalizarPixBtn { background-color: #167479; color: #fff; border: none; }
+        #finalizarTrocoBtn:hover, #finalizarPixBtn:hover { background-color: #167479; }
+        #cancelarTrocoBtn, #cancelarPixBtn { background-color: #183774; color: #fff; border: none; }
+        #cancelarTrocoBtn:hover, #cancelarPixBtn:hover { background-color: #183774; }
         #exatoBtn { background-color: #6c757d; color: #fff; border: none; }
         #exatoBtn:hover { background-color: #5a6268; }
         .saque-section {
@@ -347,6 +348,11 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             z-index: 100;
             display: none;
+        }
+        #qrcodeDisplay img {
+             /* Estilo para garantir que o QR Code não quebre o layout em telas pequenas */
+             max-width: 100%;
+             height: auto;
         }
     </style>
 </head>
@@ -444,6 +450,22 @@
         </div>
     </div>
 
+    <div id="pixModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 300px;">
+            <h3>Pagamento PIX</h3>
+            <div id="qrcodeDisplay" style="width:100%; display: flex; justify-content: center; margin: 10px 0;">
+                </div>
+            <p>Valor a pagar:</p>
+            <span class="valor-display" id="pixValorDisplay">R$ 0,00</span>
+            <p style="font-size: 0.9rem; margin-top: 10px;">Chave PIX (CNPJ):</p>
+            <p style="font-size: 1.1rem; font-weight: bold; color: #167479;">09.127.957/0001-78</p>
+            <button id="finalizarPixBtn" class="checkout-button" style="background-color: #167479;">Pagamento Confirmado</button>
+            <button id="cancelarPixBtn" class="checkout-button" style="background-color: #183774; margin-top: 10px;">Cancelar</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
     <script>
         let carrinho = [];
         let historicoTurno = [];
@@ -453,6 +475,20 @@
         let turnoStartTime = null;
         let workTimeInterval;
         let historicoVisivel = false;
+
+        // ====================================================================
+        // CONSTANTES PIX CORRIGIDAS
+        // ====================================================================
+        const PIX_KEY = '09127957000178'; 
+        const PIX_NAME = 'RAIZ CULTURAL LTDA'; 
+        const PIX_CITY = 'CAXIAS DO SUL'; 
+        // ====================================================================
+
+        const PIX_MODAL = document.getElementById('pixModal');
+        const PIX_VALOR_DISPLAY = document.getElementById('pixValorDisplay');
+        const QRCODE_DISPLAY = document.getElementById('qrcodeDisplay');
+        const FINALIZAR_PIX_BTN = document.getElementById('finalizarPixBtn');
+        const CANCELAR_PIX_BTN = document.getElementById('cancelarPixBtn');
 
         const pages = document.querySelectorAll('.page');
         const valorInput = document.getElementById('valorInput');
@@ -501,7 +537,13 @@
             setCursorPosition(this);
         });
 
+        // =================================================================
+        // FUNÇÕES LOCAL STORAGE (Inalteradas)
+        // =================================================================
+
         function saveState() {
+            // Salva o carrinho, histórico e o horário de início do turno
+            localStorage.setItem('carrinho', JSON.stringify(carrinho));
             localStorage.setItem('historicoTurno', JSON.stringify(historicoTurno));
             localStorage.setItem('saquesTurno', JSON.stringify(saquesTurno));
             localStorage.setItem('historicoCompleto', JSON.stringify(historicoCompleto));
@@ -509,11 +551,15 @@
         }
 
         function loadState() {
+            const savedCarrinho = localStorage.getItem('carrinho');
             const savedHistoricoTurno = localStorage.getItem('historicoTurno');
             const savedSaquesTurno = localStorage.getItem('saquesTurno');
             const savedHistoricoCompleto = localStorage.getItem('historicoCompleto');
             const savedTurnoStartTime = localStorage.getItem('turnoStartTime');
 
+            if (savedCarrinho) {
+                carrinho = JSON.parse(savedCarrinho);
+            }
             if (savedHistoricoTurno) {
                 historicoTurno = JSON.parse(savedHistoricoTurno);
             }
@@ -528,6 +574,82 @@
                 startWorkTimeCounter();
             }
         }
+
+        // =================================================================
+        // FUNÇÕES PIX CORRIGIDAS
+        // =================================================================
+
+        // 1. Função de Cálculo do CRC16 (CRC-16-CCITT com polinômio 0x1021)
+        function crc16CCITT(payload) {
+            const polynomial = 0x1021;
+            let crc = 0xFFFF;
+            
+            const payloadBytes = payload.split('').map(char => char.charCodeAt(0) & 0xFF); 
+
+            for (let i = 0; i < payloadBytes.length; i++) {
+                crc ^= (payloadBytes[i] << 8);
+                for (let j = 0; j < 8; j++) {
+                    if (crc & 0x8000) {
+                        crc = (crc << 1) ^ polynomial;
+                    } else {
+                        crc = (crc << 1);
+                    }
+                }
+            }
+
+            return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+        }
+
+        // 2. Função de Geração do Payload PIX (BR Code)
+        function generatePixPayload(valor) {
+            
+            const normalizeString = (str) => {
+                // Converte para maiúsculas e remove acentos e cedilhas
+                return str.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
+            }
+
+            const name = normalizeString(PIX_NAME).substring(0, 25);
+            const city = normalizeString(PIX_CITY).substring(0, 15);
+            const value = valor.toFixed(2);
+            const txid = '***'; 
+
+            // Função auxiliar para formatar TLV (ID + LENGTH + VALUE)
+            const tlv = (id, value) => {
+                const length = value.length.toString().padStart(2, '0');
+                return `${id.toString().padStart(2, '0')}${length}${value}`;
+            };
+
+            let payloadBase = '';
+            
+            payloadBase += tlv(0, '01');       // 00 - PFI (Payload Format Indicator)
+            payloadBase += tlv(1, '12');       // 01 - POIM (Point of Initiation Method) - 12 para estático com valor definido
+            
+            // 🚨 CORREÇÃO NO MAI (ID 26): Garantindo Sub-IDs 00, 01 e 02
+            const maiContent = tlv(0, 'BR.GOV.BCB.PIX') + // Sub-ID 00: GUID
+                               tlv(1, PIX_KEY) +          // Sub-ID 01: Chave PIX (CNPJ)
+                               tlv(2, txid);             // Sub-ID 02: TXID
+            
+            payloadBase += tlv(26, maiContent); // 26 - Merchant Account Information
+
+            payloadBase += tlv(52, '0000');    // 52 - MCC (Merchant Category Code)
+            payloadBase += tlv(53, '986');    // 53 - Transaction Currency (BRL)
+            payloadBase += tlv(54, value);     // 54 - Transaction Amount
+            payloadBase += tlv(58, 'BR');      // 58 - Country Code
+            payloadBase += tlv(59, name);      // 59 - Merchant Name
+            payloadBase += tlv(60, city);      // 60 - Merchant City
+            payloadBase += tlv(62, tlv(5, txid));      // 62 - Aditional Data Field Template (Sub-ID 05: TXID)
+
+            // O CRC16 deve ser calculado sobre o Payload Base + o campo do CRC16 vazio (6304)
+            const payloadCRC = payloadBase + '6304'; 
+            const crc = crc16CCITT(payloadCRC);
+
+            return payloadCRC + crc;
+        }
+
+
+        // =================================================================
+        // FUNÇÕES GERAIS (Inalteradas)
+        // =================================================================
 
         function updateWorkTime() {
             if (turnoStartTime) {
@@ -588,6 +710,7 @@
             carrinho.push(valor);
             renderizarCarrinho();
             valorInput.value = '0,00';
+            saveState(); // Salva o estado após adicionar ao carrinho
         });
 
         paymentButtons.forEach(button => {
@@ -607,14 +730,36 @@
                 alert("O carrinho está vazio. Adicione itens para finalizar a venda.");
                 return;
             }
+
+            const total = carrinho.reduce((sum, item) => sum + item, 0);
+
             if (tipoPagamento === 'Dinheiro') {
-                const total = carrinho.reduce((sum, item) => sum + item, 0);
                 modalTotalSpan.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
                 valorRecebidoInput.value = '';
                 modalTrocoSpan.textContent = `R$ 0,00`;
                 trocoModal.style.display = 'flex';
                 valorRecebidoInput.focus();
+            } else if (tipoPagamento === 'PIX') {
+                // Lógica para PIX
+                PIX_VALOR_DISPLAY.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+                
+                // 1. Gera o Payload PIX (BR Code)
+                const pixPayload = generatePixPayload(total);
+                
+                // 2. Limpa o display e gera o QR Code
+                QRCODE_DISPLAY.innerHTML = ''; 
+                new QRCode(QRCODE_DISPLAY, {
+                    text: pixPayload,
+                    width: 250,
+                    height: 250,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+                PIX_MODAL.style.display = 'flex';
             } else {
+                // Cartão ou outros
                 finalizarVendaReal();
             }
         });
@@ -633,7 +778,7 @@
             saquesTurno.push({ valor: valorSaque, data: dataSaque });
             saqueInput.value = '0,00';
             renderizarSaques();
-            saveState();
+            saveState(); 
             alert(`Saque de R$ ${valorSaque.toFixed(2).replace('.', ',')} registrado com sucesso.`);
         });
 
@@ -664,6 +809,16 @@
         cancelarTrocoBtn.addEventListener('click', () => {
             trocoModal.style.display = 'none';
         });
+
+        FINALIZAR_PIX_BTN.addEventListener('click', () => {
+            // Assume que o pagamento PIX foi confirmado
+            finalizarVendaReal();
+            PIX_MODAL.style.display = 'none';
+        });
+
+        CANCELAR_PIX_BTN.addEventListener('click', () => {
+            PIX_MODAL.style.display = 'none';
+        });
         
         function finalizarVendaReal() {
             const total = carrinho.reduce((sum, item) => sum + item, 0);
@@ -673,7 +828,7 @@
             carrinho = [];
             renderizarCarrinho();
             atualizarTotalDoDia();
-            saveState();
+            saveState(); 
             alert(`Venda finalizada com sucesso!\nTotal: R$ ${total.toFixed(2).replace('.', ',')}\nPagamento: ${tipoPagamento}`);
         }
 
@@ -685,7 +840,7 @@
             historicoTurno = [];
             saquesTurno = [];
             turnoStartTime = new Date().getTime();
-            saveState();
+            saveState(); 
             startWorkTimeCounter();
             alert("Novo turno iniciado! O caixa foi zerado.");
             renderizarHistorico();
@@ -712,7 +867,7 @@
             historicoTurno = [];
             saquesTurno = [];
             turnoStartTime = null;
-            saveState();
+            saveState(); 
             stopWorkTimeCounter();
             renderizarHistorico();
             renderizarSaques();
@@ -805,11 +960,11 @@
                         const index = e.target.getAttribute('data-index');
                         carrinho.splice(index, 1);
                         renderizarCarrinho();
+                        saveState(); // Salva o estado após remover item do carrinho
                     });
                 });
             }
             cartTotal.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
-            saveState();
         }
 
         function renderizarHistorico() {
