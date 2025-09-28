@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>M&A Caixa</title>
     <style>
-        /* ... (Estilos CSS inalterados) ... */
         /* Estilos CSS */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -190,6 +189,8 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 15px;
+            flex-wrap: wrap; 
+            gap: 8px;
         }
         .history-actions button {
             padding: 8px 12px;
@@ -202,6 +203,10 @@
         #iniciarTurnoBtn { background-color: #167479; }
         #finalizarTurnoBtn { background-color: #183774; }
         #baixarHistoricoBtn, #verHistoricoCompletoBtn { background-color: #007bff; }
+        #excluirUltimaVendaBtn { background-color: #dc3545; } 
+        #filterPixBtn, #filterOntemBtn { background-color: #6c757d; }
+        #filterPixBtn.active, #filterOntemBtn.active { background-color: #183774; }
+
         .history-item, .saque-item {
             display: flex;
             justify-content: space-between;
@@ -333,7 +338,7 @@
             font-size: 0.9rem;
             width: 100%;
             margin-top: 10px;
-            display: none; /* Inicia oculto */
+            display: none; 
         }
         #longTurnoWarning {
             background-color: #ffc107;
@@ -347,10 +352,9 @@
             width: 100%;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             z-index: 100;
-            display: none;
+            display: none; /* Inicialmente oculto */
         }
         #qrcodeDisplay img {
-             /* Estilo para garantir que o QR Code não quebre o layout em telas pequenas */
              max-width: 100%;
              height: auto;
         }
@@ -403,6 +407,13 @@
                 <button id="iniciarTurnoBtn" style="background-color: #167479;">Iniciar Turno</button>
                 <button id="finalizarTurnoBtn" style="background-color: #183774;">Finalizar Turno</button>
             </div>
+            
+            <div class="history-actions" style="margin-bottom: 20px;">
+                <button id="filterPixBtn">Mostrar Apenas **PIX**</button>
+                <button id="filterOntemBtn">Mostrar **Ontem** (Turnos Anteriores)</button>
+                <button id="excluirUltimaVendaBtn">Excluir Última Venda</button>
+            </div>
+            
             <div class="turno-status">Turno iniciado: <span id="turnoStartTime">N/A</span> | Tempo de trabalho: <span id="workTime">00:00:00</span></div>
 
             <div class="history-section">
@@ -424,7 +435,8 @@
             </div>
 
             <div class="history-actions" style="justify-content: center; margin-top: 20px;">
-                <button id="baixarHistoricoBtn" style="background-color: #183774; margin-right: 10px;">Baixar Histórico (Excel)</button>
+                <button id="baixarHistoricoBtn" style="background-color: #183774; margin-right: 10px;">Baixar Histórico (Turno Atual)</button>
+                <button id="baixarPixOntemBtn" style="background-color: #167479; margin-right: 10px;">Baixar Relatório PIX Ontem</button>
                 <button id="verHistoricoCompletoBtn">Ver Histórico Completo</button>
             </div>
 
@@ -475,21 +487,24 @@
         let turnoStartTime = null;
         let workTimeInterval;
         let historicoVisivel = false;
+        let filtroPixAtivo = false;
+        let filtroOntemAtivo = false;
+        let historicoFiltrado = []; 
+        let longTurnoWarningTimeout; 
+        // MODIFICAÇÃO CHAVE: Flag para garantir que o aviso só apareça uma vez por turno
+        let longTurnoWarningShown = false; 
 
-        // ====================================================================
-        // CONSTANTES PIX CORRIGIDAS
-        // ====================================================================
+        // CONSTANTES PIX 
         const PIX_KEY = '09127957000178'; 
         const PIX_NAME = 'RAIZ CULTURAL LTDA'; 
         const PIX_CITY = 'CAXIAS DO SUL'; 
-        // ====================================================================
 
+        // Seletores de elementos HTML (omitidos para brevidade, mas devem estar completos)
         const PIX_MODAL = document.getElementById('pixModal');
         const PIX_VALOR_DISPLAY = document.getElementById('pixValorDisplay');
         const QRCODE_DISPLAY = document.getElementById('qrcodeDisplay');
         const FINALIZAR_PIX_BTN = document.getElementById('finalizarPixBtn');
         const CANCELAR_PIX_BTN = document.getElementById('cancelarPixBtn');
-
         const pages = document.querySelectorAll('.page');
         const valorInput = document.getElementById('valorInput');
         const adicionarButton = document.getElementById('adicionarButton');
@@ -522,10 +537,15 @@
         const saqueButton = document.getElementById('saqueButton');
         const showHideHistoryBtn = document.getElementById('showHideHistoryBtn');
         const longTurnoWarning = document.getElementById('longTurnoWarning');
+        const filterPixBtn = document.getElementById('filterPixBtn');
+        const filterOntemBtn = document.getElementById('filterOntemBtn');
+        const excluirUltimaVendaBtn = document.getElementById('excluirUltimaVendaBtn');
+        const baixarPixOntemBtn = document.getElementById('baixarPixOntemBtn');
 
         const quickValues = [1.50, 2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 
-        // Função para posicionar o cursor no final do input
+        // [Funções de Utilidade, LocalStorage, PIX OMITIDAS AQUI POR BREVIDADE]
+
         function setCursorPosition(input) {
             input.selectionStart = input.selectionEnd = input.value.length;
         }
@@ -537,12 +557,7 @@
             setCursorPosition(this);
         });
 
-        // =================================================================
-        // FUNÇÕES LOCAL STORAGE (Inalteradas)
-        // =================================================================
-
         function saveState() {
-            // Salva o carrinho, histórico e o horário de início do turno
             localStorage.setItem('carrinho', JSON.stringify(carrinho));
             localStorage.setItem('historicoTurno', JSON.stringify(historicoTurno));
             localStorage.setItem('saquesTurno', JSON.stringify(saquesTurno));
@@ -574,16 +589,10 @@
                 startWorkTimeCounter();
             }
         }
-
-        // =================================================================
-        // FUNÇÕES PIX CORRIGIDAS
-        // =================================================================
-
-        // 1. Função de Cálculo do CRC16 (CRC-16-CCITT com polinômio 0x1021)
+        
         function crc16CCITT(payload) {
             const polynomial = 0x1021;
             let crc = 0xFFFF;
-            
             const payloadBytes = payload.split('').map(char => char.charCodeAt(0) & 0xFF); 
 
             for (let i = 0; i < payloadBytes.length; i++) {
@@ -596,15 +605,11 @@
                     }
                 }
             }
-
             return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
         }
 
-        // 2. Função de Geração do Payload PIX (BR Code)
         function generatePixPayload(valor) {
-            
             const normalizeString = (str) => {
-                // Converte para maiúsculas e remove acentos e cedilhas
                 return str.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
             }
 
@@ -613,33 +618,29 @@
             const value = valor.toFixed(2);
             const txid = '***'; 
 
-            // Função auxiliar para formatar TLV (ID + LENGTH + VALUE)
             const tlv = (id, value) => {
                 const length = value.length.toString().padStart(2, '0');
                 return `${id.toString().padStart(2, '0')}${length}${value}`;
             };
 
             let payloadBase = '';
+            payloadBase += tlv(0, '01');       
+            payloadBase += tlv(1, '12');       
             
-            payloadBase += tlv(0, '01');       // 00 - PFI (Payload Format Indicator)
-            payloadBase += tlv(1, '12');       // 01 - POIM (Point of Initiation Method) - 12 para estático com valor definido
+            const maiContent = tlv(0, 'BR.GOV.BCB.PIX') +
+                               tlv(1, PIX_KEY) +          
+                               tlv(2, txid);             
             
-            // 🚨 CORREÇÃO NO MAI (ID 26): Garantindo Sub-IDs 00, 01 e 02
-            const maiContent = tlv(0, 'BR.GOV.BCB.PIX') + // Sub-ID 00: GUID
-                               tlv(1, PIX_KEY) +          // Sub-ID 01: Chave PIX (CNPJ)
-                               tlv(2, txid);             // Sub-ID 02: TXID
-            
-            payloadBase += tlv(26, maiContent); // 26 - Merchant Account Information
+            payloadBase += tlv(26, maiContent); 
 
-            payloadBase += tlv(52, '0000');    // 52 - MCC (Merchant Category Code)
-            payloadBase += tlv(53, '986');    // 53 - Transaction Currency (BRL)
-            payloadBase += tlv(54, value);     // 54 - Transaction Amount
-            payloadBase += tlv(58, 'BR');      // 58 - Country Code
-            payloadBase += tlv(59, name);      // 59 - Merchant Name
-            payloadBase += tlv(60, city);      // 60 - Merchant City
-            payloadBase += tlv(62, tlv(5, txid));      // 62 - Aditional Data Field Template (Sub-ID 05: TXID)
+            payloadBase += tlv(52, '0000');    
+            payloadBase += tlv(53, '986');    
+            payloadBase += tlv(54, value);     
+            payloadBase += tlv(58, 'BR');      
+            payloadBase += tlv(59, name);      
+            payloadBase += tlv(60, city);      
+            payloadBase += tlv(62, tlv(5, txid));      
 
-            // O CRC16 deve ser calculado sobre o Payload Base + o campo do CRC16 vazio (6304)
             const payloadCRC = payloadBase + '6304'; 
             const crc = crc16CCITT(payloadCRC);
 
@@ -648,7 +649,7 @@
 
 
         // =================================================================
-        // FUNÇÕES GERAIS (Inalteradas)
+        // FUNÇÃO DE TEMPO CORRIGIDA
         // =================================================================
 
         function updateWorkTime() {
@@ -663,11 +664,27 @@
                 const pad = (num) => num.toString().padStart(2, '0');
                 workTimeSpan.textContent = `${pad(hours)}:${pad(minutes)}:${pad(remainingSeconds)}`;
 
-                // Avisa se o turno excedeu 11 horas (39600 segundos)
-                if (seconds > (11 * 3600)) {
+                // AVISO DE TURNO LONGO: Checa se excedeu 11h E se AINDA não foi mostrado
+                if (seconds > (11 * 3600) && !longTurnoWarningShown) {
+                    
+                    // 1. Marca como mostrado para que NUNCA MAIS apareça neste turno
+                    longTurnoWarningShown = true; 
+                    
+                    // 2. Mostra a mensagem
                     longTurnoWarning.style.display = 'block';
-                } else {
+                    
+                    // 3. Agenda a remoção após 2 segundos
+                    longTurnoWarningTimeout = setTimeout(() => {
+                        longTurnoWarning.style.display = 'none';
+                        longTurnoWarningTimeout = null; 
+                    }, 2000); 
+                } 
+                
+                // 4. Se estiver com menos de 11 horas, garante que qualquer timeout pendente seja cancelado
+                if (seconds <= (11 * 3600) && longTurnoWarningTimeout) {
+                    clearTimeout(longTurnoWarningTimeout);
                     longTurnoWarning.style.display = 'none';
+                    longTurnoWarningTimeout = null; 
                 }
             }
         }
@@ -683,7 +700,14 @@
             workTimeSpan.textContent = '00:00:00';
             turnoStartTimeSpan.textContent = 'N/A';
             longTurnoWarning.style.display = 'none';
+            if (longTurnoWarningTimeout) {
+                 clearTimeout(longTurnoWarningTimeout);
+            }
         }
+
+        // =================================================================
+        // LISTENERS DE AÇÃO
+        // =================================================================
 
         quickValues.forEach(valor => {
             const button = document.createElement('button');
@@ -710,7 +734,7 @@
             carrinho.push(valor);
             renderizarCarrinho();
             valorInput.value = '0,00';
-            saveState(); // Salva o estado após adicionar ao carrinho
+            saveState(); 
         });
 
         paymentButtons.forEach(button => {
@@ -740,13 +764,8 @@
                 trocoModal.style.display = 'flex';
                 valorRecebidoInput.focus();
             } else if (tipoPagamento === 'PIX') {
-                // Lógica para PIX
                 PIX_VALOR_DISPLAY.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
-                
-                // 1. Gera o Payload PIX (BR Code)
                 const pixPayload = generatePixPayload(total);
-                
-                // 2. Limpa o display e gera o QR Code
                 QRCODE_DISPLAY.innerHTML = ''; 
                 new QRCode(QRCODE_DISPLAY, {
                     text: pixPayload,
@@ -756,32 +775,12 @@
                     colorLight: "#ffffff",
                     correctLevel: QRCode.CorrectLevel.H
                 });
-
                 PIX_MODAL.style.display = 'flex';
             } else {
-                // Cartão ou outros
                 finalizarVendaReal();
             }
         });
-
-        saqueButton.addEventListener('click', () => {
-            if (!turnoStartTime) {
-                alert("Por favor, inicie um turno antes de registrar um saque.");
-                return;
-            }
-            let valorSaque = parseFloat(saqueInput.value.replace(',', '.'));
-            if (isNaN(valorSaque) || valorSaque <= 0) {
-                alert("Por favor, insira um valor de saque válido.");
-                return;
-            }
-            const dataSaque = new Date().toLocaleString('pt-BR');
-            saquesTurno.push({ valor: valorSaque, data: dataSaque });
-            saqueInput.value = '0,00';
-            renderizarSaques();
-            saveState(); 
-            alert(`Saque de R$ ${valorSaque.toFixed(2).replace('.', ',')} registrado com sucesso.`);
-        });
-
+        
         valorRecebidoInput.addEventListener('input', (e) => {
             let valorRecebido = parseFloat(e.target.value.replace(',', '.')) || 0;
             const total = parseFloat(cartTotal.textContent.replace('R$ ', '').replace(',', '.'));
@@ -811,7 +810,6 @@
         });
 
         FINALIZAR_PIX_BTN.addEventListener('click', () => {
-            // Assume que o pagamento PIX foi confirmado
             finalizarVendaReal();
             PIX_MODAL.style.display = 'none';
         });
@@ -819,19 +817,40 @@
         CANCELAR_PIX_BTN.addEventListener('click', () => {
             PIX_MODAL.style.display = 'none';
         });
+
+        saqueButton.addEventListener('click', () => {
+            if (!turnoStartTime) {
+                alert("Por favor, inicie um turno antes de registrar um saque.");
+                return;
+            }
+            let valorSaque = parseFloat(saqueInput.value.replace(',', '.'));
+            if (isNaN(valorSaque) || valorSaque <= 0) {
+                alert("Por favor, insira um valor de saque válido.");
+                return;
+            }
+            const dataSaque = new Date().toLocaleString('pt-BR');
+            saquesTurno.push({ valor: valorSaque, data: dataSaque });
+            saqueInput.value = '0,00';
+            renderizarSaques();
+            saveState(); 
+            alert(`Saque de R$ ${valorSaque.toFixed(2).replace('.', ',')} registrado com sucesso.`);
+        });
         
         function finalizarVendaReal() {
             const total = carrinho.reduce((sum, item) => sum + item, 0);
             const dataVenda = new Date().toLocaleString('pt-BR');
-            const transacao = { total, pagamento: tipoPagamento, data: dataVenda };
+            const idVenda = historicoTurno.length + 1; 
+            const transacao = { id: idVenda, total, pagamento: tipoPagamento, data: dataVenda };
             historicoTurno.push(transacao);
             carrinho = [];
             renderizarCarrinho();
             atualizarTotalDoDia();
+            renderizarHistorico(); 
             saveState(); 
             alert(`Venda finalizada com sucesso!\nTotal: R$ ${total.toFixed(2).replace('.', ',')}\nPagamento: ${tipoPagamento}`);
         }
 
+        // Listener de Iniciar Turno (Incluindo reset da flag)
         iniciarTurnoBtn.addEventListener('click', () => {
             if (turnoStartTime) {
                 alert("Já existe um turno em andamento. Finalize o turno atual para iniciar um novo.");
@@ -840,9 +859,17 @@
             historicoTurno = [];
             saquesTurno = [];
             turnoStartTime = new Date().getTime();
+            
+            // MODIFICAÇÃO: Zera a flag do aviso de turno longo para o novo turno
+            longTurnoWarningShown = false; 
+            
             saveState(); 
             startWorkTimeCounter();
             alert("Novo turno iniciado! O caixa foi zerado.");
+            filtroPixAtivo = false;
+            filtroOntemAtivo = false;
+            filterPixBtn.classList.remove('active');
+            filterOntemBtn.classList.remove('active');
             renderizarHistorico();
             renderizarSaques();
             atualizarTotalDoDia();
@@ -855,8 +882,13 @@
             }
             const totalVendasTurno = historicoTurno.reduce((sum, transacao) => sum + transacao.total, 0);
             const totalSaquesTurno = saquesTurno.reduce((sum, saque) => sum + saque.valor, 0);
+            
+            const dataFimTurno = new Date().getTime();
+            
             historicoCompleto.unshift({
-                data: new Date().toLocaleString('pt-BR'),
+                data: new Date(dataFimTurno).toLocaleString('pt-BR'),
+                dataInicioMS: parseInt(turnoStartTime),
+                dataFimMS: dataFimTurno,
                 totalVendas: totalVendasTurno,
                 totalSaques: totalSaquesTurno,
                 vendas: [...historicoTurno],
@@ -874,6 +906,71 @@
             atualizarTotalDoDia();
         });
 
+        excluirUltimaVendaBtn.addEventListener('click', () => {
+            if (!turnoStartTime) {
+                alert("Nenhum turno em andamento.");
+                return;
+            }
+            if (historicoTurno.length === 0) {
+                alert("Não há vendas para excluir no histórico atual.");
+                return;
+            }
+
+            const ultimaVenda = historicoTurno[historicoTurno.length - 1];
+            
+            if (confirm(`Tem certeza que deseja EXCLUIR a última venda (ID: ${ultimaVenda.id || 'N/A'}, R$ ${ultimaVenda.total.toFixed(2).replace('.', ',')} - ${ultimaVenda.pagamento})? Esta ação é irreversível neste turno.`)) {
+                historicoTurno.pop();
+                renderizarHistorico();
+                atualizarTotalDoDia();
+                saveState();
+                alert(`Última venda excluída com sucesso!`);
+            }
+        });
+
+        baixarPixOntemBtn.addEventListener('click', () => {
+            if (historicoCompleto.length === 0) {
+                alert("Não há turnos finalizados para verificar o histórico de ontem.");
+                return;
+            }
+            
+            const ultimoTurno = historicoCompleto[0];
+            
+            if (!ultimoTurno || ultimoTurno.vendas.length === 0) {
+                 alert("O último turno finalizado não contém vendas.");
+                 return;
+            }
+            
+            const pixVendasOntem = ultimoTurno.vendas.filter(venda => venda.pagamento === 'PIX');
+
+            if (pixVendasOntem.length === 0) {
+                alert(`Não houve vendas PIX no turno finalizado em ${ultimoTurno.data.split(' ')[0]}.`);
+                return;
+            }
+
+            const totalPixOntem = pixVendasOntem.reduce((sum, venda) => sum + venda.total, 0);
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            
+            csvContent += `Relatório PIX do Turno Finalizado em: ${ultimoTurno.data.split(' ')[0]}\n`;
+            csvContent += `"Quantidade de Vendas PIX","${pixVendasOntem.length}"\n`;
+            csvContent += `"Total de Vendas PIX","${totalPixOntem.toFixed(2).replace('.', ',')}"\n\n`;
+
+            csvContent += "Tipo,Data e Hora,Valor\n";
+
+            pixVendasOntem.forEach(transacao => {
+                const row = [`"Venda PIX"`, `"${transacao.data}"`, `"${transacao.total.toFixed(2).replace('.', ',')}"`].join(",");
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `relatorio_pix_${ultimoTurno.data.split(' ')[0].replace(/\//g, '-')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+        
         baixarHistoricoBtn.addEventListener('click', () => {
             if (historicoTurno.length === 0 && saquesTurno.length === 0) {
                 alert("Não há histórico para baixar.");
@@ -884,7 +981,7 @@
             const totalSaquesTurno = saquesTurno.reduce((sum, saque) => sum + saque.valor, 0);
             const quantidadeVendas = historicoTurno.length;
             const valorFinalCaixa = totalVendasTurno - totalSaquesTurno;
-
+            
             let csvContent = "data:text/csv;charset=utf-8,";
             
             csvContent += "Resumo do Turno\n";
@@ -908,7 +1005,7 @@
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "historico_geral.csv");
+            link.setAttribute("download", "historico_turno_atual.csv");
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -939,6 +1036,7 @@
             });
         });
 
+        // [Funções de Renderização OMITIDAS AQUI POR BREVIDADE]
         function renderizarCarrinho() {
             cartList.innerHTML = '';
             let total = 0;
@@ -960,7 +1058,7 @@
                         const index = e.target.getAttribute('data-index');
                         carrinho.splice(index, 1);
                         renderizarCarrinho();
-                        saveState(); // Salva o estado após remover item do carrinho
+                        saveState();
                     });
                 });
             }
@@ -971,8 +1069,22 @@
             historyList.innerHTML = '';
             let totalHistorico = 0;
             
-            // Invertemos o array para pegar os itens mais recentes primeiro
-            const historicoInvertido = [...historicoTurno].reverse();
+            let dadosParaRenderizar = historicoTurno;
+            
+            if (filtroOntemAtivo && historicoCompleto.length > 0) {
+                dadosParaRenderizar = historicoCompleto[0].vendas;
+            } else if (filtroOntemAtivo && historicoCompleto.length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; color: #dc3545; font-size: 0.9rem;">Não há turnos finalizados para mostrar "Ontem".</p>';
+                totalHistoricoSpan.textContent = `R$ 0,00`;
+                showHideHistoryBtn.style.display = 'none';
+                return;
+            }
+            
+            historicoFiltrado = dadosParaRenderizar.filter(transacao => {
+                return !filtroPixAtivo || transacao.pagamento === 'PIX';
+            });
+            
+            const historicoInvertido = [...historicoFiltrado].reverse();
             
             historicoInvertido.forEach((transacao, index) => {
                 const historyItem = document.createElement('div');
@@ -991,7 +1103,7 @@
                 totalHistorico += transacao.total;
             });
 
-            if (historicoTurno.length > 4) {
+            if (historicoFiltrado.length > 4) {
                 showHideHistoryBtn.style.display = 'block';
             } else {
                 showHideHistoryBtn.style.display = 'none';
@@ -999,6 +1111,28 @@
 
             totalHistoricoSpan.textContent = `R$ ${totalHistorico.toFixed(2).replace('.', ',')}`;
         }
+
+        filterPixBtn.addEventListener('click', () => {
+            filtroPixAtivo = !filtroPixAtivo;
+            filterPixBtn.classList.toggle('active', filtroPixAtivo);
+            renderizarHistorico();
+        });
+
+        filterOntemBtn.addEventListener('click', () => {
+            if (turnoStartTime) {
+                alert("O filtro 'Ontem' só mostra o histórico do ÚLTIMO turno FINALIZADO. Finalize o turno atual para ver o anterior.");
+                return;
+            }
+            filtroOntemAtivo = !filtroOntemAtivo;
+            filterOntemBtn.classList.toggle('active', filtroOntemAtivo);
+            renderizarHistorico();
+            excluirUltimaVendaBtn.disabled = filtroOntemAtivo;
+            baixarHistoricoBtn.disabled = filtroOntemAtivo;
+            
+            if (filtroOntemAtivo) {
+                 alert("Mostrando vendas do último turno FINALIZADO.");
+            }
+        });
 
         function renderizarSaques() {
             saquesList.innerHTML = '';
