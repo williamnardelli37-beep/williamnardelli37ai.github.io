@@ -467,7 +467,7 @@
             <h3>Calcular Troco</h3>
             <p>Total da venda: <span class="valor-display" id="modalTotal">R$ 0,00</span></p>
             <p>Valor recebido:</p>
-            <input type="text" id="valorRecebidoInput" placeholder="0,00">
+            <input type="tel" id="valorRecebidoInput" placeholder="0,00" inputmode="numeric"> 
             <div class="modal-buttons">
                 <button id="exatoBtn">Exato</button>
                 <button id="finalizarTrocoBtn">Finalizar</button>
@@ -590,6 +590,11 @@
             setCursorPosition(this);
         });
         saqueInput.addEventListener('click', function() {
+            setCursorPosition(this);
+        });
+        
+        // CORREÇÃO: Adiciona a lógica para posicionar o cursor no final ao clicar no campo de valor recebido
+        valorRecebidoInput.addEventListener('click', function() {
             setCursorPosition(this);
         });
 
@@ -787,10 +792,15 @@
 
             if (tipoPagamento === 'Dinheiro') {
                 modalTotalSpan.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
-                valorRecebidoInput.value = '';
-                modalTrocoSpan.textContent = `R$ 0,00`;
+                // Inicializa o campo de recebido com 0,00 para começar a digitação
+                valorRecebidoInput.value = '0,00';
+                modalTrocoSpan.textContent = `R$ ${(-total).toFixed(2).replace('.', ',')}`; // Troco negativo por padrão
                 trocoModal.style.display = 'flex';
-                valorRecebidoInput.focus();
+                // Adiciona a lógica para focar e colocar o cursor no final (opcional)
+                setTimeout(() => {
+                    setCursorPosition(valorRecebidoInput);
+                }, 50);
+
             } else if (tipoPagamento === 'PIX') {
                 PIX_VALOR_DISPLAY.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
                 const pixPayload = generatePixPayload(total);
@@ -812,22 +822,40 @@
             }
         });
         
+        // **ALTERAÇÃO CHAVE AQUI: Lógica de auto-formatação e cálculo do troco**
         valorRecebidoInput.addEventListener('input', (e) => {
-            let valorRecebido = parseFloat(e.target.value.replace(',', '.')) || 0;
+            // Lógica de auto-formatação (remove não-dígitos, divide por 100)
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length === 0) {
+                value = '0';
+            }
+            
+            let valorRecebidoFormatado = (parseInt(value) / 100).toFixed(2);
+            e.target.value = valorRecebidoFormatado.replace('.', ',');
+
+            // Cálculo do troco usando o valor formatado
+            let valorRecebido = parseFloat(valorRecebidoFormatado) || 0;
             const total = parseFloat(cartTotal.textContent.replace('R$ ', '').replace(',', '.'));
+            
             const troco = valorRecebido - total;
             modalTrocoSpan.textContent = `R$ ${troco.toFixed(2).replace('.', ',')}`;
+            
+            // Reposiciona o cursor no final
+            setCursorPosition(e.target);
         });
 
         exatoBtn.addEventListener('click', () => {
             const total = parseFloat(cartTotal.textContent.replace('R$ ', '').replace(',', '.'));
             valorRecebidoInput.value = total.toFixed(2).replace('.', ',');
-            modalTrocoSpan.textContent = `R$ 0,00`;
+            // Disparar o evento 'input' para recalcular o troco com a nova lógica
+            valorRecebidoInput.dispatchEvent(new Event('input', { bubbles: true }));
         });
 
         finalizarTrocoBtn.addEventListener('click', () => {
+            // Usa o valor atual do input, que já está formatado
             const valorRecebido = parseFloat(valorRecebidoInput.value.replace(',', '.'));
             const total = parseFloat(cartTotal.textContent.replace('R$ ', '').replace(',', '.'));
+            
             if (isNaN(valorRecebido) || valorRecebido < total) {
                 alert("O valor recebido é inválido ou menor que o total. Por favor, corrija.");
                 return;
