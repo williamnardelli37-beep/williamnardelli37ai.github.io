@@ -8,7 +8,7 @@
         /* Estilos CSS */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #15325d;
+            background-color: #FF6600; /* LARANJA FORTE */
             margin: 0;
             padding: 0;
             display: flex;
@@ -19,12 +19,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #15325d;
+            background-color: #FF6600; /* LARANJA FORTE */
             padding: 10px 15px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .header-bar button {
-            background-color: #183774;
+            background-color: #CC5200; /* LARANJA MÉDIO */
             color: #fff;
             border: none;
             padding: 8px 12px;
@@ -33,12 +33,12 @@
             font-size: 0.9rem;
         }
         .header-bar button:hover {
-            background-color: #0056b3;
+            background-color: #CC5200; /* LARANJA MÉDIO/ESCURO */
         }
         .total-do-dia {
             font-size: 1.2rem;
             font-weight: bold;
-            color: #dfdfdf;
+            color: #fff; /* BRANCO para bom contraste no laranja forte */
         }
         .container {
             flex: 1;
@@ -83,8 +83,8 @@
             overflow-y: auto;
         }
         .quick-value-button {
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
+            background-color: #FFCC99; /* LARANJA CLARO */
+            border: 1px solid #FFCC99;
             border-radius: 6px;
             padding: 10px 8px;
             font-size: 1rem;
@@ -126,7 +126,7 @@
         .cart-item-remove {
             background: none;
             border: none;
-            color: #183774;
+            color: #CC5200; /* LARANJA MÉDIO */
             cursor: pointer;
             font-size: 1.1rem;
         }
@@ -139,7 +139,7 @@
             justify-content: space-between;
             font-size: 1.5rem;
             font-weight: bold;
-            color: #218838;
+            color: #CC5200; /* LARANJA MÉDIO para destaque do total */
         }
         .payment-buttons {
             display: flex;
@@ -150,21 +150,21 @@
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 6px;
-            background-color: #f8f9fa;
+            background-color: #FFCC99; /* LARANJA CLARO */
             cursor: pointer;
             font-size: 0.9rem;
             flex-grow: 1;
             margin: 0 4px;
         }
         .payment-button.active {
-            background-color: #2b5179;
+            background-color: #FF6600; /* LARANJA FORTE */
             color: #fff;
-            border-color: #2b5179;
+            border-color: #FF6600; /* LARANJA FORTE */
         }
         .checkout-button {
             width: 100%;
             padding: 12px;
-            background-color: #167479;
+            background-color: #FF6600; /* LARANJA FORTE */
             color: #fff;
             border: none;
             border-radius: 8px;
@@ -173,7 +173,7 @@
             margin-top: 10px;
         }
         .checkout-button:hover {
-            background-color: #167479;
+            background-color: #CC5200; /* LARANJA MÉDIO HOVER */
         }
         .history-main {
             background-color: #fff;
@@ -200,12 +200,13 @@
             border: none;
             cursor: pointer;
         }
-        #iniciarTurnoBtn { background-color: #167479; }
-        #finalizarTurnoBtn { background-color: #183774; }
-        #baixarHistoricoBtn, #verHistoricoCompletoBtn { background-color: #007bff; }
-        #excluirUltimaVendaBtn { background-color: #dc3545; } 
-        #filterOntemBtn { background-color: #6c757d; }
-        #filterOntemBtn.active { background-color: #183774; }
+        #iniciarTurnoBtn { background-color: #FF6600; } /* LARANJA FORTE */
+        #finalizarTurnoBtn { background-color: #CC5200; } /* LARANJA MÉDIO */
+        #baixarHistoricoBtn, #verHistoricoCompletoBtn { background-color: #FF9933; } /* LARANJA MÉDIO/CLARO */
+        #baixarHistoricoOntemBtn { background-color: #FF6600; } /* LARANJA FORTE */
+        #excluirUltimaVendaBtn { background-color: #dc3545; } /* MANTER VERMELHO (PERIGO) */
+        #filterOntemBtn { background-color: #FFA07A; } /* LARANJA CLARO SECUNDÁRIO */
+        #filterOntemBtn.active { background-color: #CC5200; } /* LARANJA MÉDIO */
 
         .history-item, .saque-item {
             display: flex;
@@ -258,14 +259,14 @@
         .modal-content .valor-display {
             font-size: 2rem;
             font-weight: bold;
-            color: #2b5179;
+            color: #CC5200; /* LARANJA MÉDIO */
         }
         .modal-content input {
             width: 100%;
             padding: 10px;
             font-size: 1.5rem;
             text-align: right;
-            border: 1px solid #2f4180;
+            border: 1px solid #FF6600; /* LARANJA FORTE na borda do input */
             border-radius: 8px;
             box-sizing: border-box;
             margin: 10px 0;
@@ -284,12 +285,12 @@
             flex-grow: 1;
             margin: 0 5px;
         }
-        #finalizarTrocoBtn, #finalizarPixBtn, #finalizarCartaoBtn { background-color: #167479; color: #fff; border: none; }
-        #finalizarTrocoBtn:hover, #finalizarPixBtn:hover, #finalizarCartaoBtn:hover { background-color: #167479; }
-        #cancelarTrocoBtn, #cancelarPixBtn, #cancelarCartaoBtn { background-color: #183774; color: #fff; border: none; }
-        #cancelarTrocoBtn:hover, #cancelarPixBtn:hover, #cancelarCartaoBtn:hover { background-color: #183774; }
-        #exatoBtn { background-color: #6c757d; color: #fff; border: none; }
-        #exatoBtn:hover { background-color: #5a6268; }
+        #finalizarTrocoBtn, #finalizarPixBtn, #finalizarCartaoBtn { background-color: #FF6600; color: #fff; border: none; } /* LARANJA FORTE */
+        #finalizarTrocoBtn:hover, #finalizarPixBtn:hover, #finalizarCartaoBtn:hover { background-color: #CC5200; }
+        #cancelarTrocoBtn, #cancelarPixBtn, #cancelarCartaoBtn { background-color: #CC5200; color: #fff; border: none; } /* LARANJA MÉDIO */
+        #cancelarTrocoBtn:hover, #cancelarPixBtn:hover, #cancelarCartaoBtn:hover { background-color: #994000; }
+        #exatoBtn { background-color: #FFA07A; color: #fff; border: none; } /* LARANJA CLARO SECUNDÁRIO */
+        #exatoBtn:hover { background-color: #CC805A; }
         .saque-section {
             display: flex;
             flex-direction: column;
@@ -304,7 +305,7 @@
             justify-content: space-between;
             font-size: 1rem;
             font-weight: bold;
-            color: #183774;
+            color: #CC5200; /* LARANJA MÉDIO */
         }
         .history-section {
             margin-top: 15px;
@@ -329,7 +330,7 @@
             font-size: 0.9rem;
         }
         #showHideHistoryBtn {
-            background-color: #6c757d;
+            background-color: #FFA07A; /* LARANJA CLARO SECUNDÁRIO */
             color: #fff;
             border: none;
             padding: 8px 12px;
@@ -341,7 +342,7 @@
             display: none; 
         }
         #longTurnoWarning {
-            background-color: #ffc107;
+            background-color: #FF8C00; /* LARANJA ESCURO para alerta */
             color: #333;
             text-align: center;
             padding: 10px;
@@ -357,6 +358,13 @@
         #qrcodeDisplay img {
              max-width: 100%;
              height: auto;
+        }
+        #relatorioOntemSummary {
+            border: 1px solid #CC5200; /* LARANJA MÉDIO */
+            background-color: #fff5e6; /* LARANJA BEM CLARO para o fundo do resumo */
+        }
+        #relatorioOntemSummary h3 {
+            color: #CC5200; /* LARANJA MÉDIO */
         }
     </style>
 </head>
@@ -374,12 +382,12 @@
         <div class="caixa-main">
             <div class="quick-values" id="quickValues"></div>
             <input type="text" id="valorInput" class="input-valor" placeholder="0,00" value="0,00">
-            <button id="adicionarButton" class="checkout-button" style="background-color: #167479; margin-top: 0;">Adicionar</button>
+            <button id="adicionarButton" class="checkout-button" style="background-color: #FF6600; margin-top: 0;">Adicionar</button>
             
             <div class="saque-section">
                 <h2>Retirada de Caixa (Sangria)</h2>
                 <input type="text" id="saqueInput" class="input-valor" placeholder="0,00" value="0,00">
-                <button id="saqueButton" class="checkout-button" style="background-color: #183774;">Registrar Saque</button>
+                <button id="saqueButton" class="checkout-button" style="background-color: #CC5200;">Registrar Saque</button>
             </div>
         </div>
         
@@ -404,8 +412,8 @@
     <div id="historico" class="page container">
         <div class="history-main">
             <div class="history-actions">
-                <button id="iniciarTurnoBtn" style="background-color: #167479;">Iniciar Turno</button>
-                <button id="finalizarTurnoBtn" style="background-color: #183774;">Finalizar Turno</button>
+                <button id="iniciarTurnoBtn" style="background-color: #FF6600;">Iniciar Turno</button>
+                <button id="finalizarTurnoBtn" style="background-color: #CC5200;">Finalizar Turno</button>
             </div>
             
             <div class="history-actions" style="margin-bottom: 20px;">
@@ -415,8 +423,8 @@
             
             <div class="turno-status">Turno iniciado: <span id="turnoStartTime">N/A</span> | Tempo de trabalho: <span id="workTime">00:00:00</span></div>
 
-            <div id="relatorioOntemSummary" style="display: none; padding: 10px; border: 1px solid #183774; border-radius: 8px; background-color: #e6f7ff; margin-bottom: 15px;">
-                <h3 style="margin-top: 0; color: #183774; font-size: 1.1rem;">Relatório do Último Turno Finalizado</h3>
+            <div id="relatorioOntemSummary" style="display: none; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+                <h3 style="margin-top: 0; font-size: 1.1rem;">Relatório do Último Turno Finalizado</h3>
                 <p style="margin: 5px 0; font-size: 0.9rem;">
                     Data: <span id="relatorioOntemData" style="font-weight: bold;">N/A</span>
                 </p>
@@ -450,9 +458,9 @@
             </div>
 
             <div class="history-actions" style="justify-content: center; margin-top: 20px;">
-                <button id="baixarHistoricoBtn" style="background-color: #183774; margin-right: 10px;">Baixar Histórico (Turno Atual)</button>
-                <button id="baixarHistoricoOntemBtn" style="background-color: #167479; margin-right: 10px;">Baixar Histórico (Turno Anterior)</button>
-                <button id="verHistoricoCompletoBtn">Ver Histórico Completo</button>
+                <button id="baixarHistoricoBtn" style="background-color: #FF9933; margin-right: 10px;">Baixar Histórico (Turno Atual)</button>
+                <button id="baixarHistoricoOntemBtn" style="background-color: #FF6600; margin-right: 10px;">Baixar Histórico (Turno Anterior)</button>
+                <button id="verHistoricoCompletoBtn" style="background-color: #FF9933;">Ver Histórico Completo</button>
             </div>
 
             <div id="historicoCompleto" class="historico-completo">
@@ -485,9 +493,9 @@
             <p>Valor a pagar:</p>
             <span class="valor-display" id="pixValorDisplay">R$ 0,00</span>
             <p style="font-size: 0.9rem; margin-top: 10px;">Chave PIX (CNPJ):</p>
-            <p style="font-size: 1.1rem; font-weight: bold; color: #167479;">09.127.957/0001-78</p>
-            <button id="finalizarPixBtn" class="checkout-button" style="background-color: #167479;">Pagamento Confirmado</button>
-            <button id="cancelarPixBtn" class="checkout-button" style="background-color: #183774; margin-top: 10px;">Cancelar</button>
+            <p style="font-size: 1.1rem; font-weight: bold; color: #FF6600;">09.127.957/0001-78</p>
+            <button id="finalizarPixBtn" class="checkout-button" style="background-color: #FF6600;">Pagamento Confirmado</button>
+            <button id="cancelarPixBtn" class="checkout-button" style="background-color: #CC5200; margin-top: 10px;">Cancelar</button>
         </div>
     </div>
     
@@ -497,8 +505,8 @@
             <p>Valor a pagar:</p>
             <span class="valor-display" id="cartaoValorDisplay">R$ 0,00</span>
             <p style="font-size: 0.9rem; margin-top: 10px;">Aguardando confirmação na maquininha.</p>
-            <button id="finalizarCartaoBtn" class="checkout-button" style="background-color: #167479;">Pagamento Confirmado</button>
-            <button id="cancelarCartaoBtn" class="checkout-button" style="background-color: #183774; margin-top: 10px;">Cancelar</button>
+            <button id="finalizarCartaoBtn" class="checkout-button" style="background-color: #FF6600;">Pagamento Confirmado</button>
+            <button id="cancelarCartaoBtn" class="checkout-button" style="background-color: #CC5200; margin-top: 10px;">Cancelar</button>
         </div>
     </div>
 
@@ -645,6 +653,8 @@
                         crc = (crc << 1);
                     }
                 }
+                // Garante que o CRC permaneça dentro de 16 bits
+                crc &= 0xFFFF; 
             }
             return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
         }
@@ -669,8 +679,8 @@
             payloadBase += tlv(1, '12');       
             
             const maiContent = tlv(0, 'BR.GOV.BCB.PIX') +
-                               tlv(1, PIX_KEY) +          
-                               tlv(2, txid);             
+                                tlv(1, PIX_KEY) +          
+                                tlv(2, txid);             
             
             payloadBase += tlv(26, maiContent); 
 
@@ -741,17 +751,31 @@
         // LISTENERS DE AÇÃO
         // =================================================================
 
+        // Adiciona o valor diretamente ao carrinho ao clicar no botão rápido
         quickValues.forEach(valor => {
             const button = document.createElement('button');
             button.className = 'quick-value-button';
             button.textContent = `R$ ${valor.toFixed(2).replace('.', ',')}`;
             button.addEventListener('click', () => {
-                let valorAtual = parseFloat(valorInput.value.replace(',', '.')) || 0;
-                valorAtual += valor;
-                valorInput.value = valorAtual.toFixed(2).replace('.', ',');
+                // VERIFICA SE O TURNO FOI INICIADO
+                if (!turnoStartTime) {
+                    alert("Por favor, inicie um turno antes de adicionar vendas.");
+                    return;
+                }
+                
+                // ADICIONA O VALOR DIRETAMENTE AO CARRINHO
+                carrinho.push(valor);
+                
+                // ATUALIZA A TELA E SALVA O ESTADO
+                renderizarCarrinho();
+                saveState();
+                
+                // Opcional: Limpa o input de valor manual (valorInput)
+                valorInput.value = '0,00'; 
             });
             quickValuesContainer.appendChild(button);
         });
+        
 
         adicionarButton.addEventListener('click', () => {
             if (!turnoStartTime) {
@@ -822,7 +846,7 @@
             }
         });
         
-        // **ALTERAÇÃO CHAVE AQUI: Lógica de auto-formatação e cálculo do troco**
+        // **Lógica de auto-formatação e cálculo do troco**
         valorRecebidoInput.addEventListener('input', (e) => {
             // Lógica de auto-formatação (remove não-dígitos, divide por 100)
             let value = e.target.value.replace(/\D/g, '');
@@ -844,11 +868,19 @@
             setCursorPosition(e.target);
         });
 
+        // Botão Exato agora FINALIZA A VENDA imediatamente
         exatoBtn.addEventListener('click', () => {
             const total = parseFloat(cartTotal.textContent.replace('R$ ', '').replace(',', '.'));
             valorRecebidoInput.value = total.toFixed(2).replace('.', ',');
-            // Disparar o evento 'input' para recalcular o troco com a nova lógica
+            // Disparar o evento 'input' para recalcular o troco com a nova lógica (resultando em troco R$ 0,00)
             valorRecebidoInput.dispatchEvent(new Event('input', { bubbles: true }));
+            
+            // Remove o foco do campo de input
+            valorRecebidoInput.blur(); 
+            
+            // Finalizar a venda imediatamente
+            finalizarVendaReal();
+            trocoModal.style.display = 'none'; // Fechar o modal
         });
 
         finalizarTrocoBtn.addEventListener('click', () => {
