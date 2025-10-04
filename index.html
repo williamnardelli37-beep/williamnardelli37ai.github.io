@@ -366,13 +366,42 @@
         #relatorioOntemSummary h3 {
             color: #CC5200; /* LARANJA MÉDIO */
         }
+        /* Estilos do Toast Notification */
+        #notificationToast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.5s, transform 0.5s;
+            transform: translateY(-20px);
+            z-index: 2000;
+            font-size: 1rem;
+            pointer-events: none; /* Permite clicar através quando oculto */
+        }
+        #notificationToast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        #notificationToast.error {
+            background-color: #dc3545; /* Vermelho para erro */
+        }
+        #notificationToast.success {
+            background-color: #28a745; /* Verde para sucesso */
+        }
+        #notificationToast.info {
+            background-color: #007bff; /* Azul para informação */
+        }
     </style>
 </head>
 <body>
 
     <div id="longTurnoWarning">Seu turno está com mais de 11 horas. Considere finalizá-lo.</div>
-
-    <div class="header-bar">
+    <div id="notificationToast"></div> <div class="header-bar">
         <button onclick="showPage('caixa')">Caixa</button>
         <button onclick="showPage('historico')">Histórico</button>
         <div class="total-do-dia">Total do Turno: <span id="totalDoDia">R$ 0,00</span></div>
@@ -423,7 +452,7 @@
             
             <div class="turno-status">Turno iniciado: <span id="turnoStartTime">N/A</span> | Tempo de trabalho: <span id="workTime">00:00:00</span></div>
 
-            <div id="relatorioOntemSummary" style="display: none; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+            <div id="relatorioOntemSummary" style="display: none; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
                 <h3 style="margin-top: 0; font-size: 1.1rem;">Relatório do Último Turno Finalizado</h3>
                 <p style="margin: 5px 0; font-size: 0.9rem;">
                     Data: <span id="relatorioOntemData" style="font-weight: bold;">N/A</span>
@@ -585,8 +614,27 @@
         const longTurnoWarning = document.getElementById('longTurnoWarning');
         const filterOntemBtn = document.getElementById('filterOntemBtn');
         const excluirUltimaVendaBtn = document.getElementById('excluirUltimaVendaBtn');
+        
+        // NOVO: Toast Notification
+        const notificationToast = document.getElementById('notificationToast');
 
         const quickValues = [1.50, 2, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+        
+        // Função para mostrar notificações Toast
+        function showNotification(message, type = 'info') {
+            // Reset classes
+            notificationToast.className = '';
+            notificationToast.classList.add(type);
+            notificationToast.textContent = message;
+            
+            // Show the toast
+            notificationToast.classList.add('show');
+            
+            // Hide the toast after 3 seconds
+            setTimeout(() => {
+                notificationToast.classList.remove('show');
+            }, 3000);
+        }
 
         // [Funções de Utilidade, LocalStorage, PIX OMITIDAS AQUI POR BREVIDADE]
 
@@ -759,7 +807,7 @@
             button.addEventListener('click', () => {
                 // VERIFICA SE O TURNO FOI INICIADO
                 if (!turnoStartTime) {
-                    alert("Por favor, inicie um turno antes de adicionar vendas.");
+                    showNotification("Por favor, inicie um turno antes de adicionar vendas.", "error");
                     return;
                 }
                 
@@ -779,12 +827,12 @@
 
         adicionarButton.addEventListener('click', () => {
             if (!turnoStartTime) {
-                alert("Por favor, inicie um turno antes de adicionar vendas.");
+                showNotification("Por favor, inicie um turno antes de adicionar vendas.", "error");
                 return;
             }
             let valor = parseFloat(valorInput.value.replace(',', '.'));
             if (isNaN(valor) || valor <= 0) {
-                alert("Por favor, insira um valor válido.");
+                showNotification("Por favor, insira um valor válido.", "error");
                 return;
             }
             carrinho.push(valor);
@@ -804,11 +852,11 @@
         // LÓGICA DE FINALIZAR VENDAS
         finalizarButton.addEventListener('click', () => {
             if (!turnoStartTime) {
-                alert("Por favor, inicie um turno antes de finalizar vendas.");
+                showNotification("Por favor, inicie um turno antes de finalizar vendas.", "error");
                 return;
             }
             if (carrinho.length === 0) {
-                alert("O carrinho está vazio. Adicione itens para finalizar a venda.");
+                showNotification("O carrinho está vazio. Adicione itens para finalizar a venda.", "error");
                 return;
             }
 
@@ -818,7 +866,8 @@
                 modalTotalSpan.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
                 // Inicializa o campo de recebido com 0,00 para começar a digitação
                 valorRecebidoInput.value = '0,00';
-                modalTrocoSpan.textContent = `R$ ${(-total).toFixed(2).replace('.', ',')}`; // Troco negativo por padrão
+                // CORRIGIDO: O Troco agora é exibido como R$ 0,00 inicialmente
+                modalTrocoSpan.textContent = `R$ 0,00`; 
                 trocoModal.style.display = 'flex';
                 // Adiciona a lógica para focar e colocar o cursor no final (opcional)
                 setTimeout(() => {
@@ -875,7 +924,7 @@
             // Disparar o evento 'input' para recalcular o troco com a nova lógica (resultando em troco R$ 0,00)
             valorRecebidoInput.dispatchEvent(new Event('input', { bubbles: true }));
             
-            // Remove o foco do campo de input
+            // CORRIGIDO: Remove o foco do campo de input para evitar o teclado virtual no iOS/iPad
             valorRecebidoInput.blur(); 
             
             // Finalizar a venda imediatamente
@@ -889,7 +938,7 @@
             const total = parseFloat(cartTotal.textContent.replace('R$ ', '').replace(',', '.'));
             
             if (isNaN(valorRecebido) || valorRecebido < total) {
-                alert("O valor recebido é inválido ou menor que o total. Por favor, corrija.");
+                showNotification("O valor recebido é inválido ou menor que o total. Por favor, corrija.", "error");
                 return;
             }
             finalizarVendaReal();
@@ -921,12 +970,12 @@
 
         saqueButton.addEventListener('click', () => {
             if (!turnoStartTime) {
-                alert("Por favor, inicie um turno antes de registrar um saque.");
+                showNotification("Por favor, inicie um turno antes de registrar um saque.", "error");
                 return;
             }
             let valorSaque = parseFloat(saqueInput.value.replace(',', '.'));
             if (isNaN(valorSaque) || valorSaque <= 0) {
-                alert("Por favor, insira um valor de saque válido.");
+                showNotification("Por favor, insira um valor de saque válido.", "error");
                 return;
             }
             const dataSaque = new Date().toLocaleString('pt-BR');
@@ -934,7 +983,7 @@
             saqueInput.value = '0,00';
             renderizarSaques();
             saveState(); 
-            alert(`Saque de R$ ${valorSaque.toFixed(2).replace('.', ',')} registrado com sucesso.`);
+            showNotification(`Saque de R$ ${valorSaque.toFixed(2).replace('.', ',')} registrado com sucesso.`, "success");
         });
         
         function finalizarVendaReal() {
@@ -948,12 +997,12 @@
             atualizarTotalDoDia();
             renderizarHistorico(); 
             saveState(); 
-            alert(`Venda finalizada com sucesso!\nTotal: R$ ${total.toFixed(2).replace('.', ',')}\nPagamento: ${tipoPagamento}`);
+            showNotification(`Venda finalizada! Total: R$ ${total.toFixed(2).replace('.', ',')} (${tipoPagamento})`, "success");
         }
 
         iniciarTurnoBtn.addEventListener('click', () => {
             if (turnoStartTime) {
-                alert("Já existe um turno em andamento. Finalize o turno atual para iniciar um novo.");
+                showNotification("Já existe um turno em andamento. Finalize o turno atual para iniciar um novo.", "error");
                 return;
             }
             historicoTurno = [];
@@ -964,7 +1013,7 @@
             
             saveState(); 
             startWorkTimeCounter();
-            alert("Novo turno iniciado! O caixa foi zerado.");
+            showNotification("Novo turno iniciado! O caixa foi zerado.", "success");
             filtroOntemAtivo = false;
             filterOntemBtn.classList.remove('active');
             renderizarHistorico();
@@ -974,11 +1023,11 @@
 
         finalizarTurnoBtn.addEventListener('click', () => {
             if (!turnoStartTime) {
-                alert("Nenhum turno em andamento para finalizar.");
+                showNotification("Nenhum turno em andamento para finalizar.", "error");
                 return;
             }
             const totalVendasTurno = historicoTurno.reduce((sum, transacao) => sum + transacao.total, 0);
-            const totalSaquesTurno = saquesTurno.reduce((sum, saque) => sum + saque.valor, 0);
+            const totalSaquesTurno = saquesTurno.reduce((sum, transacao) => sum + transacao.valor, 0);
             
             const dataFimTurno = new Date().getTime();
             
@@ -991,7 +1040,7 @@
                 vendas: [...historicoTurno],
                 saques: [...saquesTurno]
             });
-            alert(`Turno finalizado! Total de vendas do turno: R$ ${totalVendasTurno.toFixed(2).replace('.', ',')}.\nTotal de saques: R$ ${totalSaquesTurno.toFixed(2).replace('.', ',')}.`);
+            showNotification(`Turno finalizado! Vendas: R$ ${totalVendasTurno.toFixed(2).replace('.', ',')}. Saques: R$ ${totalSaquesTurno.toFixed(2).replace('.', ',')}.`, "success");
             
             historicoTurno = [];
             saquesTurno = [];
@@ -1005,11 +1054,11 @@
 
         excluirUltimaVendaBtn.addEventListener('click', () => {
             if (!turnoStartTime) {
-                alert("Nenhum turno em andamento.");
+                showNotification("Nenhum turno em andamento.", "error");
                 return;
             }
             if (historicoTurno.length === 0) {
-                alert("Não há vendas para excluir no histórico atual.");
+                showNotification("Não há vendas para excluir no histórico atual.", "error");
                 return;
             }
 
@@ -1020,14 +1069,14 @@
                 renderizarHistorico();
                 atualizarTotalDoDia();
                 saveState();
-                alert(`Última venda excluída com sucesso!`);
+                showNotification(`Última venda excluída com sucesso!`, "success");
             }
         });
 
         // NOVO LISTENER: BAIXAR HISTÓRICO TURNO ANTERIOR
         baixarHistoricoOntemBtn.addEventListener('click', () => {
             if (historicoCompleto.length === 0) {
-                alert("Não há turnos finalizados (Ontem) para baixar.");
+                showNotification("Não há turnos finalizados (Ontem) para baixar.", "error");
                 return;
             }
             
@@ -1080,13 +1129,12 @@
         // LISTENER ATUALIZADO: BAIXAR HISTÓRICO TURNO ATUAL (com separação por pagamento)
         baixarHistoricoBtn.addEventListener('click', () => {
             if (historicoTurno.length === 0 && saquesTurno.length === 0) {
-                alert("Não há histórico para baixar.");
+                showNotification("Não há histórico para baixar.", "error");
                 return;
             }
             
             const totalVendas = historicoTurno.reduce((sum, transacao) => sum + transacao.total, 0);
             const totalSaques = saquesTurno.reduce((sum, saque) => sum + saque.valor, 0);
-            const quantidadeVendas = historicoTurno.length;
             const valorFinalCaixa = totalVendas - totalSaques;
 
             // Separação por tipo de pagamento
@@ -1130,7 +1178,7 @@
 
         verHistoricoCompletoBtn.addEventListener('click', () => {
             if (historicoCompleto.length === 0) {
-                alert("Não há histórico de turnos finalizados.");
+                showNotification("Não há histórico de turnos finalizados.", "error");
                 return;
             }
             historicoCompletoDiv.style.display = 'block';
@@ -1246,7 +1294,7 @@
 
         filterOntemBtn.addEventListener('click', () => {
             if (turnoStartTime && !filtroOntemAtivo) {
-                alert("O filtro 'Ontem' só mostra o histórico do ÚLTIMO turno FINALIZADO. Finalize o turno atual para ver o anterior.");
+                showNotification("O filtro 'Ontem' só mostra o histórico do ÚLTIMO turno FINALIZADO. Finalize o turno atual para ver o anterior.", "error");
                 return;
             }
             filtroOntemAtivo = !filtroOntemAtivo;
@@ -1256,7 +1304,7 @@
             baixarHistoricoBtn.disabled = filtroOntemAtivo;
             
             if (filtroOntemAtivo && historicoCompleto.length > 0) {
-                 alert("Mostrando vendas do último turno FINALIZADO.");
+                 showNotification("Mostrando vendas do último turno FINALIZADO.", "info");
             }
         });
 
